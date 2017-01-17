@@ -5,7 +5,7 @@ var db = require('../lib/database.js');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+    res.sendFile(path.join(__dirname + '/index.html'));
 });
 
 router.get('/users', function(req, res, next) {
