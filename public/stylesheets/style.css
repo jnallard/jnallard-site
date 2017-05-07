@@ -1,8 +1,12 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+.user-picture {
+  height: 50px;
+  width: 50px;
 }
 
-a {
-  color: #00B7FF;
+.table>tbody>tr>td.user-text {
+  vertical-align: middle;
+}
+
+rd-widget-body>div.widget-body.fill-height {
+  height: auto;
 }
