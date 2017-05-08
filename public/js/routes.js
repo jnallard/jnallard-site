@@ -19,7 +19,7 @@ angular.module('RDash').config(['$stateProvider', '$urlRouterProvider',
                 url: '/users',
                 templateUrl: 'templates/users.html'
             })
-            .state('games-risk', {
+            .state('risk', {
                 url: '/games/risk',
                 templateUrl: 'games/risk/risk.html'
             });

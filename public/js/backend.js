@@ -1,9 +1,9 @@
-function BackendService(http){
+function BackendService($q, http){
   var self = this;
   self.http = http;
   console.log(self.http);
   self.get = function(path){
-    return new Promise(function (fulfill, reject){
+    return new $q(function (fulfill, reject){
       self.http({
         method: 'GET',
         url: path,
@@ -20,6 +20,6 @@ function BackendService(http){
   }
 }
 
-angular.module('RDash').service('backend', ['$http', function($http) {
-  return new BackendService($http);
+angular.module('RDash').service('backend', ['$q', '$http', function($q, $http) {
+  return new BackendService($q, $http);
 }]);

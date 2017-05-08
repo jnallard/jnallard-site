@@ -17,7 +17,6 @@ function UserCtrl($scope, $cookieStore, backend) {
       then(function(users){
         console.log(users);
         self.users = users;
-        $scope.$apply();
         $scope.loading = false;
       }).catch(function(error){
         console.log(error);
