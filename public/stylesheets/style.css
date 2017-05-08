@@ -24,7 +24,7 @@ rd-widget-body>div.widget-body.fill-height {
   max-width: 1000px;
   margin-left: auto;
   margin-right: auto;
-  overflow-x: scroll;
+  overflow-x: hidden;
 }
 
 .risk-map-image {
