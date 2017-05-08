@@ -17,6 +17,23 @@ function BackendService($q, http){
       });
     });
 
+  };
+
+  self.post = function(path, json){
+    return new $q(function (fulfill, reject){
+      self.http({
+        method: 'POST',
+        url: path,
+        data: json,
+        headers: {
+          "content-type": "application/json"
+        }
+      }).then(function successCallback(response) {
+          fulfill(response.data)
+      }, function errorCallback(response) {
+        reject(response);
+      });
+    });
   }
 }
 

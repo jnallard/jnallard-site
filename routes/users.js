@@ -96,4 +96,14 @@ router.get('/me', function(req, res, next) {
   });
 });
 
+
+
+router.post('/me', function(req, res, next) {
+  console.log(req.body);
+
+  db.query("update users set name = " + db.escape(req.body.name) + ", picture = " + db.escape(req.body.picture) + " where auth0Name = '" + req.user.id + "' ;", function(results){
+    res.send(results);
+  });
+});
+
 module.exports = router;

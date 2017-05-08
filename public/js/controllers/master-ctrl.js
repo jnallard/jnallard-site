@@ -13,13 +13,18 @@ function MasterCtrl($scope, $cookieStore, backend) {
 
     $scope.user = null;
 
-    backend.get("/users/me").
-    then(function(me){
-      console.log(me);
-      $scope.user = me;
-    }).catch(function(error){
-      console.log(error);
-    })
+    $scope.updateUser = function(){
+      $scope.userPromise = backend.get("/users/me");
+      $scope.userPromise.then(function(me){
+        console.log(me);
+        $scope.user = me.db[0];
+      }).catch(function(error){
+        console.log(error);
+      });
+    }
+    $scope.updateUser();
+
+
 
     $scope.getWidth = function() {
         return window.innerWidth;

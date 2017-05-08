@@ -58,3 +58,7 @@ rd-widget-body>div.widget-body.fill-height {
   margin: 0;
   cursor: pointer;
 }
+
+.me-img {
+  max-width: 200px;
+}
