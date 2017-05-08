@@ -49,6 +49,12 @@ getToken(function(auth0_token){
 var db = require('../lib/database.js');
 
 router.get('/', function(req, res, next) {
+  db.query("select * from users where auth0Name = '" + req.user.id + "';", function(results){
+    res.send(results);
+  });
+});
+
+router.get('/auth0', function(req, res, next) {
   request.get(
     {
       url: 'https://jnallard.auth0.com/api/v2/users',
@@ -81,7 +87,13 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/me', function(req, res, next) {
-  res.send(req.user);
+  db.query("select * from users where auth0Name = '" + req.user.id + "' LIMIT 1;", function(results){
+    var message = {
+      auth0: req.user,
+      db: results
+    };
+    res.send(message);
+  });
 });
 
 module.exports = router;
