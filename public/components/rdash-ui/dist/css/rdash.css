@@ -16,11 +16,12 @@
 }
 #page-wrapper.open #sidebar-wrapper {
   left: 150px;
+  visibility: visible;
 }
 
 /**
  * Hamburg Menu
- * When the class of 'hamburg' is applied to the body tag of the document, 
+ * When the class of 'hamburg' is applied to the body tag of the document,
  * the sidebar changes it's style to attempt to mimic a menu on a phone app,
  * where the content is overlaying the content, rather than push it.
  */
@@ -54,6 +55,40 @@
 /**
  * Header
  */
+.header-button{
+  transition: all .4s ease 0s;
+  line-height: 60px;
+  background: #2d3e63;
+  color: #fff;
+  display: block;
+  float: left;
+  text-decoration: none;
+  width: 250px;
+  text-indent: 20px;
+}
+@media only screen and (max-width: 560px) {
+  .header-button{
+  line-height: 0px;
+    width: 70px;
+  }
+  .header-button-text {
+    visibility: hidden;
+  }
+}
+.header-icon {
+  float: right;
+  font-size: 18px;
+  padding-right: 28px;
+  line-height: 60px;
+}
+.header-button:hover {
+  color: #fff;
+  border-left: 3px solid #e99d1a;
+  text-indent: 22px;
+}
+.top-header-row{
+  padding-left: 0;
+}
 .row.header {
   height: 60px;
   background: #fff;
@@ -64,7 +99,6 @@
 }
 .row.header .meta .page {
   font-size: 17px;
-  padding-top: 11px;
 }
 .row.header .meta .breadcrumb-links {
   font-size: 10px;
@@ -220,7 +254,7 @@ body {
   margin-bottom: 0;
 }
 #page-wrapper {
-  padding-left: 70px;
+  /*padding-left: 70px;*/
   height: 100%;
 }
 #sidebar-wrapper {
@@ -230,6 +264,7 @@ body {
   position: fixed;
   height: 100%;
   z-index: 999;
+  visibility: hidden;
 }
 #page-wrapper,
 #sidebar-wrapper {
@@ -292,6 +327,12 @@ ul.sidebar li a {
   float: left;
   text-decoration: none;
   width: 250px;
+}
+
+ul.sidebar li a:hover {
+  color: #fff;
+  border-left: 3px solid #e99d1a;
+  text-indent: 22px;
 }
 ul.sidebar .sidebar-main {
   height: 65px;
