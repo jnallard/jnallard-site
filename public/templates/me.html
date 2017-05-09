@@ -16,7 +16,10 @@
           <div class="form-group">
             <img class="img img-responsive img-thumbnail me-img" ng-src="{{ctrl.picture}}" alt="Image not loaded"></img>
           </div>
-          <button type="submit" class="btn btn-default">Save</button>
+          <button type="submit" class="btn btn-default" ng-disabled="ctrl.saving">
+            <span ng-show="!ctrl.saving">Save</span>
+            <span ng-show="ctrl.saving"><i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> Saving...</span>
+          </button>
         </form>
       </rd-widget-body>
     </rd-widget>

@@ -114,10 +114,13 @@
 </div>
 
 <div ng-show="ctrl.currentCell" class="risk-element">
-  <h1>Cell: <strong>{{ctrl.currentCell.name}}</strong></h1>
-  <h1>Description: <strong>{{ctrl.currentCell.description}}</strong></h1>
-  <h1>Owner: <strong>{{ctrl.currentCell.owner}}</strong></h1>
-  <h1>Troops: <strong>{{ctrl.currentCell.troops}}</strong></h1>
+  <div class="panel panel-info">
+    <div class="panel-heading"><h3>{{ctrl.currentCell.name}} - {{ctrl.currentCell.description}}</h3></div>
+    <div class="panel-body">
+      <p>Owner: <strong>{{ctrl.currentCell.owner}}</strong></p>
+      <p>Troops: <strong>{{ctrl.currentCell.troops}}</strong></p>
+    </div>
+  </div>
 </div>
 
 </div>
