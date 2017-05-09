@@ -49,7 +49,7 @@ getToken(function(auth0_token){
 var db = require('../lib/database.js');
 
 router.get('/', function(req, res, next) {
-  db.query("select * from users where auth0Name = '" + req.user.id + "';", function(results){
+  db.query("select * from users;", function(results){
     res.send(results);
   });
 });
