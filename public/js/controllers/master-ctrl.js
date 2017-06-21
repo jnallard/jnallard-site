@@ -17,7 +17,7 @@ function MasterCtrl($scope, $cookieStore, backend) {
       $scope.userPromise = backend.get("/users/me");
       $scope.userPromise.then(function(me){
         console.log(me);
-        $scope.user = me.db[0];
+        $scope.user = me.db;
       }).catch(function(error){
         console.log(error);
       });

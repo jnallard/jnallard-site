@@ -8,7 +8,7 @@
         <div class="table-responsive">
           <table class="table">
             <tbody>
-              <tr ng-repeat="user in ctrl.users"><td><img ng-src="{{user.picture}}" class="img img-thumbnail user-picture"></img></td><td class="user-text">{{user.name}}</td></tr>
+              <tr ng-repeat="user in ctrl.users"><td><img ng-src="{{user.picture}}" class="img img-thumbnail user-picture"></img></td><td class="user-text">{{user.name}}</td><td ng-style="{'background-color': user.playerColor}">{{user.playerColor}}</td></tr>
             </tbody>
           </table>
         </div>

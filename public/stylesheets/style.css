@@ -51,8 +51,7 @@ rd-widget-body>div.widget-body.fill-height {
 }
 
 .row>.risk-section {
-  background-color: #ddeaff;
-  opacity: 0.5;
+  background-color: rgba(221, 234, 255, 0.50);
   border: 1px solid black;
   height: 100%;
   margin: 0;

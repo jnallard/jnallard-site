@@ -90,7 +90,7 @@ router.get('/me', function(req, res, next) {
   db.query("select * from users where auth0Name = '" + req.user.id + "' LIMIT 1;", function(results){
     var message = {
       auth0: req.user,
-      db: results
+      db: results[0]
     };
     res.send(message);
   });
@@ -101,7 +101,7 @@ router.get('/me', function(req, res, next) {
 router.post('/me', function(req, res, next) {
   console.log(req.body);
 
-  db.query("update users set name = " + db.escape(req.body.name) + ", picture = " + db.escape(req.body.picture) + " where auth0Name = '" + req.user.id + "' ;", function(results){
+  db.query("update users set name = " + db.escape(req.body.name) + ", picture = " + db.escape(req.body.picture) + ", playerColor = " + db.escape(req.body.playerColor) + " where auth0Name = '" + req.user.id + "' ;", function(results){
     res.send(results);
   });
 });

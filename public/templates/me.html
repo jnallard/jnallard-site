@@ -7,11 +7,15 @@
         <form ng-submit="ctrl.save()">
           <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" class="form-control" id="name" ng-model="ctrl.name">
+            <input type="text" class="form-control" id="name" ng-model="ctrl.name" required>
+          </div>
+          <div class="form-group">
+            <label for="name">Player Color:</label>
+            <input type="color" class="form-control" id="color" ng-model="ctrl.color" required>
           </div>
           <div class="form-group">
             <label for="pic">Picture:</label>
-            <input type="url" class="form-control" id="pic" ng-model="ctrl.picture">
+            <input type="url" class="form-control" id="pic" ng-model="ctrl.picture" required>
           </div>
           <div class="form-group">
             <img class="img img-responsive img-thumbnail me-img" ng-src="{{ctrl.picture}}" alt="Image not loaded"></img>

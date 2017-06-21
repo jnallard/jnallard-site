@@ -15,12 +15,14 @@ function MeCtrl($scope, $timeout, $cookieStore, backend) {
       $scope.userPromise.then(function(me){
         self.name = $scope.user.name;
         self.picture = $scope.user.picture;
+        self.color = $scope.user.playerColor;
       });
     };
 
     self.save = function(){
       self.saving = true;
-      backend.post("/users/me", {"name": self.name, "picture": self.picture}).then(function(result){
+      console.log(self.color);
+      backend.post("/users/me", {"name": self.name, "picture": self.picture, "playerColor": self.color}).then(function(result){
         $timeout( function(){
           self.saving = false;
         }, 1000 );
