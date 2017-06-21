@@ -27,7 +27,7 @@ function RiskCtrl($scope, $cookieStore, backend) {
           console.log(users);
           self.players = users;
           self.playerNames = users.map(function(player){ return player.name; });
-          self.playerNames.push("");
+          self.playerNames.push("[Nobody]");
           self.colorCells();
         }).catch(function(error){
           console.log(error);
@@ -42,7 +42,7 @@ function RiskCtrl($scope, $cookieStore, backend) {
       for(var i = 0; i < self.cells.length; i++){
         var cell = self.cells[i];
         console.log(cell);
-        player = self.getPlayer(cell.owner);
+        player = self.getPlayer(null, cell.owner);
         console.log(player);
         if(player && player.playerColor){
           cell.style = {
@@ -81,7 +81,8 @@ function RiskCtrl($scope, $cookieStore, backend) {
       var cell = self.getCell(cellName);
       if(cell){
         self.currentCell = cell;
-        self.playerChosen = self.currentCell.owner;
+        self.currentCell.ownerName = self.getPlayer(null, cell.owner).name;
+        self.playerChosen = self.currentCell.ownerName;
         self.troopChangeAmount = 0;
         return;
       }
@@ -89,15 +90,16 @@ function RiskCtrl($scope, $cookieStore, backend) {
 
     self.updateCell = function(){
       self.saving = true;
-      backend.post("/risk/cells", {"name": self.currentCell.name, "owner": self.playerChosen, "troops": self.currentCell.troops + self.troopChangeAmount}).then(function(result){
+      var player = self.getPlayer(self.playerChosen);
+      backend.post("/risk/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.currentCell.troops + self.troopChangeAmount}).then(function(result){
         for(var i = 0; i < self.cells.length; i++){
           if(self.cells[i].name == result.name){
             self.cells[i] = result;
             self.currentCell = self.cells[i];
-            self.playerChosen = self.currentCell.owner;
+            self.playerChosen = self.getPlayer(null, result.owner).name;
             self.troopChangeAmount = 0;
             self.colorCells();
-              self.saving = false;
+            self.saving = false;
             return;
           }
         }
@@ -107,12 +109,12 @@ function RiskCtrl($scope, $cookieStore, backend) {
       });
     }
 
-    self.getPlayer = function(playerName){
+    self.getPlayer = function(playerName, id){
       for(var i = 0; i < self.players.length; i++){
-        if(self.players[i].name == playerName){
+        if(self.players[i].name == playerName || self.players[i].id == id){
           return self.players[i];
         }
       }
-      return null;
+      return {name: "[Nobody]"};
     }
 }
