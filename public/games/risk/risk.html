@@ -124,10 +124,38 @@
         <p><strong>Admin Controls:</strong></p>
         <p>Change Owner: </p>
         <select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select>
-        <p>Add Troops: </p>
-        <p><input type="number" ng-model="ctrl.troopChangeAmount" value="0"></input></p>
+        <p>Troops: </p>
+        <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
         <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button>
 
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="risk-element">
+  <div class="panel panel-info">
+    <div class="panel-heading"><h3>Players</h3></div>
+    <div class="panel-body">
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>User</th>
+              <th>Cells Owned</th>
+              <th>Daily Troops</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="player in ctrl.players">
+              <td ng-style="{'background-color': ctrl.hexToRGB(player.playerColor, 0.5)}"><img ng-src="{{player.picture}}" class="img img-thumbnail user-picture"></img></td>
+              <td class="user-text">{{player.name}}</td>
+              <td>{{ctrl.getCellsOwnedBy(player.id).length}}</td>
+              <td>{{ctrl.getTroopDailyValue(player.id)}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
