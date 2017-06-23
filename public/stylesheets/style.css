@@ -51,11 +51,18 @@ rd-widget-body>div.widget-body.fill-height {
 }
 
 .row>.risk-section {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   background-color: rgba(221, 234, 255, 0.50);
-  border: 1px solid black;
+  /*border: 1px solid black;*/
   height: 100%;
   margin: 0;
   cursor: pointer;
+}
+
+.row>.risk-section.currentCell {
+  border: 5px dashed gold;
 }
 
 .me-img {

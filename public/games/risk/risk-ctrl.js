@@ -14,6 +14,18 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     self.playerNames = [];
     self.currentCell = null;
 
+    self.getRows = function(){
+      return ["A", "B", "C", "D", "E"];
+    }
+
+    self.getColumns = function(cellRow){
+      var array = [];
+      for(var i = 0; i < 6; i++){
+        array.push(cellRow + (i + 1));
+      }
+      return array;
+    }
+
     self.init = function(){
       $scope.loading = true;
       backend.get("/risk/cells").
@@ -72,7 +84,6 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
           cell.style = {
             "background-color": self.hexToRGB(player.playerColor, 0.5)
           }
-          console.log(player.playerColor);
         }
       }
     }
@@ -114,6 +125,17 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
         }
       }
       return cells;
+    }
+
+    self.getCellDiplomacy = function(cellName){
+      var cell = self.getCell(cellName);
+      if(!cell || !cell.owner){
+        return 0; //Unowned
+      }
+      if(cell.owner != $scope.user.id){
+        return -1; //Enemy
+      }
+      return 1; //Owns cell
     }
 
     self.showCell = function(cellName){

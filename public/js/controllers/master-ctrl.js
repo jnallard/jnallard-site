@@ -20,7 +20,7 @@ function MasterCtrl($scope, $cookieStore, $interval, backend) {
         $scope.addNotification(error);
       });
 
-    }, 2000);
+    }, 10000);
 
     $scope.updateUser = function(){
       $scope.userPromise = backend.get("/users/me");

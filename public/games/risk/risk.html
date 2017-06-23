@@ -2,104 +2,13 @@
 <div class="risk-world-map">
   <img class="img-responsive risk-map-image" src="/games/risk/pictures/Simple_world_map.png">
   <div class="risk-grid">
-    <div class="row risk-row">
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A1')" ng-style="ctrl.getCell('A1').style">
-        A1
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A2')" ng-style="ctrl.getCell('A2').style">
-        A2
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A3')" ng-style="ctrl.getCell('A3').style">
-        A3
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A4')" ng-style="ctrl.getCell('A4').style">
-        A4
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A5')" ng-style="ctrl.getCell('A5').style">
-        A5
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('A6')" ng-style="ctrl.getCell('A6').style">
-        A6
-      </div>
-    </div>
-    <div class="row risk-row">
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B1')" ng-style="ctrl.getCell('B1').style">
-        B1
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B2')" ng-style="ctrl.getCell('B2').style">
-        B2
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B3')" ng-style="ctrl.getCell('B3').style">
-        B3
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B4')" ng-style="ctrl.getCell('B4').style">
-        B4
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B5')" ng-style="ctrl.getCell('B5').style">
-        B5
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('B6')" ng-style="ctrl.getCell('B6').style">
-        B6
-      </div>
-    </div>
-    <div class="row risk-row">
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C1')" ng-style="ctrl.getCell('C1').style">
-        C1
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C2')" ng-style="ctrl.getCell('C2').style">
-        C2
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C3')" ng-style="ctrl.getCell('C3').style">
-        C3
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C4')" ng-style="ctrl.getCell('C4').style">
-        C4
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C5')" ng-style="ctrl.getCell('C5').style">
-        C5
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('C6')" ng-style="ctrl.getCell('C6').style">
-        C6
-      </div>
-    </div>
-    <div class="row risk-row">
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D1')" ng-style="ctrl.getCell('D1').style">
-        D1
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D2')" ng-style="ctrl.getCell('D2').style">
-        D2
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D3')" ng-style="ctrl.getCell('D3').style">
-        D3
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D4')" ng-style="ctrl.getCell('D4').style">
-        D4
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D5')" ng-style="ctrl.getCell('D5').style">
-        D5
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('D6')" ng-style="ctrl.getCell('D6').style">
-        D6
-      </div>
-    </div>
-    <div class="row risk-row">
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E1')" ng-style="ctrl.getCell('E1').style">
-        E1
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E2')" ng-style="ctrl.getCell('E2').style">
-        E2
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E3')" ng-style="ctrl.getCell('E3').style">
-        E3
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E4')" ng-style="ctrl.getCell('E4').style">
-        E4
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E5')" ng-style="ctrl.getCell('E5').style">
-        E5
-      </div>
-      <div class="col-xs-2 risk-section" ng-click="ctrl.showCell('E6')" ng-style="ctrl.getCell('E6').style">
-        E6
+    <div class="row risk-row" ng-repeat="row in ctrl.getRows()">
+      <div class="col-xs-2 risk-section" ng-repeat="cellName in ctrl.getColumns(row)" ng-click="ctrl.showCell(cellName)" ng-style="ctrl.getCell(cellName).style" ng-class="{'currentCell': ctrl.currentCell.name == cellName}">
+        <span class="label"
+          ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
+          {{cellName}}
+        </span>
+        <span class="badge hidden-xs pull-right">{{ctrl.getCell(cellName).troops}}</span>
       </div>
     </div>
   </div>
