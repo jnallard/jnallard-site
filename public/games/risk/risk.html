@@ -117,6 +117,7 @@
   <div class="panel panel-info">
     <div class="panel-heading"><h3>{{ctrl.currentCell.name}} - {{ctrl.currentCell.description}}</h3></div>
     <div class="panel-body">
+      <p ng-if="ctrl.cellWarning" class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> {{ctrl.cellWarning}}</p>
       <p>Owner: <strong>{{ctrl.currentCell.ownerName}}</strong></p>
       <p>Troops: <strong>{{ctrl.currentCell.troops}}</strong></p>
       <div ng-if="user.userLevel == 'admin'">
@@ -126,7 +127,7 @@
         <select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select>
         <p>Troops: </p>
         <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
-        <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button>
+        <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button> <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
 
       </div>
     </div>

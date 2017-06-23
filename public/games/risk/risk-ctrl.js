@@ -3,9 +3,9 @@
  */
 
 angular.module('RDash')
-    .controller('RiskCtrl', ['$scope', '$cookieStore', 'backend', RiskCtrl]);
+    .controller('RiskCtrl', ['$scope', '$cookieStore', '$interval', 'backend', RiskCtrl]);
 
-function RiskCtrl($scope, $cookieStore, backend) {
+function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
 
     var self = this;
@@ -27,12 +27,32 @@ function RiskCtrl($scope, $cookieStore, backend) {
           self.playerNames = users.map(function(player){ return player.name; });
           self.playerNames.push("[Nobody]");
           self.colorCells();
+
+          self.interval = $interval(self.refreshCells, 5000);
         }).catch(function(error){
           console.log(error);
         });
       }).catch(function(error){
         console.log(error);
         $scope.loading = false;
+      });
+    }
+
+    self.refreshCells = function(){
+      backend.get("/risk/cells").
+      then(function(users){
+        self.cells = users;
+        self.colorCells();
+        if(self.currentCell){
+          var cell = self.getCell(self.currentCell.name);
+          if(cell.revisionId != self.currentCell.revisionId){
+            self.disableSave = true;
+            self.showCell(self.currentCell.name);
+            self.cellWarning = "This cell has been updated!";
+          }
+        }
+      }).catch(function(error){
+        console.log(error);
       });
     }
 
@@ -89,6 +109,7 @@ function RiskCtrl($scope, $cookieStore, backend) {
     }
 
     self.showCell = function(cellName){
+      self.cellWarning = null;
       var cell = self.getCell(cellName);
       if(cell){
         self.currentCell = cell;
@@ -101,8 +122,9 @@ function RiskCtrl($scope, $cookieStore, backend) {
 
     self.updateCell = function(){
       self.saving = true;
+      self.savingError = null;
       var player = self.getPlayer(self.playerChosen);
-      backend.post("/risk/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount}).then(function(result){
+      backend.post("/risk/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
         for(var i = 0; i < self.cells.length; i++){
           if(self.cells[i].name == result.name){
             self.cells[i] = result;
@@ -117,6 +139,7 @@ function RiskCtrl($scope, $cookieStore, backend) {
         }
       }).catch(function(error){
         self.saving = false;
+        self.savingError = error.data;
         console.log(error);
       });
     }

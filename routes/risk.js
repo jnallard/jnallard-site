@@ -15,7 +15,15 @@ router.get('/cells', function(req, res, next) {
 
 router.post('/cells', function(req, res, next) {
   var body = req.body;
-  db.query("update riskCells set owner=" + db.escape(req.body.owner) + ",  troops=" + db.escape(req.body.troops) + " where name=" + db.escape(req.body.name) + ";", function(results){
+  db.query("update riskCells set owner=" + db.escape(req.body.owner) + ",  troops=" + db.escape(req.body.troops)
+   + ",  revisionId=" + db.escape(req.body.revisionId + 1) + " where name=" + db.escape(req.body.name)
+   + " and revisionId=" + db.escape(req.body.revisionId) + ";", function(results){
+
+    console.log(results);
+    if(results.affectedRows == 0){
+      res.status(400).send("Cell Not Updated");
+      return;
+    }
 
     db.query("select * from riskCells where name=" + db.escape(req.body.name) + ";", function(results){
       res.send(results[0]);
