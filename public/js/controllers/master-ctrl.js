@@ -3,15 +3,24 @@
  */
 
 angular.module('RDash')
-    .controller('MasterCtrl', ['$scope', '$cookieStore', 'backend', MasterCtrl]);
+    .controller('MasterCtrl', ['$scope', '$cookieStore', '$interval', 'backend', MasterCtrl]);
 
-function MasterCtrl($scope, $cookieStore, backend) {
+function MasterCtrl($scope, $cookieStore, $interval, backend) {
     /**
      * Sidebar Toggle & Cookie Control
      */
     var mobileView = 992;
 
     $scope.user = null;
+
+    $interval(function(){
+      backend.ping().then(function(){
+        //Else Ping was fine
+      }).catch(function(error){
+        $scope.addNotification(error);
+      });
+
+    }, 2000);
 
     $scope.updateUser = function(){
       $scope.userPromise = backend.get("/users/me");
@@ -21,8 +30,18 @@ function MasterCtrl($scope, $cookieStore, backend) {
       }).catch(function(error){
         console.log(error);
       });
-    }
+    };
     $scope.updateUser();
+
+    $scope.notifications = [];
+
+    $scope.addNotification = function(notification){
+      console.log(notification);
+      if($scope.notifications.indexOf(notification) == -1){
+        $scope.notifications.push(notification);
+        console.log("yay");
+      }
+    }
 
 
 

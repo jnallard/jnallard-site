@@ -2,6 +2,26 @@ function BackendService($q, http){
   var self = this;
   self.http = http;
   console.log(self.http);
+
+  self.ping = function(){
+    return new $q(function (fulfill, reject){
+      self.http({
+        method: 'GET',
+        url: '/'
+      }).then(function successCallback(response) {
+        console.log(response);
+        if(response.data && response.data.includes("Sign In with Auth0")){
+          reject("You have been logged out. Please refresh the page.");
+          return;
+        }
+        fulfill(response);
+      }, function errorCallback(response) {
+        reject("Cannot connect to server.");
+      });
+    });
+
+  };
+
   self.get = function(path){
     return new $q(function (fulfill, reject){
       self.http({

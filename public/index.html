@@ -96,16 +96,6 @@
                       Profile
                     </a>
                   </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
-                  <li class="link">
-                    <a href="#">
-                      Menu Item
-                    </a>
-                  </li>
                   <li class="divider"></li>
                   <li class="link">
                     <a href="/logout">
@@ -116,7 +106,7 @@
               </div>
               <div class="item dropdown" uib-dropdown>
                <a href="#" class="dropdown-toggle" uib-dropdown-toggle>
-                  <i class="fa fa-bell-o"></i>
+                  <i class="fa" ng-class="{'fa-bell text-danger flashing': notifications.length > 0, 'fa-bell-o': notifications.length == 0}"></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-right">
                   <li class="dropdown-header">
@@ -124,7 +114,7 @@
                   </li>
                   <li class="divider"></li>
                   <li>
-                    <a href="#">Server Down!</a>
+                    <a href="#" ng-repeat="notification in notifications">{{notification}}</a>
                   </li>
                 </ul>
               </div>

@@ -38,6 +38,13 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       });
     }
 
+
+    $scope.$on('$destroy',function(){
+      if(self.interval){
+        $interval.cancel(self.interval);
+      }
+    });
+
     self.refreshCells = function(){
       backend.get("/risk/cells").
       then(function(users){
@@ -53,6 +60,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
         }
       }).catch(function(error){
         console.log(error);
+        $scope.addNotification("Could not refresh risk board");
       });
     }
 

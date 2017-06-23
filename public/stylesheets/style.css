@@ -61,3 +61,19 @@ rd-widget-body>div.widget-body.fill-height {
 .me-img {
   max-width: 200px;
 }
+
+.flashing {
+ -webkit-animation: flashing-anim 1s infinite; /* Safari 4+ */
+  -moz-animation:    flashing-anim 1s infinite; /* Fx 5+ */
+  -o-animation:      flashing-anim 1s infinite; /* Opera 12+ */
+  animation:         flashing-anim 1s infinite; /* IE 10+, Fx 29+ */
+}
+
+@-webkit-keyframes flashing-anim {
+0%, 49% {
+    opacity: 0.5;
+}
+50%, 100% {
+    opacity: 1.0;
+}
+}
