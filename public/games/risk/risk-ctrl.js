@@ -215,4 +215,60 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       }
       return {name: "[Nobody]"};
     }
+
+    self.rollDice = function(){
+      return Math.floor(getRandom() * 6) + 1;
+    }
+
+    self.battle = function(attackingCount, defendingCount){
+      var result = {};
+      result.startingAttackers = attackingCount;
+      result.startingDefenders = defendingCount;
+      result.remainingAttackers = attackingCount;
+      result.remainingDefenders = defendingCount;
+
+      result.fights = [];
+
+      var fightNumber = 0;
+
+      while(result.remainingAttackers > 0 && result.remainingDefenders > 0){
+        var fight = self.fight(Math.min(result.remainingAttackers, 3), Math.min(result.remainingDefenders, 2));
+        fightNumber++;
+        result.remainingAttackers -= fight.attackersLost;
+        result.remainingDefenders -= fight.defendersLost;
+        fight.remainingAttackers = result.remainingAttackers;
+        fight.remainingDefenders = result.remainingDefenders;
+        fight.fightNumber = fightNumber;
+        result.fights.push(fight);
+      }
+      return result;
+    }
+
+    self.fight = function(attacking, defending){
+      var result = {};
+      result.attackingDice = Array.apply(null, {length: attacking}).map(self.rollDice).sort(sortNumber);
+      result.defendingDice = Array.apply(null, {length: defending}).map(self.rollDice).sort(sortNumber);
+      result.attackersLost = 0;
+      result.defendersLost = 0;
+      for(var i = 0; i < attacking && i < defending; i++){
+        if(result.attackingDice[i] > result.defendingDice[i]){
+          result.defendersLost += 1;
+        }
+        else{
+          result.attackersLost += 1;
+        }
+      }
+      return result;
+    }
+
+    function sortNumber(a,b) {
+      return b - a;
+    }
+
+    function getRandom() {
+      var randomCounts = 10;
+      var randoms = Array.apply(null, {length: randomCounts}).map(Math.random);
+      return randoms[Math.floor(Math.random() * randomCounts)];
+
+    }
 }

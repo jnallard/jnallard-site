@@ -41,7 +41,7 @@
         <hr />
         <p><strong>Admin Controls:</strong></p>
         <p>Change Owner: </p>
-        <select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select>
+        <p><select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select></p>
         <p>Troops: </p>
         <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
         <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button> <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
@@ -74,6 +74,44 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="risk-element" ng-init="attackers = 1; defenders = 1;">
+  <div class="panel panel-info">
+    <div class="panel-heading"><h3>Dice Roller</h3></div>
+    <div class="panel-body">
+      <div>
+        <div class = "row">
+          <div class="col-sm-3">
+            <p>Attackers:</p>
+            <p><input type="number" min="1" ng-model="attackers"/></p>
+            <p>Defenders:</p>
+            <p><input type="number" min="1" ng-model="defenders"/></p>
+            <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="battle = ctrl.battle(attackers, defenders)">Battle</button>
+          </div>
+          <div class="col-sm-3" ng-show="battle">
+            <h3>Summary:</h3><br />
+            <span class="text-success" ng-if="!battle.remainingDefenders">The attackers succeeded!<br/></span>
+            <span class="text-danger" ng-if="!battle.remainingAttackers">The defenders defeated the attackers!<br/></span>
+            <br />
+            <span>Starting Attackers: {{battle.startingAttackers}}</span><br/>
+            <span>Remaining Attackers: {{battle.remainingAttackers}}</span><br/>
+            <br />
+            <span>Starting Defenders: {{battle.startingDefenders}}</span><br/>
+            <span>Remaining Defenders: {{battle.remainingDefenders}}</span><br/><br/>
+          </div>
+          <div class="col-sm-6" ng-show="battle">
+            <h3>Rolls ({{battle.fights.length}}):</h3><br />
+            <div ng-repeat="fight in battle.fights">
+              <span>---- Roll {{fight.fightNumber}} ----</span><br/>
+              <span>A: {{fight.attackingDice}} - Losses: {{fight.attackersLost}} - Remaining: {{fight.remainingAttackers}}</span><br/>
+              <span>D: {{fight.defendingDice}} - Losses: {{fight.defendersLost}} - Remaining: {{fight.remainingDefenders}}</span><br/><br/>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
