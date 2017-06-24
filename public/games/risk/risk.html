@@ -26,35 +26,49 @@
   <span>Loading..</span>
 </div>
 
-<div ng-show="!loading && !ctrl.currentCell" class="risk-element">
-  <h3>Please select a cell</h3>
-</div>
+<div class="risk-element" ng-init="showCellPanel = true">
+  <div class="panel panel-info risk-panel">
+    <div class="panel-heading clickable" ng-click="showCellPanel = !showCellPanel">
+      <h4>
+        <span class="glyphicon glyphicon-chevron-up" ng-show="showCellPanel"></span>
+        <span class="glyphicon glyphicon-chevron-down" ng-show="!showCellPanel"></span>
+        <a ng-show="ctrl.currentCell">{{ctrl.currentCell.name}} - {{ctrl.currentCell.description}}</a>
+        <a ng-show="!loading && !ctrl.currentCell">Please select a cell</a>
+      </h4>
+    </div>
+    <div class="panel-body" ng-show="showCellPanel">
+      <div ng-show="ctrl.currentCell">
+        <p ng-if="ctrl.cellWarning" class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> {{ctrl.cellWarning}}</p>
+        <p>Owner: <strong>{{ctrl.currentCell.ownerName}}</strong></p>
+        <p>Troops: <strong>{{ctrl.currentCell.troops}}</strong></p>
+        <div ng-if="user.userLevel == 'admin'">
+          <hr />
+          <p><strong>Admin Controls:</strong></p>
+          <p>Change Owner: </p>
+          <p><select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select></p>
+          <p>Troops: </p>
+          <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
+          <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button> <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
 
-<div ng-show="ctrl.currentCell" class="risk-element">
-  <div class="panel panel-info">
-    <div class="panel-heading"><h3>{{ctrl.currentCell.name}} - {{ctrl.currentCell.description}}</h3></div>
-    <div class="panel-body">
-      <p ng-if="ctrl.cellWarning" class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> {{ctrl.cellWarning}}</p>
-      <p>Owner: <strong>{{ctrl.currentCell.ownerName}}</strong></p>
-      <p>Troops: <strong>{{ctrl.currentCell.troops}}</strong></p>
-      <div ng-if="user.userLevel == 'admin'">
-        <hr />
-        <p><strong>Admin Controls:</strong></p>
-        <p>Change Owner: </p>
-        <p><select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select></p>
-        <p>Troops: </p>
-        <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
-        <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button> <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
-
+        </div>
+      </div>
+      <div ng-show="!ctrl.currentCell">
+        No cell is selected.
       </div>
     </div>
   </div>
 </div>
 
 <div class="risk-element">
-  <div class="panel panel-info">
-    <div class="panel-heading"><h3>Players</h3></div>
-    <div class="panel-body">
+  <div class="panel panel-info risk-panel">
+    <div class="panel-heading clickable" ng-click="showPlayers = !showPlayers">
+      <h4>
+        <span class="glyphicon glyphicon-chevron-up" ng-show="showPlayers"></span>
+        <span class="glyphicon glyphicon-chevron-down" ng-show="!showPlayers"></span>
+        <a>Players</a>
+      </h4>
+    </div>
+    <div class="panel-body" ng-show="showPlayers">
       <div class="table-responsive">
         <table class="table">
           <thead>
@@ -80,9 +94,15 @@
 </div>
 
 <div class="risk-element" ng-init="attackers = 1; defenders = 1;">
-  <div class="panel panel-info">
-    <div class="panel-heading"><h3>Dice Roller</h3></div>
-    <div class="panel-body">
+  <div class="panel panel-info risk-panel">
+    <div class="panel-heading clickable" ng-click="showRoller = !showRoller">
+      <h4>
+        <span class="glyphicon glyphicon-chevron-up" ng-show="showRoller"></span>
+        <span class="glyphicon glyphicon-chevron-down" ng-show="!showRoller"></span>
+        <a>Dice Roller</a>
+      </h4>
+    </div>
+    <div class="panel-body" ng-show="showRoller">
       <div>
         <div class = "row">
           <div class="col-sm-3">
