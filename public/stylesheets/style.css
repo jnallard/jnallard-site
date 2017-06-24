@@ -1,6 +1,6 @@
 .user-picture {
-  height: 50px;
-  width: 50px;
+  max-height: 50px;
+  max-width: 50px;
 }
 
 .table>tbody>tr>td.user-text {
