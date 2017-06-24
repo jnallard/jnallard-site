@@ -9,6 +9,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
 
     var self = this;
+    self.gameId = 1;
     self.cells = null;
     self.neighbors = {};
     self.players = [];
@@ -29,7 +30,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
     self.init = function(){
       $scope.loading = true;
-      backend.get("/risk/cells").
+      backend.get("/risk/games/" + self.gameId + "/cells").
       then(function(cells){
         self.cells = cells;
         $scope.loading = false;
@@ -51,7 +52,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       });
 
 
-      backend.get("/risk/links").
+      backend.get("/risk/games/" + self.gameId + "/links").
       then(function(links){
         self.links = links;
 
@@ -91,7 +92,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     });
 
     self.refreshCells = function(){
-      backend.get("/risk/cells").
+      backend.get("/risk/games/" + self.gameId + "/cells").
       then(function(users){
         self.cells = users;
         self.colorCells();
@@ -187,7 +188,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       self.saving = true;
       self.savingError = null;
       var player = self.getPlayer(self.playerChosen);
-      backend.post("/risk/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
+      backend.post("/risk/games/" + self.gameId + "/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
         for(var i = 0; i < self.cells.length; i++){
           if(self.cells[i].name == result.name){
             self.cells[i] = result;
