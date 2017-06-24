@@ -9,20 +9,31 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
 
     var self = this;
-    self.gameId = 1;
-    self.cells = null;
-    self.neighbors = {};
-    self.players = [];
-    self.playerNames = [];
-    self.currentCell = null;
+
+    self.resetBoard = function(){
+      self.cells = null;
+      self.neighbors = {};
+      self.players = [];
+      self.playerNames = [];
+      self.currentCell = null;
+      self.largeMap = false;
+    };
+    self.resetBoard();
 
     self.getRows = function(){
-      return ["A", "B", "C", "D", "E"];
+      if(!self.largeMap){
+        return  ["A", "B", "C", "D", "E"];
+      }
+      return ["A", "B", "C", "D", "E", "F", "G"];
     }
 
     self.getColumns = function(cellRow){
       var array = [];
-      for(var i = 0; i < 6; i++){
+      var columnCount = 6;
+      if(self.largeMap){
+        columnCount = 12;
+      }
+      for(var i = 0; i < columnCount; i++){
         array.push(cellRow + (i + 1));
       }
       return array;
@@ -30,13 +41,25 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
     self.init = function(){
       $scope.loading = true;
-      backend.get("/risk/games/" + self.gameId + "/cells").
-      then(function(cells){
+      backend.get("/risk/games/").then(function(games){
+        self.games = games;
+        self.game = games[0];
+        self.loadGame();
+      }).catch(function(){
+
+      });
+    };
+
+    self.loadGame = function(){
+      self.resetBoard();
+      self.largeMap = self.game.size == "large";
+      self.currentCell = null;
+      $scope.loading = true;
+      backend.get("/risk/games/" + self.game.id + "/cells").then(function(cells){
         self.cells = cells;
         $scope.loading = false;
 
-        backend.get("/users").
-        then(function(users){
+        backend.get("/users").then(function(users){
           self.players = users;
           self.playerNames = users.map(function(player){ return player.name; });
           self.playerNames.push("[Nobody]");
@@ -52,7 +75,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       });
 
 
-      backend.get("/risk/games/" + self.gameId + "/links").
+      backend.get("/risk/games/" + self.game.id + "/links").
       then(function(links){
         self.links = links;
 
@@ -92,7 +115,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     });
 
     self.refreshCells = function(){
-      backend.get("/risk/games/" + self.gameId + "/cells").
+      backend.get("/risk/games/" + self.game.id + "/cells").
       then(function(users){
         self.cells = users;
         self.colorCells();
@@ -188,7 +211,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       self.saving = true;
       self.savingError = null;
       var player = self.getPlayer(self.playerChosen);
-      backend.post("/risk/games/" + self.gameId + "/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
+      backend.post("/risk/games/" + self.game.id + "/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
         for(var i = 0; i < self.cells.length; i++){
           if(self.cells[i].name == result.name){
             self.cells[i] = result;

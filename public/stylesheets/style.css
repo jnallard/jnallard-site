@@ -27,6 +27,10 @@ rd-widget-body>div.widget-body.fill-height {
   overflow-x: hidden;
 }
 
+.risk-world-map.large-map {
+  min-width: 500px;
+}
+
 .risk-map-image {
 }
 
@@ -40,6 +44,10 @@ rd-widget-body>div.widget-body.fill-height {
 
 .risk-row {
   height: 20%;
+}
+
+.risk-row.large-map {
+  height: 14.28%;
 }
 
 .risk-element {

@@ -7,6 +7,12 @@ var request = require('request');
 
 var db = require('../lib/database.js');
 
+router.get('/games', function(req, res, next) {
+  db.query("select * from riskGames;", function(results){
+    res.send(results);
+  });
+});
+
 router.get('/games/:gameId/cells', function(req, res, next) {
   var gameId = req.params.gameId;
   db.query("select * from riskCells where gameId=" + db.escape(gameId) + ";", function(results){
