@@ -10,6 +10,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
     var self = this;
     self.cells = null;
+    self.neighbors = {};
     self.players = [];
     self.playerNames = [];
     self.currentCell = null;
@@ -29,8 +30,8 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     self.init = function(){
       $scope.loading = true;
       backend.get("/risk/cells").
-      then(function(users){
-        self.cells = users;
+      then(function(cells){
+        self.cells = cells;
         $scope.loading = false;
 
         backend.get("/users").
@@ -48,6 +49,38 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
         console.log(error);
         $scope.loading = false;
       });
+
+
+      backend.get("/risk/links").
+      then(function(links){
+        self.links = links;
+
+        for(var i = 0; i < links.length; i++){
+          var link = links[i];
+          self.addNeighbor(link.cell1, link.cell2);
+          self.addNeighbor(link.cell2, link.cell1);
+        }
+        console.log(self.neighbors);
+
+      }).catch(function(error){
+        console.log(error);
+      });
+    }
+
+    self.addNeighbor = function(thisCell, neighbor){
+      if(!self.neighbors[thisCell]){
+        self.neighbors[thisCell] = [];
+      }
+
+      self.neighbors[thisCell].push(neighbor);
+    }
+
+    self.isNeighbor = function(cellName){
+      if(!self.currentCell){
+        return false;
+      }
+      var neighborList = self.neighbors[self.currentCell.name];
+      return neighborList != null && neighborList.indexOf(cellName) != -1;
     }
 
 

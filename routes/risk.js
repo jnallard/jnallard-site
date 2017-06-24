@@ -13,6 +13,12 @@ router.get('/cells', function(req, res, next) {
   });
 });
 
+router.get('/links', function(req, res, next) {
+  db.query("select * from riskLinks;", function(results){
+    res.send(results);
+  });
+});
+
 router.post('/cells', function(req, res, next) {
   var body = req.body;
   db.query("update riskCells set owner=" + db.escape(req.body.owner) + ",  troops=" + db.escape(req.body.troops)

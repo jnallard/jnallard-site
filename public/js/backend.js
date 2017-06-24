@@ -9,7 +9,6 @@ function BackendService($q, http){
         method: 'GET',
         url: '/'
       }).then(function successCallback(response) {
-        console.log(response);
         if(response.data && response.data.includes("Sign In with Auth0")){
           reject("You have been logged out. Please refresh the page.");
           return;

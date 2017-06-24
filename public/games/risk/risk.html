@@ -3,12 +3,17 @@
   <img class="img-responsive risk-map-image" src="/games/risk/pictures/Simple_world_map.png">
   <div class="risk-grid">
     <div class="row risk-row" ng-repeat="row in ctrl.getRows()">
-      <div class="col-xs-2 risk-section" ng-repeat="cellName in ctrl.getColumns(row)" ng-click="ctrl.showCell(cellName)" ng-style="ctrl.getCell(cellName).style" ng-class="{'currentCell': ctrl.currentCell.name == cellName}">
-        <span class="label"
+      <div class="col-xs-2 risk-section" ng-repeat="cellName in ctrl.getColumns(row)"
+      ng-click="ctrl.showCell(cellName)" ng-style="ctrl.getCell(cellName).style"
+      ng-class="{'currentCell': ctrl.currentCell.name == cellName, 'neighborCell': ctrl.isNeighbor(cellName)}">
+        <span class="label" ng-if="ctrl.getCell(cellName).active"
           ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
           {{cellName}}
         </span>
-        <span class="badge hidden-xs pull-right">{{ctrl.getCell(cellName).troops}}</span>
+        <span class="label label-pill hidden-xs troop-badge" ng-if="ctrl.getCell(cellName).active"
+          ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
+          {{ctrl.getCell(cellName).troops}}
+        </span>
       </div>
     </div>
   </div>
