@@ -10,6 +10,9 @@
           ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
           {{cellName}}
         </span>
+        <span class="visible-xs-inline pull-right" ng-if="ctrl.getCell(cellName).active">
+          {{ctrl.getCell(cellName).troops}}
+        </span>
         <span class="label label-pill hidden-xs troop-badge" ng-if="ctrl.getCell(cellName).active"
           ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
           {{ctrl.getCell(cellName).troops}}
