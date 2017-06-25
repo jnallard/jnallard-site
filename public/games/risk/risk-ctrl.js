@@ -67,6 +67,10 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
           self.playerNames.push("[Nobody]");
           self.colorCells();
 
+          if(self.interval){
+            $interval.cancel(self.interval);
+          }
+
           self.interval = $interval(self.refreshCells, 5000);
         }).catch(function(error){
           console.log(error);
