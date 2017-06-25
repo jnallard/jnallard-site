@@ -41,23 +41,57 @@
         <a ng-show="!loading && !ctrl.currentCell">Please select a cell</a>
       </h4>
     </div>
-    <div class="panel-body" ng-show="showCellPanel">
+    <div class="panel-body">
       <div ng-show="ctrl.currentCell">
         <p ng-if="ctrl.cellWarning" class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> {{ctrl.cellWarning}}</p>
         <p>Owner: <strong>{{ctrl.currentCell.ownerName}}</strong></p>
         <p>Troops: <strong>{{ctrl.currentCell.troops}}</strong></p>
-        <div ng-if="user.userLevel == 'admin'">
+        <div ng-show="user.userLevel == 'admin'">
           <hr />
-          <p><strong>Admin Controls:</strong></p>
-          <p>Change Owner: </p>
-          <p><select ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select></p>
-          <p>Troops: </p>
-          <p><input type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
-          <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Save</button> <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
+          <div class="row">
+            <div class="col-sm-6">
+              <p><strong>Cell Edit:</strong></p>
+              <p>Change Name: </p>
+              <p><input class="form-control" type="text" ng-model="ctrl.newCellDescription"></input></p>
+              <p>Change Owner: </p>
+              <p><select class="form-control" ng-options="player for player in ctrl.playerNames" ng-model="ctrl.playerChosen"></select></p>
+              <p>Troops: </p>
+              <p><input class="form-control" type="number" ng-model="ctrl.troopsAmount" value="0"></input></p>
+              <div class="checkbox">
+                <label><input type="checkbox" ng-model="ctrl.cellActive" ng-true-value="1" ng-false-value="0"> Active?</label>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <p><strong>Neighbors:</strong></p>
+              <div class="list-group" ng-if="ctrl.currentNeighbors && ctrl.currentNeighbors.length > 0">
+                <p ng-repeat="neighbor in ctrl.currentNeighbors track by $index" class="list-group-item">
+                  <button class="btn btn-danger" ng-click="ctrl.currentNeighbors.splice(ctrl.currentNeighbors.indexOf(neighbor), 1)">
+                    <span class="glyphicon glyphicon-minus"></span>
+                  </button>
+                  {{neighbor}}
+                </p>
+              </div>
+              <p>Add New Neighbor:</p>
+              <p>
+                <select class="form-control" ng-options="cell for cell in ctrl.cellNames"
+                  ng-model="newNeighbor" ng-change="ctrl.currentNeighbors.push(newNeighbor); newNeighbor = null;"></select>
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateCell()">Update Cell</button>
+              <span ng-if="ctrl.savingError" class="text-danger">{{ctrl.savingError}}</span>
+            </div>
+            <div class="col-sm-6">
+              <button class="btn btn-primary" ng-disabled="ctrl.saving" ng-click="ctrl.updateLinks()">Update Neighbors</button>
+              <span ng-if="ctrl.savingLinksError" class="text-danger">{{ctrl.savingLinksError}}</span>
+            </div>
+          </div>
 
         </div>
       </div>
-      <div ng-show="!ctrl.currentCell">
+      <div ng-if="!ctrl.currentCell">
         No cell is selected.
       </div>
     </div>

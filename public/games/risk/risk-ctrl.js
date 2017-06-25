@@ -12,6 +12,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
     self.resetBoard = function(){
       self.cells = null;
+      self.cellNames = [];
       self.neighbors = {};
       self.players = [];
       self.playerNames = [];
@@ -57,6 +58,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       $scope.loading = true;
       backend.get("/risk/games/" + self.game.id + "/cells").then(function(cells){
         self.cells = cells;
+        self.cellNames = self.cells.map(function(cell){ return cell.name;});
         $scope.loading = false;
 
         backend.get("/users").then(function(users){
@@ -73,8 +75,11 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
         console.log(error);
         $scope.loading = false;
       });
+      self.getLinks();
+    }
 
-
+    self.getLinks = function(){
+      self.neighbors = {};
       backend.get("/risk/games/" + self.game.id + "/links").
       then(function(links){
         self.links = links;
@@ -84,11 +89,21 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
           self.addNeighbor(link.cell1, link.cell2);
           self.addNeighbor(link.cell2, link.cell1);
         }
-        console.log(self.neighbors);
+
+        if(self.currentCell){
+          self.currentNeighbors = self.getNeighbors(self.currentCell.name);
+        }
 
       }).catch(function(error){
         console.log(error);
       });
+    }
+
+    self.getNeighbors = function(cellName){
+      if(!self.neighbors[cellName]){
+        return [];
+      }
+      return self.neighbors[cellName].map(function(neighbor){return neighbor});
     }
 
     self.addNeighbor = function(thisCell, neighbor){
@@ -196,6 +211,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     }
 
     self.showCell = function(cellName){
+      self.currentNeighbors = [];
       self.cellWarning = null;
       var cell = self.getCell(cellName);
       if(cell){
@@ -203,6 +219,9 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
         self.currentCell.ownerName = self.getPlayer(null, cell.owner).name;
         self.playerChosen = self.currentCell.ownerName;
         self.troopsAmount = self.currentCell.troops;
+        self.cellActive = self.currentCell.active;
+        self.newCellDescription = self.currentCell.description;
+        self.currentNeighbors = self.getNeighbors(self.currentCell.name);
         return;
       }
     }
@@ -211,7 +230,8 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       self.saving = true;
       self.savingError = null;
       var player = self.getPlayer(self.playerChosen);
-      backend.post("/risk/games/" + self.game.id + "/cells", {"name": self.currentCell.name, "owner": player.id, "troops": self.troopsAmount, "revisionId": self.currentCell.revisionId}).then(function(result){
+      backend.post("/risk/games/" + self.game.id + "/cells", {"name": self.currentCell.name, "owner": player.id,
+      "troops": self.troopsAmount, "description": self.newCellDescription, "active": self.cellActive, "revisionId": self.currentCell.revisionId}).then(function(result){
         for(var i = 0; i < self.cells.length; i++){
           if(self.cells[i].name == result.name){
             self.cells[i] = result;
@@ -219,6 +239,8 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
             self.playerChosen = self.getPlayer(null, result.owner).name;
             self.currentCell.ownerName = self.playerChosen;
             self.troopsAmount = self.currentCell.troops;
+            self.newCellDescription = self.currentCell.description;
+            self.cellActive = self.currentCell.active;
             self.colorCells();
             self.saving = false;
             return;
@@ -227,6 +249,21 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       }).catch(function(error){
         self.saving = false;
         self.savingError = error.data;
+        console.log(error);
+      });
+    }
+
+    self.updateLinks = function(){
+      self.saving = true;
+      self.savingLinksError = null;
+      backend.post("/risk/games/" + self.game.id + "/links", {"target": self.currentCell.name, "neighbors": self.currentNeighbors}).then(function(result){
+        self.currentNeighbors = [];
+        self.saving = false;
+        self.getLinks();
+
+      }).catch(function(error){
+        self.saving = false;
+        self.savingLinksError = error.data;
         console.log(error);
       });
     }
