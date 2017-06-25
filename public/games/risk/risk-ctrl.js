@@ -47,7 +47,18 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       $scope.loading = true;
       backend.get("/risk/games/").then(function(games){
         self.games = games;
-        self.game = games[0];
+        var latestGameId = JSON.parse(localStorage.getItem('latest-game-id'));
+        if(latestGameId != null){
+          for(var i = 0; i < games.length; i++){
+            if(games[i].id == latestGameId){
+              self.game = games[i];
+            }
+          }
+        }
+
+        if(!self.game){
+          self.game = games[0];
+        }
         self.loadGame();
       }).catch(function(){
 
@@ -55,6 +66,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
     };
 
     self.loadGame = function(){
+      localStorage.setItem('latest-game-id', self.game.id);
       self.resetBoard();
       self.largeMap = self.game.size == "large";
       self.currentCell = null;
@@ -337,5 +349,15 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       var randoms = Array.apply(null, {length: randomCounts}).map(Math.random);
       return randoms[Math.floor(Math.random() * randomCounts)];
 
+    }
+
+    self.showGridValue = JSON.parse(localStorage.getItem('show-grid'));
+    self.showGrid = function(value){
+      if(value == null){
+        return self.showGridValue;
+      }
+      self.showGridValue = value;
+      localStorage.setItem('show-grid', value);
+      return;
     }
 }

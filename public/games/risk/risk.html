@@ -1,14 +1,14 @@
 <div ng-controller="RiskCtrl as ctrl" ng-init="ctrl.init()" class="risk-page">
 
 <div class="risk-element">
-  <p>Game: <select ng-options="game.name for game in ctrl.games" ng-model="ctrl.game" ng-change="ctrl.loadGame()"></select> ------ <input type="checkbox" ng-model="showGrid" ng-true-value="true" ng-false-value="false"> Show Grid?</p>
+  <p>Game: <select ng-options="game.name for game in ctrl.games" ng-model="ctrl.game" ng-change="ctrl.loadGame()"></select> ------ <input type="checkbox" ng-model-options="{ getterSetter: true }" ng-model="ctrl.showGrid"> Show Grid?</p>
 </div>
 <div class="risk-world-map" ng-class="{'large-map': ctrl.largeMap}">
   <img class="img-responsive risk-map-image" src="/games/risk/pictures/Simple_world_map.png">
   <div class="risk-grid">
     <div class="row risk-row" ng-class="{'large-map': ctrl.largeMap}" ng-repeat="row in ctrl.getRows()">
       <div class="risk-section"
-      ng-class="{'col-xs-2': !ctrl.largeMap, 'col-xs-1': ctrl.largeMap, 'show-grid': showGrid, 'currentCell': ctrl.currentCell.name == cell.name, 'neighborCell': ctrl.isNeighbor(cell.name), 'inactiveCell': cell.active == 0}"
+      ng-class="{'col-xs-2': !ctrl.largeMap, 'col-xs-1': ctrl.largeMap, 'show-grid': ctrl.showGrid(), 'currentCell': ctrl.currentCell.name == cell.name, 'neighborCell': ctrl.isNeighbor(cell.name), 'inactiveCell': cell.active == 0}"
       ng-repeat="cell in ctrl.getColumns(row)"
       ng-click="ctrl.showCell(cell.name)" ng-style="cell.style">
         <span class="label" ng-show="cell.active"
