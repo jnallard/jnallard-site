@@ -41,7 +41,7 @@
         <a ng-show="!loading && !ctrl.currentCell">Please select a cell</a>
       </h4>
     </div>
-    <div class="panel-body">
+    <div class="panel-body" ng-show="showCellPanel">
       <div ng-show="ctrl.currentCell">
         <p ng-if="ctrl.cellWarning" class="text-warning"><span class="glyphicon glyphicon-warning-sign"></span> {{ctrl.cellWarning}}</p>
         <p>Owner: <strong>{{ctrl.currentCell.ownerName}}</strong></p>
