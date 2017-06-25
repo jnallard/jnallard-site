@@ -1,26 +1,26 @@
 <div ng-controller="RiskCtrl as ctrl" ng-init="ctrl.init()" class="risk-page">
 
 <div class="risk-element">
-  <p>Game: <select ng-options="game.name for game in ctrl.games" ng-model="ctrl.game" ng-change="ctrl.loadGame()"></select></p>
+  <p>Game: <select ng-options="game.name for game in ctrl.games" ng-model="ctrl.game" ng-change="ctrl.loadGame()"></select> ------ <input type="checkbox" ng-model="showGrid" ng-true-value="true" ng-false-value="false"> Show Grid?</p>
 </div>
 <div class="risk-world-map" ng-class="{'large-map': ctrl.largeMap}">
   <img class="img-responsive risk-map-image" src="/games/risk/pictures/Simple_world_map.png">
   <div class="risk-grid">
     <div class="row risk-row" ng-class="{'large-map': ctrl.largeMap}" ng-repeat="row in ctrl.getRows()">
       <div class="risk-section"
-      ng-class="{'col-xs-2': !ctrl.largeMap, 'col-xs-1': ctrl.largeMap, 'currentCell': ctrl.currentCell.name == cellName, 'neighborCell': ctrl.isNeighbor(cellName)}"
-      ng-repeat="cellName in ctrl.getColumns(row)"
-      ng-click="ctrl.showCell(cellName)" ng-style="ctrl.getCell(cellName).style">
-        <span class="label" ng-if="ctrl.getCell(cellName).active"
-          ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
-          {{cellName}}
+      ng-class="{'col-xs-2': !ctrl.largeMap, 'col-xs-1': ctrl.largeMap, 'show-grid': showGrid, 'currentCell': ctrl.currentCell.name == cell.name, 'neighborCell': ctrl.isNeighbor(cell.name), 'inactiveCell': cell.active == 0}"
+      ng-repeat="cell in ctrl.getColumns(row)"
+      ng-click="ctrl.showCell(cell.name)" ng-style="cell.style">
+        <span class="label" ng-show="cell.active"
+          ng-class="{'label-default': ctrl.getCellDiplomacy(cell) == 0, 'label-primary': ctrl.getCellDiplomacy(cell) == 1, 'label-danger': ctrl.getCellDiplomacy(cell) == -1}">
+          {{cell.name}}
         </span>
-        <span class="visible-xs-inline pull-right" ng-if="ctrl.getCell(cellName).active">
-          {{ctrl.getCell(cellName).troops}}
+        <span class="visible-xs-inline pull-right" ng-show="cell.active">
+          {{cell.troops}}
         </span>
-        <span class="label label-pill hidden-xs troop-badge" ng-if="ctrl.getCell(cellName).active"
-          ng-class="{'label-default': ctrl.getCellDiplomacy(cellName) == 0, 'label-primary': ctrl.getCellDiplomacy(cellName) == 1, 'label-danger': ctrl.getCellDiplomacy(cellName) == -1}">
-          {{ctrl.getCell(cellName).troops}}
+        <span class="label label-pill hidden-xs troop-badge" ng-show="cell.active"
+          ng-class="{'label-default': ctrl.getCellDiplomacy(cell) == 0, 'label-primary': ctrl.getCellDiplomacy(cell) == 1, 'label-danger': ctrl.getCellDiplomacy(cell) == -1}">
+          {{cell.troops}}
         </span>
       </div>
     </div>

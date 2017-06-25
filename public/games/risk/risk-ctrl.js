@@ -30,12 +30,15 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
 
     self.getColumns = function(cellRow){
       var array = [];
+      if(!self.cells){
+        return array;
+      }
       var columnCount = 6;
       if(self.largeMap){
         columnCount = 12;
       }
       for(var i = 0; i < columnCount; i++){
-        array.push(cellRow + (i + 1));
+        array.push(self.getCell(cellRow + (i + 1)));
       }
       return array;
     }
@@ -203,8 +206,7 @@ function RiskCtrl($scope, $cookieStore, $interval, backend) {
       return cells;
     }
 
-    self.getCellDiplomacy = function(cellName){
-      var cell = self.getCell(cellName);
+    self.getCellDiplomacy = function(cell){
       if(!cell || !cell.owner){
         return 0; //Unowned
       }
