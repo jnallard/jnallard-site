@@ -1,0 +1,4 @@
+host     : 'the-allards.com',
+user     : 'jnallard',
+password : 'xidu@9S(X5L?',
+database : 'jnallard'
