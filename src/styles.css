@@ -1,2 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 /*@import '~bootstrap/dist/css/bootstrap.min.css';*/
+
+.router-page {
+  position: absolute;
+  top: 56px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  padding: 10px;
+}
