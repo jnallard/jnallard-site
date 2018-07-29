@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Grid, Canvas } from './models';
+import { GameEntry } from '../models/game-entry';
 
 @Component({
   selector: 'app-minesweeper',
@@ -14,6 +15,14 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public canvas: Canvas;
 
   constructor() { }
+
+  public static getGameEntry() {
+    return new GameEntry('Minesweeper',
+      'minesweeper',
+      'Find all the mines on the board in this classic mathematic puzzle.',
+      'minesweeper.png',
+      MinesweeperComponent);
+  }
 
   ngOnInit() {
   }

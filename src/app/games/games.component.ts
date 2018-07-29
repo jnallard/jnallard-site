@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { GameList } from './models/game-list';
 
 @Component({
   selector: 'app-games',
@@ -6,6 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./games.component.css']
 })
 export class GamesComponent implements OnInit {
+  public gameList = GameList.instance;
 
   constructor() { }
 
