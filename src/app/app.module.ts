@@ -16,6 +16,7 @@ import { GameList } from './games/models/game-list';
 
 const appRoutes: Routes = [
   { path: 'games', component: GamesComponent, pathMatch: 'full' },
+  { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: '',
     redirectTo: '/home',
@@ -23,10 +24,12 @@ const appRoutes: Routes = [
   }
 ];
 
+/* TODO: Routes aren't being added when deploying to the site. Something must be lost in the build process. For now, manually adding them
 GameList.instance.games.forEach(game => {
-  console.log(game);
-  appRoutes.push({path: `${game.path}`, component: game.componentName});
+  appRoutes.push({path: `${game.path}`, component: game.componentName, pathMatch: 'full'});
 });
+console.log(appRoutes);
+*/
 
 @NgModule({
   declarations: [
@@ -39,7 +42,7 @@ GameList.instance.games.forEach(game => {
     FormsModule,
     RouterModule.forRoot(
       appRoutes,
-      // { enableTracing: true } // <-- debugging purposes only
+       { enableTracing: true } // <-- debugging purposes only
     ),
     BrowserModule,
     BsDropdownModule.forRoot(),
