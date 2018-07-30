@@ -1,3 +1,60 @@
 <div class="router-page">
-  <canvas #myCanvas></canvas>
+  <form class="form-inline">
+    <label class="sr-only" for="difficulty">Difficulty</label>
+    <div class="input-group mb-1 mr-sm-1 value-input-div">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Difficulty</div>
+      </div>
+      <select class="form-control" id="difficulty" name="difficulty" required [ngModel]="difficulty" (ngModelChange)="onDifficultyChange($event)">
+        <option *ngFor="let diff of difficulties"  name="diff" [ngValue]="diff">{{diff.name}}</option>
+      </select>
+    </div>
+
+    <label class="sr-only" for="gridX">Columns</label>
+    <div class="input-group mb-1 mr-sm-1 value-input-div">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Columns</div>
+      </div>
+      <input type="number" class="form-control" id="gridX" placeholder="X" name="gridX" [(ngModel)]="gridX" 
+        min="{{minColumns}}" max="{{maxColumns}}" required [ngClass]="{'is-invalid': !validateColumns()}" [disabled]="!difficulty.isCustom">
+    </div>
+
+    <label class="sr-only" for="gridY">Rows</label>
+    <div class="input-group mb-1 mr-sm1 value-input-div">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Rows</div>
+      </div>
+      <input type="number" class="form-control" id="gridY" placeholder="gridY" name="gridY" [(ngModel)]="gridY"
+        min="{{minRows}}" max="{{maxRows}}" required [ngClass]="{'is-invalid': !validateRows()}" [disabled]="!difficulty.isCustom">
+    </div>
+
+    <label class="sr-only" for="gridMines">Mines</label>
+    <div class="input-group mb-1 mr-sm1 value-input-div">
+      <div class="input-group-prepend">
+        <div class="input-group-text">Mines</div>
+      </div>
+      <input type="number" class="form-control" id="gridMines" placeholder="gridMines" name="gridMines" [(ngModel)]="gridMines"
+        min="{{minMines}}" max="{{getMaxMines()}}" required [ngClass]="{'is-invalid': !validateMines()}" [disabled]="!difficulty.isCustom">
+    </div>
+
+    <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">New Game</button>
+  </form>
+
+  <hr />
+
+  <canvas #myCanvas (mousedown)="click($event)" (dblclick)="dblClick($event)" oncontextmenu="return false;"></canvas>
+
+  <hr />
+
+  Unflagged Mines: <strong>{{grid.getUnflaggedMineCount()}}</strong>
+
+  <hr />
+
+  <h2>Controls</h2>
+  <ul>
+    <li><strong>Left Click:</strong> Reveal cell</li>
+    <li><strong>Right Click:</strong> Place flag</li>
+    <li><strong>Double Click/Middle Click:</strong> Reveal adjacent cells (if the correct number of adjacent mines are flagged)</li>
+  </ul>
+  
 </div>
