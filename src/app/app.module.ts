@@ -12,7 +12,6 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { GamesComponent } from './games/games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
-import { GameList } from './games/models/game-list';
 
 const appRoutes: Routes = [
   { path: 'games', component: GamesComponent, pathMatch: 'full' },

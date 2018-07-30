@@ -42,7 +42,7 @@
 
   <hr />
 
-  <canvas #myCanvas (mousedown)="click($event)" (dblclick)="dblClick($event)" oncontextmenu="return false;"></canvas>
+  <canvas #myCanvas (click)="click($event)" (dblclick)="dblClick($event)" (contextmenu)="click($event)" oncontextmenu="return false;"></canvas>
 
   <hr />
 
