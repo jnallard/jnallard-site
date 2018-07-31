@@ -12,6 +12,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { GamesComponent } from './games/games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
+import { PressDirective } from './shared/directives/long-press.directive';
 
 const appRoutes: Routes = [
   { path: 'games', component: GamesComponent, pathMatch: 'full' },
@@ -35,13 +36,14 @@ console.log(appRoutes);
     AppComponent,
     HomeComponent,
     GamesComponent,
-    MinesweeperComponent
+    MinesweeperComponent,
+    PressDirective
   ],
   imports: [
     FormsModule,
     RouterModule.forRoot(
       appRoutes,
-       { enableTracing: true } // <-- debugging purposes only
+      // { enableTracing: true } // <-- debugging purposes only
     ),
     BrowserModule,
     BsDropdownModule.forRoot(),

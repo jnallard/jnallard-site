@@ -1,5 +1,8 @@
 import { Cell } from './cell.model';
 import { Canvas } from './canvas.model';
+import { PressEvent } from '../../../shared/models/press-event';
+import { PressType } from '../../../shared/models/press-type';
+import { PressButtonType } from '../../../shared/models/press-button-type';
 
 export class Grid {
 
@@ -11,6 +14,28 @@ export class Grid {
       for (let j = 0; j < rows; j++) {
         const key = this.getKey(i, j);
         this.cells[key] = new Cell(i, j, key);
+      }
+    }
+  }
+
+  public handlePressEvent(event: PressEvent) {
+    const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
+
+    if (event.type === PressType.Single) {
+      if (event.button === PressButtonType.Left) {
+        this.revealCell(cell);
+      } else if (event.button === PressButtonType.Middle) {
+        this.revealNeighborCells(cell);
+      } else if (event.button === PressButtonType.Right) {
+        this.flagCell(cell);
+      }
+    } else if (event.type === PressType.Double) {
+      this.revealNeighborCells(cell);
+    } else if (event.type === PressType.Long) {
+      if (cell.searched) {
+        this.revealNeighborCells(cell);
+      } else {
+        this.flagCell(cell);
       }
     }
   }
@@ -30,29 +55,15 @@ export class Grid {
     return this.mines - this.getAllCells().filter(cell => cell.flagged).length;
   }
 
-  public revealClick(event: MouseEvent) {
-    const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
-    if (!this.initialized) {
-      this.initializeGrid(cell);
-    }
-    this.revealCell(cell);
-  }
-
-  public flagClick(event: MouseEvent) {
-    const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
-    this.flagCell(cell);
-  }
-
-  public revealNeighborsClick(event: MouseEvent) {
-    const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
-    this.revealNeighborCells(cell);
-  }
-
   public revealGameDone(success: boolean) {
     this.getAllCells().forEach(cell => cell.revealGameDone(success));
   }
 
   private revealCell(cell: Cell) {
+    if (!this.initialized) {
+      this.initializeGrid(cell);
+    }
+
     if (cell.searched || cell.flagged) {
       return;
     }

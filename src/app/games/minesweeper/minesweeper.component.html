@@ -42,7 +42,7 @@
 
   <hr />
 
-  <canvas #myCanvas (click)="click($event)" (dblclick)="dblClick($event)" (contextmenu)="click($event)" oncontextmenu="return false;"></canvas>
+  <canvas #myCanvas oncontextmenu="return false;" (appPress)="click($event)"></canvas>
 
   <hr />
 

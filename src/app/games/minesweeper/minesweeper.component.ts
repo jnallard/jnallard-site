@@ -3,6 +3,10 @@ import { Grid, Canvas, Cell } from './models';
 import { GameEntry } from '../models/game-entry';
 import { GameLostException } from './models/GameOverException.model';
 import { Difficulty } from './models/difficulty.model';
+import { PressController } from '../../shared/models/long-press-controller';
+import { PressEvent } from '../../shared/models/press-event';
+import { PressType } from '../../shared/models/press-type';
+import { PressButtonType } from '../../shared/models/press-button-type';
 
 @Component({
   selector: 'app-minesweeper',
@@ -49,7 +53,6 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   public onDifficultyChange(difficulty: Difficulty, redraw = true) {
-    console.log(difficulty);
     this.difficulty = difficulty;
     if (!difficulty.isCustom) {
       this.gridX = this.difficulty.columns;
@@ -114,33 +117,11 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     this.redraw();
   }
 
-  public click(event: MouseEvent) {
+  public click(event: PressEvent) {
     if (this.gameDisabled) { return; }
 
     try {
-      if (event.which === 1) {
-        this.grid.revealClick(event);
-      } else if (event.which === 2) {
-        this.grid.revealNeighborsClick(event);
-      } else if (event.which === 3) {
-        this.grid.flagClick(event);
-      }
-      event.preventDefault();
-    } catch (exception) {
-      if (exception instanceof GameLostException) {
-        this.handleGameOver(exception);
-      }
-    } finally {
-      this.checkGameWon();
-    }
-  }
-
-  public dblClick(event: MouseEvent) {
-    if (this.gameDisabled) { return; }
-
-    try {
-      this.grid.revealNeighborsClick(event);
-      event.preventDefault();
+      this.grid.handlePressEvent(event);
     } catch (exception) {
       if (exception instanceof GameLostException) {
         this.handleGameOver(exception);
