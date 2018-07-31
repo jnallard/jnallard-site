@@ -1,7 +1,6 @@
 import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 import { PressEvent } from '../models/press-event';
 import { PressType } from '../models/press-type';
-import { Observable } from '../../../../node_modules/rxjs';
 
 @Directive({
   selector: '[appPress]'
@@ -15,7 +14,7 @@ export class PressDirective {
   private touchHoldStarted = false;
 
   private readonly LONG_PRESS_INTERVAL = 250;
-  private readonly DOUBLE_PRESS_INTERVAL = 250;
+  private readonly DOUBLE_PRESS_INTERVAL = 100;
 
   constructor() {
 

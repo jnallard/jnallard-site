@@ -1,4 +1,4 @@
-import { PressDirective } from './long-press.directive';
+import { PressDirective } from './press.directive';
 
 describe('LongPressDirective', () => {
   it('should create an instance', () => {

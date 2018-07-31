@@ -32,7 +32,7 @@ export class Cell {
     context.fill();
     context.lineWidth = 2;
     context.strokeStyle = 'black';
-    context.font = '20px Georgia';
+    context.font = '24px Times New Roman';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     if (this.flagged) {
@@ -83,6 +83,20 @@ export class Cell {
     switch (this.neighborMineCount) {
       default:
         return Color.One;
+      case 2:
+        return Color.Two;
+      case 3:
+        return Color.Three;
+      case 4:
+        return Color.Four;
+      case 5:
+        return Color.Five;
+      case 6:
+        return Color.Six;
+      case 7:
+        return Color.Seven;
+      case 8:
+        return Color.Eight;
     }
   }
 

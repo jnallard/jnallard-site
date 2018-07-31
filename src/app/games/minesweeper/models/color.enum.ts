@@ -18,6 +18,13 @@ export enum Color {
 
   // Text Colors
   Flag = '#ffffff',
-  Mine = '#ffffff',
+  Mine = '#00104c',
   One = '#000000',
+  Two = '#00771f',
+  Three = '#ce1010',
+  Four = '#910fce',
+  Five = '#4c0000',
+  Six = '#49ffec',
+  Seven = '#000000',
+  Eight = '#707070',
 }

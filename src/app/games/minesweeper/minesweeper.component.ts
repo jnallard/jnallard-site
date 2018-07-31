@@ -3,10 +3,9 @@ import { Grid, Canvas, Cell } from './models';
 import { GameEntry } from '../models/game-entry';
 import { GameLostException } from './models/GameOverException.model';
 import { Difficulty } from './models/difficulty.model';
-import { PressController } from '../../shared/models/long-press-controller';
 import { PressEvent } from '../../shared/models/press-event';
-import { PressType } from '../../shared/models/press-type';
-import { PressButtonType } from '../../shared/models/press-button-type';
+import { Observable } from '../../../../node_modules/rxjs';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'app-minesweeper',
@@ -38,7 +37,9 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public canvasWidth = -1;
   public canvasHeight = -1;
 
-  private viewStarted = false;
+  private startTime = null;
+  private endTime = null;
+  public displayTime = '0:00';
 
   constructor() {
     this.onDifficultyChange(this.difficulties[0], false);
@@ -91,6 +92,8 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
       return;
     }
     this.gameDisabled = false;
+    this.startTime = null;
+    this.endTime = null;
 
     this.grid = new Grid(this.gridX, this.gridY, this.gridMines);
     this.canvasWidth = this.grid.columns * Cell.width;
@@ -108,6 +111,10 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    const source = timer(1000, 100);
+    source.subscribe(t => {
+        this.displayTime = this.updateTime();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -119,6 +126,10 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
 
   public click(event: PressEvent) {
     if (this.gameDisabled) { return; }
+
+    if (this.startTime == null) {
+      this.startTime = new Date();
+    }
 
     try {
       this.grid.handlePressEvent(event);
@@ -134,6 +145,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public handleGameOver(exception: GameLostException) {
     console.log(exception);
     this.gameDisabled = true;
+    this.endTime = new Date();
     this.grid.revealGameDone(false);
 
   }
@@ -141,7 +153,24 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public checkGameWon() {
     if (this.grid.isGameDone()) {
       this.gameDisabled = true;
+      this.endTime = new Date();
       this.grid.revealGameDone(true);
     }
+  }
+
+  private updateTime() {
+    let milliseconds = 0;
+    if (this.startTime && !this.endTime) {
+      milliseconds = new Date().getTime() - this.startTime.getTime();
+    } else if (this.startTime && this.endTime) {
+      milliseconds = this.endTime.getTime() - this.startTime.getTime();
+    }
+    return this.convertMillisecondsToTimeString(milliseconds);
+  }
+
+  private convertMillisecondsToTimeString(milliseconds: number) {
+    const seconds = Math.floor(milliseconds / 1000) % 60;
+    const minutes = Math.floor(milliseconds / 60000);
+    return `${minutes}:${seconds < 10 ? '0' + seconds :  seconds}`;
   }
 }
