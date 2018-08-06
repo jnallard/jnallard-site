@@ -7,17 +7,23 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { GamesComponent } from './games/games.component';
-import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
-import { PressDirective } from './shared/directives/press.directive';
+import { AboutComponent } from './about/about.component';
+import { HistoryComponent } from './history/history.component';
+import { FirstComponent } from './first/first.component';
+import { NewsAndEventsComponent } from './news-and-events/news-and-events.component';
+import { SupportAndSponsorsComponent } from './support-and-sponsors/support-and-sponsors.component';
 
 const appRoutes: Routes = [
-  { path: 'games', component: GamesComponent, pathMatch: 'full' },
-  { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'history', component: HistoryComponent },
+  { path: 'first', component: FirstComponent },
+  { path: 'news-and-events', component: NewsAndEventsComponent },
+  { path: 'support-and-sponsors', component: SupportAndSponsorsComponent },
   { path: '',
     redirectTo: '/home',
     pathMatch: 'full'
@@ -35,9 +41,11 @@ console.log(appRoutes);
   declarations: [
     AppComponent,
     HomeComponent,
-    GamesComponent,
-    MinesweeperComponent,
-    PressDirective
+    AboutComponent,
+    HistoryComponent,
+    FirstComponent,
+    NewsAndEventsComponent,
+    SupportAndSponsorsComponent
   ],
   imports: [
     FormsModule,
@@ -47,6 +55,7 @@ console.log(appRoutes);
     ),
     BrowserModule,
     BsDropdownModule.forRoot(),
+    CarouselModule.forRoot(),
     CollapseModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot()

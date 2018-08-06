@@ -1,28 +1,30 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand">Jnallard.com</a>
-    <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" aria-expanded="false">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent" [collapse]="isCollapsed">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" routerLink="/" routerLinkActive="active">
-            Home <span class="sr-only">(current)</span>
-          </a>
-        </li>
-        <li class="nav-item dropdown" dropdown>
-          <a class="nav-link dropdown-toggle" dropdownToggle id="navbarDropdown">
-            Games
-          </a>
-          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
-              role="menu" aria-labelledby="button-basic">
-            <li role="menuitem"class="dropdown-item"><a routerLink="/games" routerLinkActive="active">All Games</a></li>
-            <li class="divider dropdown-divider"></li>
-            <li *ngFor="let game of gameList.games" role="menuitem"class="dropdown-item"><a routerLink="/{{game.path}}" routerLinkActive="active">{{game.name}}</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </nav>
+<nav class="navbar navbar-expand-lg navbar-dark chaos-background">
+  <a class="navbar-brand nav-link" routerLink="/" routerLinkActive="active">C.H.A.O.S. 131</a>
+  <button class="navbar-toggler" type="button" (click)="isCollapsed = !isCollapsed" aria-expanded="false">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent" [collapse]="isCollapsed">
+    <ul class="navbar-nav mr-auto">
+      <a class="nav-link" routerLink="/home" routerLinkActive="active">
+        Home <span class="sr-only">(current)</span>
+      </a>
+      <a class="nav-link" routerLink="/about" routerLinkActive="active">
+        About C.H.A.O.S.
+      </a>
+      <a class="nav-link" routerLink="/history" routerLinkActive="active">
+        Team History
+      </a>
+      <a class="nav-link" routerLink="/first" routerLinkActive="active">
+        What is FIRST?
+      </a>
+      <a class="nav-link" routerLink="/news-and-events" routerLinkActive="active">
+        News & Events
+      </a>
+      <a class="nav-link" routerLink="/support-and-sponsors" routerLinkActive="active">
+        Support & Sponsors
+      </a>
+    </ul>
+  </div>
+</nav>
 <router-outlet></router-outlet>

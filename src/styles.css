@@ -4,9 +4,55 @@
 .router-page {
   position: absolute;
   top: 56px;
-  bottom: 0px;
+  bottom: 10px;
   left: 0px;
   right: 0px;
   padding: 10px;
   z-index: -1;
+}
+
+.align-text-center {
+  text-align: center;
+}
+
+.separated-div {
+  margin-bottom: 20px;
+}
+
+.green-text {
+  color: #264200;
+}
+
+.orange-text {
+  color: #ff7126;
+}
+
+.card-chaos {
+  margin-bottom: 20px;
+}
+
+.btn-chaos {
+  color: #ffffff;
+  background-color: #264200;
+  border-color: #000000;
+}
+
+.btn-chaos:hover {
+  color: #ffffff;
+  background-color: #ff7126;
+  border-color: #000000;
+}
+
+.green-background {
+  background-color: #264200;
+  border-color: #000000;
+}
+
+.orange-background {
+  background-color: #ff7126;
+  border-color: #000000;
+}
+
+.card {
+  margin-bottom: 10px;
 }

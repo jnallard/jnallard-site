@@ -1,11 +1,76 @@
 <div class="router-page">
-  <div style="text-align:center">
-    <h1>
-      Welcome to Jnallard.com!
-    </h1>
+  <div class="container">
+    <div class="card jumbotron-chaos">
+      <h1 class="card-header green-background orange-text ">
+          C.H.A.O.S. Robotics
+      </h1>
+      <img class="card-img-top" src="https://static.wixstatic.com/media/1ef32f_fa3ea7c4bf244e7c818ab32a13d86443.jpg/v1/fill/w_970,h_176,al_c,lg_1,q_80/1ef32f_fa3ea7c4bf244e7c818ab32a13d86443.webp" alt="Card image cap">
+      <div class="card-body">
+        <h3 class="card-title green-text">FRC Team 131</h3>
+        <p class="card-text">Nonstop <em>CHAOS</em> since 1992!</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card">
+          <h3 class="card-header green-background orange-text align-text-center">
+              Welcome!
+          </h3>
+          <div class="card-body">
+            <p class="card-text">
+              Welcome to the website of FRC team 131 or CHAOS!  We are a year-round FIRST team that competes in several competitions.
+              We have lots to share with our community as well as many years of history and dedication to FIRST.
+              Take a look around and enjoy the media, resources, and just pure CHAOS we spread. See you on the field!
+            </p>
+            <carousel class="align-text-center">
+              <slide *ngFor="let image of images">
+                <img src="{{image.imageUrl}}" alt="First slide">
+                <div class="carousel-caption d-none d-md-block">
+                  <h3 *ngIf="image.title"><span class="translucent-background">{{image.title}}</span></h3>
+                </div>
+              </slide>
+            </carousel>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card">
+          <h3 class="card-header green-background orange-text align-text-center">
+            Events
+          </h3>
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let event of upcomingEvents">
+              <strong>{{event.name}}</strong>
+              <br />
+              {{event.getDateString()}}
+            </li>
+          </ul>
+          <div class="card-footer">
+            <a routerLink="/news-and-events" routerLinkActive="active" class="btn btn-block btn-chaos">
+              View All
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card">
+          <h3 class="card-header green-background orange-text align-text-center">
+            Quick Links
+          </h3>
+          <ul class="list-group list-group-flush align-text-center">
+            <a class="list-group-item" href="https://www.firstinspires.org/" target="_blank">
+              <img src="/assets/images/logos/usfirst.png" class="img-fluid" alt="US FIRST">
+            </a>
+            <a class="list-group-item" href="http://www.nefirst.org/" target="_blank">
+              <img src="/assets/images/logos/nefirst.webp" class="img-fluid" alt="US FIRST">
+            </a>
+            <a class="list-group-item" href="https://www.firstinspires.org/scholarships" target="_blank">
+              <img src="/assets/images/logos/first-scholarships.png" class="img-fluid" alt="US FIRST">
+            </a>
+          </ul>
+        </div>
+      </div>
+
+    </div>
   </div>
-  <h2>Links:</h2>
-  <ul>
-    <li><a routerLink="/games" routerLinkActive="active">Games</a></li>
-  </ul>
 </div>

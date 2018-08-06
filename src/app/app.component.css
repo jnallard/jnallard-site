@@ -1,0 +1,15 @@
+.chaos-background {
+  background-color: #264200;
+  color: #ff7126;
+}
+
+.navbar-dark .navbar-brand {
+  color: #ff7126;
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 0;
+}
+
+.navbar-nav .nav-link {
+  padding-right: 20px;
+}

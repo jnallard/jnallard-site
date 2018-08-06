@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { GameList } from './games/models/game-list';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +9,6 @@ import { GameList } from './games/models/game-list';
 export class AppComponent {
 
   public isCollapsed = true;
-  public gameList = GameList.instance;
 
   constructor(private router: Router) {
     router.events.subscribe(event => {
