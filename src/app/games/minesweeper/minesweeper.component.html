@@ -24,9 +24,13 @@
   <canvas #myCanvas oncontextmenu="return false;" (appPress)="click($event)"></canvas>
 
   <form class="form-inline">
-    <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">New Game</button>
+    <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">
+      New Game
+    </button>
+    <button class="btn btn-default mb-2" (click)="autoReveal()" [disabled]="gameData.autoReveals <= 0 || !startTime || gameDisabled">
+      Auto Reveal <span class="badge badge-secondary">{{gameData.autoReveals}} left</span>
+    </button>
   </form>
-
   <hr />
 
   <h3>Settings</h3>
@@ -71,11 +75,23 @@
 
   <hr />
 
+  <h3>Stats</h3>
+  <ul>
+    <li><strong>Difficulty:</strong> {{difficulty.name}}</li>
+    <li><strong>Wins:</strong> {{gameData.wins}}</li>
+    <li><strong>Attempts:</strong> {{gameData.attempts}}</li>
+    <li><strong>Percent Won:</strong> {{gameData.wins / (gameData.attempts || 1) | percent}}</li>
+    <li><strong>Auto Reveals Used:</strong> {{gameData.autoRevealsUsed}}</li>
+  </ul>
+
+  <hr />
+
   <h3>Controls</h3>
   <ul>
     <li><strong>Left Click/Tap:</strong> Reveal cell</li>
     <li><strong>Right Click/Hold:</strong> Place flag</li>
     <li><strong>Double Click/Middle Click/Hold:</strong> Reveal adjacent cells (if the correct number of adjacent mines are flagged)</li>
+    <li><strong>Auto Reveal</strong> Randomly flags an unflagged mine. You gain one each time you win a game</li>
   </ul>
   
 </div>

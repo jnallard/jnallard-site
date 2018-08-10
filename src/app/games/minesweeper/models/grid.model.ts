@@ -67,6 +67,13 @@ export class Grid {
     this.getAllCells().forEach(cell => cell.revealGameDone(success));
   }
 
+  public autoRevealFlag() {
+    const mines = this.getAllCells().filter(x => x.hasMine && !x.flagged).sort((a, b) => a.sortingValue - b.sortingValue);
+    if (mines.length > 0) {
+      mines[0].flag();
+    }
+  }
+
   private revealCell(cell: Cell) {
     if (!this.initialized) {
       this.initializeGrid(cell);

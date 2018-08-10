@@ -49,7 +49,6 @@ export class PressDirective {
     }
 
     const distance = Math.abs($event.offsetX - this.startingPress.offsetX) + Math.abs($event.offsetY - this.startingPress.offsetY);
-    console.log(distance);
     if (distance > this.MOVE_DISTANCE_BUFFER_PIXELS) {
       this.pressInterrupted = true;
       this.endHoldingNotification($event);

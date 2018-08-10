@@ -6,3 +6,7 @@
 .value-input-div > input {
   width: 100px;
 }
+
+form > button {
+  margin-right: .25rem!important;
+}

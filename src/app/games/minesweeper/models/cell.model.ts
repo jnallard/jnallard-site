@@ -1,6 +1,6 @@
 import { Canvas } from './canvas.model';
 import { Color } from './color.enum';
-import { GameLostException } from './GameOverException.model';
+import { GameLostException } from './game-over-exception';
 
 export class Cell {
   public static readonly width: number = 35;
@@ -11,6 +11,8 @@ export class Cell {
 
   public searched = false;
   public flagged = false;
+
+  public readonly sortingValue = Math.random();
 
   private isGameOver = false;
   private isGameWon = false;

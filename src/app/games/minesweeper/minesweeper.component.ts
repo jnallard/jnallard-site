@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Grid, Canvas, Cell } from './models';
 import { GameEntry } from '../models/game-entry';
-import { GameLostException } from './models/GameOverException.model';
+import { GameLostException } from './models/game-over-exception';
 import { Difficulty } from './models/difficulty.model';
 import { PressEvent } from '../../shared/models/press-event';
 import { timer } from 'rxjs';
+import { GameData } from './models/game-data';
 
 @Component({
   selector: 'app-minesweeper',
@@ -36,9 +37,11 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public canvasWidth = -1;
   public canvasHeight = -1;
 
-  private startTime = null;
-  private endTime = null;
+  public startTime = null;
+  public endTime = null;
   public displayTime = '0:00';
+
+  public gameData: GameData;
 
   constructor() {
     this.onDifficultyChange(this.difficulties[0], false);
@@ -59,6 +62,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
       this.gridY = this.difficulty.rows;
       this.gridMines = this.difficulty.mines;
     }
+    this.gameData = new GameData(difficulty.name);
     this.createGame(redraw);
   }
 
@@ -128,6 +132,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
 
     if (this.startTime == null) {
       this.startTime = new Date();
+      this.gameData.attempts++;
     }
 
     try {
@@ -154,6 +159,16 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
       this.gameDisabled = true;
       this.endTime = new Date();
       this.grid.revealGameDone(true);
+      this.gameData.wins++;
+      this.gameData.autoReveals++;
+    }
+  }
+
+  public autoReveal() {
+    if (this.gameData.autoReveals > 0) {
+      this.gameData.autoReveals--;
+      this.gameData.autoRevealsUsed++;
+      this.grid.autoRevealFlag();
     }
   }
 
