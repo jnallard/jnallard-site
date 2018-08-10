@@ -1,5 +1,7 @@
 export enum PressType {
   Single = 'Single',
   Double = 'Double',
-  Long = 'Long'
+  Long = 'Long',
+  HoldingStarted = 'HoldingStarted',
+  HoldingEnded = 'HoldingEnded'
 }

@@ -4,7 +4,6 @@ import { GameEntry } from '../models/game-entry';
 import { GameLostException } from './models/GameOverException.model';
 import { Difficulty } from './models/difficulty.model';
 import { PressEvent } from '../../shared/models/press-event';
-import { Observable } from '../../../../node_modules/rxjs';
 import { timer } from 'rxjs';
 
 @Component({

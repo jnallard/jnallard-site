@@ -14,6 +14,7 @@ export class Cell {
 
   private isGameOver = false;
   private isGameWon = false;
+  private isHighlighted = false;
 
   constructor(public readonly x: number,
     public readonly y: number,
@@ -71,6 +72,11 @@ export class Cell {
     this.draw();
   }
 
+  public setHighlighted(isHighlighted: boolean = true) {
+    this.isHighlighted = isHighlighted;
+    this.draw();
+  }
+
   private drawText(text: string, textColor: Color) {
     const xPos = Cell.width * this.x + Math.floor(Cell.width / 2);
     const yPos = Cell.height * this.y + Math.floor(Cell.height / 2);
@@ -101,6 +107,11 @@ export class Cell {
   }
 
   private getCellColor() {
+    if (this.isHighlighted) {
+      return this.searched ?
+        Color.HighlightedSearched
+        : Color.HighlightedUnsearched;
+    }
 
     if (!this.searched) {
       return this.isGameOver ?

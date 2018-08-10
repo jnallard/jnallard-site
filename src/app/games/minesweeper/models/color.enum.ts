@@ -16,6 +16,9 @@ export enum Color {
   SearchedAndMineWon = '#27540b',
   SearchedAndMineLost = '#db3232',
 
+  HighlightedSearched = '#fffdce',
+  HighlightedUnsearched = '#a0a0a0',
+
   // Text Colors
   Flag = '#ffffff',
   Mine = '#00104c',

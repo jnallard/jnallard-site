@@ -21,7 +21,15 @@ export class Grid {
   public handlePressEvent(event: PressEvent) {
     const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
 
-    if (event.type === PressType.Single) {
+    if (event.type === PressType.HoldingStarted) {
+      if (cell.searched) {
+        this.getNeighborCells(cell).forEach(x => x.setHighlighted());
+      } else {
+        cell.setHighlighted();
+      }
+    } else if (event.type === PressType.HoldingEnded) {
+      this.getAllCells().forEach(x => x.setHighlighted(false));
+    } else if (event.type === PressType.Single) {
       if (event.button === PressButtonType.Left) {
         this.revealCell(cell);
       } else if (event.button === PressButtonType.Middle) {
