@@ -1,5 +1,5 @@
 export class SourcePressEvent {
-  constructor(sourceEvent: MouseEvent | TouchEvent) {
+  constructor(sourceEvent: MouseEvent | TouchEvent, stopPropagation = true, preventDefault = true) {
     if (sourceEvent instanceof TouchEvent) {
       const touchEvent = sourceEvent as TouchEvent;
       const target = sourceEvent.target as HTMLElement;
@@ -14,8 +14,13 @@ export class SourcePressEvent {
       this.offsetY = mouseEvent.offsetY;
     }
 
-    sourceEvent.preventDefault();
-    sourceEvent.stopPropagation();
+    if (preventDefault) {
+      sourceEvent.preventDefault();
+    }
+
+    if (stopPropagation) {
+      sourceEvent.stopPropagation();
+    }
   }
 
   public which: number;

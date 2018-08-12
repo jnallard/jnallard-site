@@ -15,22 +15,24 @@ export class PressDirective {
   private pressInterrupted = true;
   private holdingNotification: Subscription = null;
 
-
   private readonly LONG_PRESS_INTERVAL = 250;
-  private readonly MOVE_DISTANCE_BUFFER_PIXELS = 10;
+  private readonly MOVE_DISTANCE_BUFFER_PIXELS = 40;
 
   @HostListener('touchstart', ['$event'])
   onTouchStart($event: TouchEvent) {
-    this.onPressStart(new SourcePressEvent($event));
+    this.onPressStart(new SourcePressEvent($event, true, false));
   }
 
   @HostListener('touchmove', ['$event'])
   onTouchMove($event: TouchEvent) {
-    this.onPressMove(new SourcePressEvent($event));
+    this.onPressMove(new SourcePressEvent($event, false, false));
   }
 
   @HostListener('touchend', ['$event'])
+  @HostListener('touchcancel', ['$event'])
+  @HostListener('touchleave', ['$event'])
   onTouchEnd($event: TouchEvent) {
+    console.log($event);
     this.onPressEnd(new SourcePressEvent($event));
   }
 
@@ -41,12 +43,25 @@ export class PressDirective {
 
   @HostListener('mousemove', ['$event'])
   onMouseMove($event: MouseEvent) {
-    this.onPressMove(new SourcePressEvent($event));
+    this.onPressMove(new SourcePressEvent($event, false, false));
   }
 
   @HostListener('mouseup', ['$event'])
   onMouseUp($event: TouchEvent) {
     this.onPressEnd(new SourcePressEvent($event));
+  }
+
+  @HostListener('dblclick', ['$event'])
+  onDoublePress($sourceEvent: MouseEvent | TouchEvent) {
+    const $event = new SourcePressEvent($sourceEvent);
+    this.appPress.emit(new PressEvent(PressType.Double, $event));
+  }
+
+  @HostListener('contextmenu', ['$event'])
+  onContextMenu($event: MouseEvent | TouchEvent) {
+    $event.preventDefault();
+    $event.stopImmediatePropagation();
+    $event.stopPropagation();
   }
 
   onPressStart($event: SourcePressEvent) {
@@ -82,16 +97,12 @@ export class PressDirective {
     this.pressInterrupted = true;
   }
 
-  @HostListener('dblclick', ['$event'])
-  onDoublePress($sourceEvent: MouseEvent | TouchEvent) {
-    const $event = new SourcePressEvent($sourceEvent);
-    this.appPress.emit(new PressEvent(PressType.Double, $event));
-  }
-
   private startHoldingNotification($event: SourcePressEvent) {
-    this.holdingNotification = interval(this.LONG_PRESS_INTERVAL).subscribe(() => {
+    const subscription = interval(this.LONG_PRESS_INTERVAL).subscribe(() => {
       this.appPress.emit(new PressEvent(PressType.HoldingStarted, $event));
+      subscription.unsubscribe();
     });
+    this.holdingNotification = subscription;
   }
 
   private endHoldingNotification($event: SourcePressEvent) {

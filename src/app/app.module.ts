@@ -15,13 +15,13 @@ import { MinesweeperComponent } from './games/minesweeper/minesweeper.component'
 import { PressDirective } from './shared/directives/press.directive';
 
 const appRoutes: Routes = [
-  { path: 'games', component: GamesComponent, pathMatch: 'full' },
-  { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
-  { path: 'home', component: HomeComponent },
   { path: '',
     redirectTo: '/home',
     pathMatch: 'full'
-  }
+  },
+  { path: 'games', component: GamesComponent, pathMatch: 'full' },
+  { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
+  { path: 'home', component: HomeComponent }
 ];
 
 /* TODO: Routes aren't being added when deploying to the site. Something must be lost in the build process. For now, manually adding them

@@ -31,8 +31,8 @@
       </div>
     </form>
 
-    <div class="canvas-div">
-      <canvas #myCanvas oncontextmenu="return false;" (appPress)="click($event)"></canvas>
+    <div class="canvas-div" oncontextmenu="return false;">
+      <canvas #myCanvas (appPress)="click($event)" class="unselectable" oncontextmenu="return false;"></canvas>
     </div>
 
     <form class="form-inline">
