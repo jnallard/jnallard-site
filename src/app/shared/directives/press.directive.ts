@@ -2,7 +2,7 @@ import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
 import { PressEvent } from '../models/press-event';
 import { PressType } from '../models/press-type';
 import { interval, Subscription } from 'rxjs';
-import { ISourcePressEvent } from '../models/isource-press-event';
+import { SourcePressEvent } from '../models/source-press-event';
 
 @Directive({
   selector: '[appPress]'
@@ -11,7 +11,7 @@ export class PressDirective {
   @Output() appPress = new EventEmitter();
 
   private thisPress: number = new Date().getTime();
-  private startingPress: ISourcePressEvent = null;
+  private startingPress: SourcePressEvent = null;
   private pressInterrupted = true;
   private holdingNotification: Subscription = null;
 
@@ -21,29 +21,42 @@ export class PressDirective {
 
   @HostListener('touchstart', ['$event'])
   onTouchStart($event: TouchEvent) {
-    this.onPressStart(this.convertTouchEvent($event));
+    this.onPressStart(new SourcePressEvent($event));
   }
 
   @HostListener('touchmove', ['$event'])
   onTouchMove($event: TouchEvent) {
-    this.onPressMove(this.convertTouchEvent($event));
+    this.onPressMove(new SourcePressEvent($event));
   }
 
   @HostListener('touchend', ['$event'])
   onTouchEnd($event: TouchEvent) {
-    this.onPressEnd(this.convertTouchEvent($event));
+    this.onPressEnd(new SourcePressEvent($event));
   }
 
   @HostListener('mousedown', ['$event'])
-  onPressStart($event: ISourcePressEvent) {
+  onMouseDown($event: MouseEvent) {
+    this.onPressStart(new SourcePressEvent($event));
+  }
+
+  @HostListener('mousemove', ['$event'])
+  onMouseMove($event: MouseEvent) {
+    this.onPressMove(new SourcePressEvent($event));
+  }
+
+  @HostListener('mouseup', ['$event'])
+  onMouseUp($event: TouchEvent) {
+    this.onPressEnd(new SourcePressEvent($event));
+  }
+
+  onPressStart($event: SourcePressEvent) {
     this.startingPress = $event;
     this.thisPress = new Date().getTime();
     this.pressInterrupted = false;
     this.startHoldingNotification($event);
   }
 
-  @HostListener('mousemove', ['$event'])
-  onPressMove($event: ISourcePressEvent) {
+  onPressMove($event: SourcePressEvent) {
     if (this.pressInterrupted) {
       return;
     }
@@ -53,11 +66,9 @@ export class PressDirective {
       this.pressInterrupted = true;
       this.endHoldingNotification($event);
     }
-    return;
   }
 
-  @HostListener('mouseup', ['$event'])
-  onPressEnd($event: ISourcePressEvent) {
+  onPressEnd($event: SourcePressEvent) {
     this.endHoldingNotification($event);
     if (this.pressInterrupted) {
       return;
@@ -72,32 +83,18 @@ export class PressDirective {
   }
 
   @HostListener('dblclick', ['$event'])
-  onDoublePress($event: ISourcePressEvent) {
+  onDoublePress($sourceEvent: MouseEvent | TouchEvent) {
+    const $event = new SourcePressEvent($sourceEvent);
     this.appPress.emit(new PressEvent(PressType.Double, $event));
-    console.log($event);
-
-    if ($event as MouseEvent) {
-      ($event as MouseEvent).preventDefault();
-    }
   }
 
-  private convertTouchEvent($event: TouchEvent) {
-    const target = $event.target as HTMLElement;
-    const bounds = target.getBoundingClientRect();
-    return {
-      offsetX: ($event.changedTouches[0].clientX - bounds.left),
-      offsetY: ($event.changedTouches[0].clientY - bounds.top),
-      which: 1
-    } as ISourcePressEvent;
-  }
-
-  private startHoldingNotification($event: ISourcePressEvent) {
+  private startHoldingNotification($event: SourcePressEvent) {
     this.holdingNotification = interval(this.LONG_PRESS_INTERVAL).subscribe(() => {
       this.appPress.emit(new PressEvent(PressType.HoldingStarted, $event));
     });
   }
 
-  private endHoldingNotification($event: ISourcePressEvent) {
+  private endHoldingNotification($event: SourcePressEvent) {
     if (this.holdingNotification) {
       this.appPress.emit(new PressEvent(PressType.HoldingEnded, $event));
       this.holdingNotification.unsubscribe();

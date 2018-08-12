@@ -1,13 +1,13 @@
 import { PressType } from './press-type';
 import { PressButtonType } from './press-button-type';
-import { ISourcePressEvent } from './isource-press-event';
+import { SourcePressEvent } from './source-press-event';
 
 export class PressEvent {
   public readonly button: PressButtonType;
   public readonly offsetX: number;
   public readonly offsetY: number;
 
-  public constructor(public readonly type: PressType, $event: ISourcePressEvent) {
+  public constructor(public readonly type: PressType, $event: SourcePressEvent) {
     this.offsetX = $event.offsetX;
     this.offsetY = $event.offsetY;
     this.button = this.getButtonType($event.which);
