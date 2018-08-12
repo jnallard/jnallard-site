@@ -12,6 +12,7 @@ export class SourcePressEvent {
       this.which = mouseEvent.which;
       this.offsetX = mouseEvent.offsetX;
       this.offsetY = mouseEvent.offsetY;
+      this.isTouchEvent = true;
     }
 
     if (preventDefault) {
@@ -26,4 +27,5 @@ export class SourcePressEvent {
   public which: number;
   public offsetX: number;
   public offsetY: number;
+  public isTouchEvent = false;
 }

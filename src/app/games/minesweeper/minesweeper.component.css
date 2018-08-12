@@ -16,7 +16,7 @@ canvas {
 }
 
 .canvas-div {
-  max-height: calc(100% - 175px);
+  max-height: calc(100% - 90px);
   width: 100%;
   overflow-x: auto;
   margin-bottom: 5px;

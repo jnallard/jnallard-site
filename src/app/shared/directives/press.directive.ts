@@ -16,7 +16,7 @@ export class PressDirective {
   private holdingNotification: Subscription = null;
 
   private readonly LONG_PRESS_INTERVAL = 250;
-  private readonly MOVE_DISTANCE_BUFFER_PIXELS = 40;
+  private readonly MOVE_DISTANCE_BUFFER_PIXELS = 10;
 
   @HostListener('touchstart', ['$event'])
   onTouchStart($event: TouchEvent) {
@@ -72,7 +72,7 @@ export class PressDirective {
   }
 
   onPressMove($event: SourcePressEvent) {
-    if (this.pressInterrupted) {
+    if (this.pressInterrupted || $event.isTouchEvent !== this.startingPress.isTouchEvent) {
       return;
     }
 
