@@ -38,8 +38,8 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public canvasWidth = -1;
   public canvasHeight = -1;
 
-  public startTime = null;
-  public endTime = null;
+  public startTime: Date = null;
+  public endTime: Date = null;
   public displayTime = '0:00';
 
   public defaultGameData: DefaultGameData;
@@ -175,6 +175,11 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
       this.grid.revealGameDone(true);
       this.gameData.wins++;
       this.gameData.autoReveals++;
+
+      const timeElapsed = this.getTimeElasped();
+      if (this.gameData.bestTimeMilliseconds === 0 || timeElapsed < this.gameData.bestTimeMilliseconds) {
+        this.gameData.bestTimeMilliseconds = timeElapsed;
+      }
     }
   }
 
@@ -186,17 +191,21 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private updateTime() {
+  private getTimeElasped() {
     let milliseconds = 0;
     if (this.startTime && !this.endTime) {
       milliseconds = new Date().getTime() - this.startTime.getTime();
     } else if (this.startTime && this.endTime) {
       milliseconds = this.endTime.getTime() - this.startTime.getTime();
     }
-    return this.convertMillisecondsToTimeString(milliseconds);
+    return milliseconds;
   }
 
-  private convertMillisecondsToTimeString(milliseconds: number) {
+  private updateTime() {
+    return this.convertMillisecondsToTimeString(this.getTimeElasped());
+  }
+
+  public convertMillisecondsToTimeString(milliseconds: number) {
     const seconds = Math.floor(milliseconds / 1000) % 60;
     const minutes = Math.floor(milliseconds / 60000);
     return `${minutes}:${seconds < 10 ? '0' + seconds :  seconds}`;

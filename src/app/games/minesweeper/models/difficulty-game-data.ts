@@ -42,4 +42,13 @@ export class DifficultyGameData {
   public set autoRevealsUsed(newValue: number) {
     this.data.set('autoRevealsUsed', newValue);
   }
+
+  public get bestTimeMilliseconds(): number {
+    const value = this.data.get('bestTimeMilliseconds');
+    return value ? +value : 0;
+  }
+
+  public set bestTimeMilliseconds(newValue: number) {
+    this.data.set('bestTimeMilliseconds', newValue);
+  }
 }

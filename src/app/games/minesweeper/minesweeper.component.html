@@ -118,6 +118,10 @@ tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
           <li><strong>Attempts:</strong> {{gameData.attempts}}</li>
           <li><strong>Percent Won:</strong> {{gameData.wins / (gameData.attempts || 1) | percent}}</li>
           <li><strong>Auto Reveals Used:</strong> {{gameData.autoRevealsUsed}}</li>
+          <li><strong>Best Time:</strong> 
+            <span *ngIf="gameData.bestTimeMilliseconds == 0"> N/A</span>
+            <span *ngIf="gameData.bestTimeMilliseconds > 0"> {{convertMillisecondsToTimeString(gameData.bestTimeMilliseconds)}}</span>
+          </li>
         </ul>
       </div>
     </div>
