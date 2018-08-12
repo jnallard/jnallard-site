@@ -1,97 +1,147 @@
 <div class="router-page">
-  <form class="form-inline">
+  <form class="form-inline flex-nowrap">
+    
+    <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">
+      <i class="fas fa-sync-alt"></i>
+    </button>
+    <button class="btn btn-primary mb-2" (click)="autoReveal()" [disabled]="gameData.autoReveals <= 0 || !startTime || gameDisabled">
+      <i class="far fa-eye"></i> <span class="badge badge-secondary btn-badge">{{gameData.autoReveals}}</span>
+    </button>
     <label class="sr-only">Unflagged Mines</label>
-    <div class="input-group mb-1 mr-sm-1 value-input-div">
+    <div class="input-group mb-1 mr-xs-1 value-input-div">
       <div class="input-group-prepend">
-        <div class="input-group-text badge-info">Unflagged Mines</div>
+        <div class="input-group-text badge-info"><i class="fas fa-flag-checkered"></i></div>
       </div>
-      <span class="form-control">
+      <span class="form-control unselectable">
         {{grid.getUnflaggedMineCount()}}
       </span>
     </div>
 
     <label class="sr-only">Time</label>
-    <div class="input-group mb-1 mr-sm-1 value-input-div">
+    <div class="input-group mb-1 mr-xs-1 value-input-div">
       <div class="input-group-prepend">
-        <div class="input-group-text badge-info">Timer</div>
+        <div class="input-group-text badge-info"><i class="far fa-clock"></i></div>
       </div>
-      <span class="form-control">
+      <span class="form-control unselectable">
         {{displayTime}}
       </span>
     </div>
   </form>
 
-  <canvas #myCanvas oncontextmenu="return false;" (appPress)="click($event)"></canvas>
+  <div class="canvas-div">
+    <canvas #myCanvas oncontextmenu="return false;" (appPress)="click($event)"></canvas>
+  </div>
 
   <form class="form-inline">
-    <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">
-      New Game
+    <button class="btn btn-primary mb-2" (click)="settingsModal.show()">
+      <i class="fas fa-cog"></i> <span class="badge badge-secondary btn-badge">{{difficulty.name}}</span>
     </button>
-    <button class="btn btn-default mb-2" (click)="autoReveal()" [disabled]="gameData.autoReveals <= 0 || !startTime || gameDisabled">
-      Auto Reveal <span class="badge badge-secondary">{{gameData.autoReveals}} left</span>
+    <button class="btn btn-primary mb-2" (click)="statsModal.show()">
+      <i class="fas fa-chart-bar"></i>
+    </button>
+    <button class="btn btn-primary mb-2" (click)="helpModal.show()">
+      <i class="fas fa-question-circle"></i>
     </button>
   </form>
-  <hr />
-
-  <h3>Settings</h3>
-  <form class="form-inline">
-    <label class="sr-only" for="difficulty">Difficulty</label>
-    <div class="input-group mb-1 mr-sm-1 value-input-div">
-      <div class="input-group-prepend">
-        <div class="input-group-text">Difficulty</div>
-      </div>
-      <select class="form-control" id="difficulty" name="difficulty" required [ngModel]="difficulty" (ngModelChange)="onDifficultyChange($event)">
-        <option *ngFor="let diff of difficulties"  name="diff" [ngValue]="diff">{{diff.name}}</option>
-      </select>
-    </div>
-
-    <label class="sr-only" for="gridX">Columns</label>
-    <div class="input-group mb-1 mr-sm-1 value-input-div">
-      <div class="input-group-prepend">
-        <div class="input-group-text">Columns</div>
-      </div>
-      <input type="number" class="form-control" id="gridX" placeholder="X" name="gridX" [(ngModel)]="gridX" (ngModelChange)="createGame()"
-        min="{{minColumns}}" max="{{maxColumns}}" required [ngClass]="{'is-invalid': !validateColumns()}" [disabled]="!difficulty.isCustom">
-    </div>
-
-    <label class="sr-only" for="gridY">Rows</label>
-    <div class="input-group mb-1 mr-sm1 value-input-div">
-      <div class="input-group-prepend">
-        <div class="input-group-text">Rows</div>
-      </div>
-      <input type="number" class="form-control" id="gridY" placeholder="gridY" name="gridY" [(ngModel)]="gridY" (ngModelChange)="createGame()"
-        min="{{minRows}}" max="{{maxRows}}" required [ngClass]="{'is-invalid': !validateRows()}" [disabled]="!difficulty.isCustom">
-    </div>
-
-    <label class="sr-only" for="gridMines">Mines</label>
-    <div class="input-group mb-1 mr-sm1 value-input-div">
-      <div class="input-group-prepend">
-        <div class="input-group-text">Mines</div>
-      </div>
-      <input type="number" class="form-control" id="gridMines" placeholder="gridMines" name="gridMines" [(ngModel)]="gridMines" (ngModelChange)="createGame()"
-        min="{{minMines}}" max="{{getMaxMines()}}" required [ngClass]="{'is-invalid': !validateMines()}" [disabled]="!difficulty.isCustom">
-    </div>
-  </form>
-
-  <hr />
-
-  <h3>Stats</h3>
-  <ul>
-    <li><strong>Difficulty:</strong> {{difficulty.name}}</li>
-    <li><strong>Wins:</strong> {{gameData.wins}}</li>
-    <li><strong>Attempts:</strong> {{gameData.attempts}}</li>
-    <li><strong>Percent Won:</strong> {{gameData.wins / (gameData.attempts || 1) | percent}}</li>
-    <li><strong>Auto Reveals Used:</strong> {{gameData.autoRevealsUsed}}</li>
-  </ul>
-
-  <hr />
-
-  <h3>Controls</h3>
-  <ul>
-    <li><strong>Left Click/Tap:</strong> Reveal cell</li>
-    <li><strong>Right Click/Hold:</strong> Place flag</li>
-    <li><strong>Double Click/Middle Click/Hold:</strong> Reveal adjacent cells (if the correct number of adjacent mines are flagged)</li>
-    <li><strong>Auto Reveal</strong> Randomly flags an unflagged mine. You gain one each time you win a game</li>
-  </ul>
   
+</div>
+
+
+<div class="modal fade" bsModal #settingsModal="bs-modal" [config]="{backdrop: false}"
+tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Settings</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="settingsModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-inline">
+          <label class="sr-only" for="difficulty">Difficulty</label>
+          <div class="input-group mb-1 mr-sm-1 value-input-div">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Difficulty</div>
+            </div>
+            <select class="form-control" id="difficulty" name="difficulty" required [ngModel]="difficulty" (ngModelChange)="onDifficultyChange($event)">
+              <option *ngFor="let diff of difficulties"  name="diff" [ngValue]="diff">{{diff.name}}</option>
+            </select>
+          </div>
+      
+          <label class="sr-only" for="gridX">Columns</label>
+          <div class="input-group mb-1 mr-sm-1 value-input-div">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Columns</div>
+            </div>
+            <input type="number" class="form-control" id="gridX" placeholder="X" name="gridX" [(ngModel)]="gridX" (ngModelChange)="createGame()"
+              min="{{minColumns}}" max="{{maxColumns}}" required [ngClass]="{'is-invalid': !validateColumns()}" [disabled]="!difficulty.isCustom">
+          </div>
+      
+          <label class="sr-only" for="gridY">Rows</label>
+          <div class="input-group mb-1 mr-sm1 value-input-div">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Rows</div>
+            </div>
+            <input type="number" class="form-control" id="gridY" placeholder="gridY" name="gridY" [(ngModel)]="gridY" (ngModelChange)="createGame()"
+              min="{{minRows}}" max="{{maxRows}}" required [ngClass]="{'is-invalid': !validateRows()}" [disabled]="!difficulty.isCustom">
+          </div>
+      
+          <label class="sr-only" for="gridMines">Mines</label>
+          <div class="input-group mb-1 mr-sm1 value-input-div">
+            <div class="input-group-prepend">
+              <div class="input-group-text">Mines</div>
+            </div>
+            <input type="number" class="form-control" id="gridMines" placeholder="gridMines" name="gridMines" [(ngModel)]="gridMines" (ngModelChange)="createGame()"
+              min="{{minMines}}" max="{{getMaxMines()}}" required [ngClass]="{'is-invalid': !validateMines()}" [disabled]="!difficulty.isCustom">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #statsModal="bs-modal" [config]="{backdrop: false}"
+tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Stats</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="statsModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><strong>Difficulty:</strong> {{difficulty.name}}</li>
+          <li><strong>Wins:</strong> {{gameData.wins}}</li>
+          <li><strong>Attempts:</strong> {{gameData.attempts}}</li>
+          <li><strong>Percent Won:</strong> {{gameData.wins / (gameData.attempts || 1) | percent}}</li>
+          <li><strong>Auto Reveals Used:</strong> {{gameData.autoRevealsUsed}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" bsModal #helpModal="bs-modal" [config]="{backdrop: false}"
+tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-static-name" class="modal-title pull-left">Help</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="helpModal.hide()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul>
+          <li><strong>Left Click/Tap:</strong> Reveal cell</li>
+          <li><strong>Right Click/Hold:</strong> Places a flag (<i class="fas fa-flag-checkered"></i>) to indicate a mine (<i class="fas fa-bomb"></i>)</li>
+          <li><strong>Double Click/Middle Click/Hold:</strong> Reveal adjacent cells (if the correct number of adjacent mines are flagged)</li>
+          <li><strong><i class="far fa-eye"></i> (Auto Reveal):</strong> Randomly flags an unflagged mine. You gain one each time you win a game.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>

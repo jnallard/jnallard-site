@@ -10,3 +10,32 @@
 form > button {
   margin-right: .25rem!important;
 }
+
+canvas {
+  border: 10px solid #00000040;
+}
+
+.canvas-div {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.btn-badge {
+  margin-left: 5px;
+}
+
+.modal {
+  background-color: rgba(229, 239, 255, 0.5);
+}
+
+.modal-dialog {
+  opacity: 1;
+}
+
+.unselectable {
+  -webkit-user-select: none; /* Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+/Edge */
+  user-select: none; /* Standard */
+}
+

@@ -35,13 +35,12 @@ export class Cell {
     context.fill();
     context.lineWidth = 2;
     context.strokeStyle = 'black';
-    context.font = '24px Times New Roman';
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     if (this.flagged) {
-      this.drawText('f', Color.Flag);
+      this.drawText('\uf11e', Color.Flag, true);
     } else if (this.searched && this.hasMine) {
-      this.drawText('X', Color.Mine);
+      this.drawText('\uf1e2', Color.Mine, true);
     } else if (this.searched && this.neighborMineCount > 0) {
       this.drawText(this.neighborMineCount.toString(), this.getTextColorForNeighborMineCount());
     }
@@ -79,11 +78,13 @@ export class Cell {
     this.draw();
   }
 
-  private drawText(text: string, textColor: Color) {
+  private drawText(text: string, textColor: Color, useFontAwesome: boolean = false) {
+
     const xPos = Cell.width * this.x + Math.floor(Cell.width / 2);
     const yPos = Cell.height * this.y + Math.floor(Cell.height / 2);
     const context = Canvas.instance.context2D;
     context.fillStyle = textColor;
+    context.font = useFontAwesome ? '900 24px "Font Awesome 5 Free"' : '500 24px "Arial"';
     Canvas.instance.context2D.fillText(text, xPos, yPos);
   }
 

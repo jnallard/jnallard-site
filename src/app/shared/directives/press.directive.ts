@@ -74,6 +74,11 @@ export class PressDirective {
   @HostListener('dblclick', ['$event'])
   onDoublePress($event: ISourcePressEvent) {
     this.appPress.emit(new PressEvent(PressType.Double, $event));
+    console.log($event);
+
+    if ($event as MouseEvent) {
+      ($event as MouseEvent).preventDefault();
+    }
   }
 
   private convertTouchEvent($event: TouchEvent) {
