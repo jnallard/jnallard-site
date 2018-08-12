@@ -5,7 +5,8 @@ import { GameLostException } from './models/game-over-exception';
 import { Difficulty } from './models/difficulty.model';
 import { PressEvent } from '../../shared/models/press-event';
 import { timer } from 'rxjs';
-import { GameData } from './models/game-data';
+import { DifficultyGameData } from './models/difficulty-game-data';
+import { DefaultGameData } from './models/default-game-data';
 
 @Component({
   selector: 'app-minesweeper',
@@ -41,10 +42,12 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public endTime = null;
   public displayTime = '0:00';
 
-  public gameData: GameData;
+  public defaultGameData: DefaultGameData;
+  public gameData: DifficultyGameData;
 
   constructor() {
-    this.onDifficultyChange(this.difficulties[0], false);
+    this.defaultGameData = new DefaultGameData();
+    this.onDifficultyChange(this.defaultGameData.lastDifficulty, false);
   }
 
   public static getGameEntry() {
@@ -61,9 +64,14 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
       this.gridX = this.difficulty.columns;
       this.gridY = this.difficulty.rows;
       this.gridMines = this.difficulty.mines;
+    } else {
+      this.gridX = this.defaultGameData.customX;
+      this.gridY = this.defaultGameData.customY;
+      this.gridMines = this.defaultGameData.customMines;
     }
-    this.gameData = new GameData(difficulty.name);
+    this.gameData = new DifficultyGameData(difficulty.name);
     this.createGame(redraw);
+    this.defaultGameData.lastDifficulty = difficulty;
   }
 
   public getMaxMines() {
@@ -103,6 +111,12 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     this.canvasHeight = this.grid.rows * Cell.height;
     if (redraw) {
       this.redraw();
+    }
+
+    if (this.difficulty.isCustom) {
+      this.defaultGameData.customX = this.gridX;
+      this.defaultGameData.customY = this.gridY;
+      this.defaultGameData.customMines = this.gridMines;
     }
   }
 

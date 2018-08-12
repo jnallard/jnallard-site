@@ -1,7 +1,7 @@
 
 import { StoredData } from '../../../shared/models/stored-data';
 
-export class GameData {
+export class DifficultyGameData {
   private data: StoredData;
   constructor(difficulty: string) {
     this.data = new StoredData(`minesweeper-${difficulty}`);
