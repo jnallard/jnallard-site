@@ -5,7 +5,7 @@
       <button class="btn btn-primary mb-2" (click)="createGame()" [disabled]="!validateAll()">
         <i class="fas fa-sync-alt"></i>
       </button>
-      <button class="btn btn-primary mb-2" (click)="autoReveal()" [disabled]="gameData.autoReveals <= 0 || !startTime || gameDisabled">
+      <button class="btn btn-primary mb-2" (click)="autoReveal()" [disabled]="gameData.autoReveals <= 0 || !isGameStarted() || gameDisabled">
         <i class="far fa-eye"></i> <span class="badge badge-secondary btn-badge">{{gameData.autoReveals}}</span>
       </button>
       <label class="sr-only">Unflagged Mines</label>
@@ -31,6 +31,7 @@
 
     <div class="canvas-div" oncontextmenu="return false;">
       <canvas #myCanvas (appPress)="click($event)" class="unselectable" oncontextmenu="return false;"></canvas>
+      <h1 class="canvas-background" *ngIf="!isGameStarted()">Minesweeper!</h1>
     </div>
 
     <form class="form-inline">

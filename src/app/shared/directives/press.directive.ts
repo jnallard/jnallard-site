@@ -32,7 +32,6 @@ export class PressDirective {
   @HostListener('touchcancel', ['$event'])
   @HostListener('touchleave', ['$event'])
   onTouchEnd($event: TouchEvent) {
-    console.log($event);
     this.onPressEnd(new SourcePressEvent($event));
   }
 

@@ -34,7 +34,7 @@ export class Cell {
     context.fillStyle = this.getCellColor();
     context.fill();
     context.lineWidth = 2;
-    context.strokeStyle = 'black';
+    context.strokeStyle = Color.GridColor;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
     if (this.flagged) {

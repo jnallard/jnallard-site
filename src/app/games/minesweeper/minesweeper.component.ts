@@ -191,6 +191,10 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public isGameStarted() {
+    return this.startTime != null;
+  }
+
   private getTimeElasped() {
     let milliseconds = 0;
     if (this.startTime && !this.endTime) {

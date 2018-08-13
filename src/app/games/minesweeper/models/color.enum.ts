@@ -30,4 +30,7 @@ export enum Color {
   Six = '#49ffec',
   Seven = '#000000',
   Eight = '#707070',
+
+  // Other Colors
+  GridColor = '#00000066',
 }
