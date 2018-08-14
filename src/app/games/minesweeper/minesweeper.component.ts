@@ -37,6 +37,7 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
 
   public canvasWidth = -1;
   public canvasHeight = -1;
+  public borderWidth = 10;
 
   public startTime: Date = null;
   public endTime: Date = null;
@@ -144,13 +145,12 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public click(event: PressEvent) {
     if (this.gameDisabled) { return; }
 
-    if (this.startTime == null) {
-      this.startTime = new Date();
-      this.gameData.attempts++;
-    }
-
     try {
       this.grid.handlePressEvent(event);
+      if (this.startTime == null && this.grid.isGameStarted()) {
+        this.startTime = new Date();
+        this.gameData.attempts++;
+      }
     } catch (exception) {
       if (exception instanceof GameLostException) {
         this.handleGameOver(exception);

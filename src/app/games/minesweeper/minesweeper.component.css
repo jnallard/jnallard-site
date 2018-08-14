@@ -12,7 +12,8 @@ form > button {
 }
 
 canvas {
-  border: 10px solid rgba(199, 199, 199, 1);
+  border-style: solid;
+  border-color: rgba(199, 199, 199, 1);
   cursor: pointer;
 }
 

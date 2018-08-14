@@ -3,5 +3,6 @@ export enum PressType {
   Double = 'Double',
   Long = 'Long',
   HoldingStarted = 'HoldingStarted',
-  HoldingEnded = 'HoldingEnded'
+  HoldingEnded = 'HoldingEnded',
+  Hover = 'Hover',
 }

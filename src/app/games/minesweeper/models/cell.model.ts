@@ -17,6 +17,7 @@ export class Cell {
   private isGameOver = false;
   private isGameWon = false;
   private isHighlighted = false;
+  private isHovered = false;
 
   constructor(public readonly x: number,
     public readonly y: number,
@@ -33,10 +34,15 @@ export class Cell {
     context.rect(xPos, yPos, Cell.width, Cell.height);
     context.fillStyle = this.getCellColor();
     context.fill();
-    context.lineWidth = 2;
     context.strokeStyle = Color.GridColor;
     context.textAlign = 'center';
     context.textBaseline = 'middle';
+    if (this.isHovered) {
+      context.lineWidth = 5;
+    } else {
+      context.lineWidth = 2;
+    }
+
     if (this.flagged) {
       this.drawText('\uf11e', Color.Flag, true);
     } else if (this.searched && this.hasMine) {
@@ -60,6 +66,8 @@ export class Cell {
     if (this.hasMine) {
       this.searched = true;
     }
+    this.isHighlighted = false;
+    this.isHovered = false;
 
     this.isGameOver = true;
     this.isGameWon = success;
@@ -75,6 +83,11 @@ export class Cell {
 
   public setHighlighted(isHighlighted: boolean = true) {
     this.isHighlighted = isHighlighted;
+    this.draw();
+  }
+
+  public setHovered(isHovered: boolean = true) {
+    this.isHovered = isHovered;
     this.draw();
   }
 

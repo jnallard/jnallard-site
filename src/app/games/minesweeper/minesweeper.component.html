@@ -30,7 +30,7 @@
     </form>
 
     <div class="canvas-div" oncontextmenu="return false;">
-      <canvas #myCanvas (appPress)="click($event)" class="unselectable" oncontextmenu="return false;"></canvas>
+      <canvas #myCanvas (appPress)="click($event)" class="unselectable" oncontextmenu="return false;" [borderWidth]="borderWidth"></canvas>
       <h1 class="canvas-background" *ngIf="!isGameStarted()">Minesweeper!</h1>
     </div>
 

@@ -1,12 +1,12 @@
 export class SourcePressEvent {
-  constructor(sourceEvent: MouseEvent | TouchEvent, stopPropagation = true, preventDefault = true) {
+  constructor(sourceEvent: MouseEvent | TouchEvent, borderWidth: number, stopPropagation = true, preventDefault = true) {
     if (sourceEvent instanceof TouchEvent) {
       const touchEvent = sourceEvent as TouchEvent;
       const target = sourceEvent.target as HTMLElement;
       const bounds = target.getBoundingClientRect();
       this.which = 1;
-      this.offsetX = touchEvent.changedTouches[0].clientX - bounds.left;
-      this.offsetY = touchEvent.changedTouches[0].clientY - bounds.top;
+      this.offsetX = touchEvent.changedTouches[0].clientX - bounds.left - borderWidth;
+      this.offsetY = touchEvent.changedTouches[0].clientY - bounds.top - borderWidth;
     } else {
       const mouseEvent = sourceEvent as MouseEvent;
       this.which = mouseEvent.which;

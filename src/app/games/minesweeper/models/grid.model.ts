@@ -20,6 +20,10 @@ export class Grid {
 
   public handlePressEvent(event: PressEvent) {
     const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
+    if (!cell) {
+      this.getAllCells().forEach(x => x.setHovered(false));
+      return;
+    }
 
     if (event.type === PressType.HoldingStarted) {
       if (cell.searched) {
@@ -27,6 +31,9 @@ export class Grid {
       } else {
         cell.setHighlighted();
       }
+    } else if (event.type === PressType.Hover) {
+      this.getAllCells().filter(x => x !== cell).forEach(x => x.setHovered(false));
+      cell.setHovered();
     } else if (event.type === PressType.HoldingEnded) {
       this.getAllCells().forEach(x => x.setHighlighted(false));
     } else if (event.type === PressType.Single) {
@@ -52,6 +59,10 @@ export class Grid {
     for (const cell of this.getAllCells()) {
       cell.draw();
     }
+  }
+
+  public isGameStarted() {
+    return this.initialized;
   }
 
   public isGameDone() {

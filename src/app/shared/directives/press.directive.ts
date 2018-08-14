@@ -1,4 +1,4 @@
-import { Directive, EventEmitter, HostListener, Output } from '@angular/core';
+import { Directive, EventEmitter, HostListener, Input, Output, ElementRef, OnInit} from '@angular/core';
 import { PressEvent } from '../models/press-event';
 import { PressType } from '../models/press-type';
 import { interval, Subscription } from 'rxjs';
@@ -7,8 +7,12 @@ import { SourcePressEvent } from '../models/source-press-event';
 @Directive({
   selector: '[appPress]'
 })
-export class PressDirective {
+export class PressDirective implements OnInit {
   @Output() appPress = new EventEmitter();
+
+  @Input('borderWidth') borderWidth = 0;
+
+  constructor(private el: ElementRef) { }
 
   private thisPress: number = new Date().getTime();
   private startingPress: SourcePressEvent = null;
@@ -18,41 +22,52 @@ export class PressDirective {
   private readonly LONG_PRESS_INTERVAL = 250;
   private readonly MOVE_DISTANCE_BUFFER_PIXELS = 10;
 
+  ngOnInit() {
+    this.el.nativeElement.style.borderWidth = `${this.borderWidth}px`;
+  }
+
   @HostListener('touchstart', ['$event'])
   onTouchStart($event: TouchEvent) {
-    this.onPressStart(new SourcePressEvent($event, true, false));
+    const sourceEvent = new SourcePressEvent($event, this.borderWidth, true, false);
+    this.appPress.emit(new PressEvent(PressType.Hover, sourceEvent));
+    this.onPressStart(sourceEvent);
   }
 
   @HostListener('touchmove', ['$event'])
   onTouchMove($event: TouchEvent) {
-    this.onPressMove(new SourcePressEvent($event, false, false));
+    const sourceEvent = new SourcePressEvent($event, this.borderWidth, false, false);
+    this.appPress.emit(new PressEvent(PressType.Hover, sourceEvent));
+    this.onPressMove(sourceEvent);
   }
 
   @HostListener('touchend', ['$event'])
   @HostListener('touchcancel', ['$event'])
   @HostListener('touchleave', ['$event'])
   onTouchEnd($event: TouchEvent) {
-    this.onPressEnd(new SourcePressEvent($event));
+    const sourceEvent = new SourcePressEvent($event, this.borderWidth);
+    this.appPress.emit(new PressEvent(PressType.Hover, sourceEvent));
+    this.onPressEnd(sourceEvent);
   }
 
   @HostListener('mousedown', ['$event'])
   onMouseDown($event: MouseEvent) {
-    this.onPressStart(new SourcePressEvent($event));
+    this.onPressStart(new SourcePressEvent($event, this.borderWidth));
   }
 
+  @HostListener('mouseleave', ['$event'])
   @HostListener('mousemove', ['$event'])
   onMouseMove($event: MouseEvent) {
-    this.onPressMove(new SourcePressEvent($event, false, false));
+    this.onPressMove(new SourcePressEvent($event, this.borderWidth, false, false));
   }
 
   @HostListener('mouseup', ['$event'])
   onMouseUp($event: TouchEvent) {
-    this.onPressEnd(new SourcePressEvent($event));
+    this.onPressEnd(new SourcePressEvent($event, this.borderWidth));
   }
 
   @HostListener('dblclick', ['$event'])
   onDoublePress($sourceEvent: MouseEvent | TouchEvent) {
-    const $event = new SourcePressEvent($sourceEvent);
+    const $event = new SourcePressEvent($sourceEvent, this.borderWidth);
     this.appPress.emit(new PressEvent(PressType.Double, $event));
   }
 
@@ -72,6 +87,7 @@ export class PressDirective {
 
   onPressMove($event: SourcePressEvent) {
     if (this.pressInterrupted || $event.isTouchEvent !== this.startingPress.isTouchEvent) {
+      this.appPress.emit(new PressEvent(PressType.Hover, $event));
       return;
     }
 
