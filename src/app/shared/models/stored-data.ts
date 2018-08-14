@@ -20,4 +20,8 @@ export class StoredData {
     data[field] = value;
     this.setData(data);
   }
+
+  public clear() {
+    this.setData({});
+  }
 }

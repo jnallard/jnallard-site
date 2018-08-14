@@ -1,54 +1,53 @@
 
 import { StoredData } from '../../../shared/models/stored-data';
 
-export class DifficultyGameData {
-  private data: StoredData;
+export class DifficultyGameData extends StoredData {
   constructor(difficulty: string) {
-    this.data = new StoredData(`minesweeper-${difficulty}`);
+    super(`minesweeper-${difficulty}`);
   }
 
   public get wins(): number {
-    const value = this.data.get('wins');
+    const value = this.get('wins');
     return value ? +value : 0;
   }
 
   public set wins(newValue: number) {
-    this.data.set('wins', newValue);
+    this.set('wins', newValue);
   }
 
   public get attempts(): number {
-    const value = this.data.get('attempts');
+    const value = this.get('attempts');
     return value ? +value : 0;
   }
 
   public set attempts(newValue: number) {
-    this.data.set('attempts', newValue);
+    this.set('attempts', newValue);
   }
 
   public get autoReveals(): number {
-    const value = this.data.get('autoReveals');
+    const value = this.get('autoReveals');
     return value ? +value : 0;
   }
 
   public set autoReveals(newValue: number) {
-    this.data.set('autoReveals', newValue);
+    this.set('autoReveals', newValue);
   }
 
   public get autoRevealsUsed(): number {
-    const value = this.data.get('autoRevealsUsed');
+    const value = this.get('autoRevealsUsed');
     return value ? +value : 0;
   }
 
   public set autoRevealsUsed(newValue: number) {
-    this.data.set('autoRevealsUsed', newValue);
+    this.set('autoRevealsUsed', newValue);
   }
 
   public get bestTimeMilliseconds(): number {
-    const value = this.data.get('bestTimeMilliseconds');
+    const value = this.get('bestTimeMilliseconds');
     return value ? +value : 0;
   }
 
   public set bestTimeMilliseconds(newValue: number) {
-    this.data.set('bestTimeMilliseconds', newValue);
+    this.set('bestTimeMilliseconds', newValue);
   }
 }

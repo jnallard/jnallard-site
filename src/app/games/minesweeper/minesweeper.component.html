@@ -119,12 +119,13 @@ tabindex="-1" role="dialog" aria-labelledby="dialog-static-name">
           <li><strong>Wins:</strong> {{gameData.wins}}</li>
           <li><strong>Attempts:</strong> {{gameData.attempts}}</li>
           <li><strong>Percent Won:</strong> {{gameData.wins / (gameData.attempts || 1) | percent}}</li>
-          <li><strong>Auto Reveals Used:</strong> {{gameData.autoRevealsUsed}}</li>
+          <li><strong><i class="far fa-eye"></i> (Auto Reveals) Used:</strong> {{gameData.autoRevealsUsed}}</li>
           <li><strong>Best Time:</strong> 
             <span *ngIf="gameData.bestTimeMilliseconds == 0"> N/A</span>
             <span *ngIf="gameData.bestTimeMilliseconds > 0"> {{convertMillisecondsToTimeString(gameData.bestTimeMilliseconds)}}</span>
           </li>
         </ul>
+        <button class="btn btn-warning btn-block" (click)="gameData.clear()">Clear Stats and <i class="far fa-eye"></i></button>
       </div>
     </div>
   </div>

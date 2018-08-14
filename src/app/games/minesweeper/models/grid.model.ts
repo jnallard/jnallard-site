@@ -8,6 +8,7 @@ export class Grid {
 
   private cells: { [key: string]: Cell; } = {};
   private initialized = false;
+  private previousHover: Cell;
 
   constructor(public readonly columns: number, public readonly rows: number, public readonly mines: number) {
     for (let i = 0; i < columns; i++) {
@@ -21,7 +22,7 @@ export class Grid {
   public handlePressEvent(event: PressEvent) {
     const cell = this.getCellFromPixels(event.offsetX, event.offsetY);
     if (!cell) {
-      this.getAllCells().forEach(x => x.setHovered(false));
+      this.clearPreviousHoverCell();
       return;
     }
 
@@ -32,8 +33,9 @@ export class Grid {
         cell.setHighlighted();
       }
     } else if (event.type === PressType.Hover) {
-      this.getAllCells().filter(x => x !== cell).forEach(x => x.setHovered(false));
+      this.clearPreviousHoverCell();
       cell.setHovered();
+      this.previousHover = cell;
     } else if (event.type === PressType.HoldingEnded) {
       this.getAllCells().forEach(x => x.setHighlighted(false));
     } else if (event.type === PressType.Single) {
@@ -82,6 +84,13 @@ export class Grid {
     const mines = this.getAllCells().filter(x => x.hasMine && !x.flagged).sort((a, b) => a.sortingValue - b.sortingValue);
     if (mines.length > 0) {
       mines[0].flag();
+    }
+  }
+
+  private clearPreviousHoverCell() {
+    if (this.previousHover != null) {
+      this.previousHover.setHovered(false);
+      this.getNeighborCells(this.previousHover).forEach(x => x.draw());
     }
   }
 
