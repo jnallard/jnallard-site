@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { GameList } from './games/models/game-list';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +13,7 @@ export class AppComponent {
   public isCollapsed = true;
   public gameList = GameList.instance;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private socket: Socket) {
     router.events.subscribe(event => {
       this.isCollapsed = true;
     });

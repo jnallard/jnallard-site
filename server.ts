@@ -1,6 +1,17 @@
 import express = require('express');
 import path = require('path');
+import io = require('socket.io');
+
 const app = express();
+const port = process.env.PORT || 3000;
+const server = app.listen(process.env.PORT || 3000, function() {
+    console.log(`Server now listening on ${port}.`);
+});
+const socketIO = io.listen(server);
+
+socketIO.on('connect', socket => {
+    console.log(`Socket connected: ${socket.id}.`);
+});
 
 // Allow any method from any host and log requests
 app.use((req, res, next) => {
@@ -25,6 +36,4 @@ app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname + '/dist/my-app/index.html'));
 });
 
-app.listen(process.env.PORT || 3000, function() {
-    console.log('Server now listening on 3000');
-});
+

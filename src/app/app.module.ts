@@ -13,6 +13,8 @@ import { HomeComponent } from './home/home.component';
 import { GamesComponent } from './games/games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { PressDirective } from './shared/directives/press.directive';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+const socketConfig: SocketIoConfig = { url: `${window.location.origin}`, options: {} };
 
 const appRoutes: Routes = [
   { path: '',
@@ -49,7 +51,8 @@ console.log(appRoutes);
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
     TooltipModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    SocketIoModule.forRoot(socketConfig)
   ],
   providers: [],
   bootstrap: [AppComponent]

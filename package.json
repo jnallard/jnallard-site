@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "serve": "concurrently \"ng build --watch\" \"ts-node server.ts\"",
+    "serve": "concurrently \"ng build --watch\" \"npx ts-node-dev server.ts\"",
     "start": "npx ts-node server.ts",
     "build": "ng build",
     "test": "ng test",
@@ -30,9 +30,11 @@
     "core-js": "^2.5.4",
     "express": "^4.16.3",
     "ngx-bootstrap": "^3.0.1",
+    "ngx-socket-io": "^2.1.1",
     "path": "^0.12.7",
     "rxjs": "^6.0.0",
     "socket.io": "^2.2.0",
+    "ts-node-dev": "^1.0.0-pre.32",
     "typescript": "~2.7.2",
     "zone.js": "~0.8.26"
   },
