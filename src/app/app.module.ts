@@ -14,7 +14,7 @@ import { GamesComponent } from './games/games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { PressDirective } from './shared/directives/press.directive';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-const socketConfig: SocketIoConfig = { url: `${window.location.origin}`, options: {} };
+const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
   { path: '',

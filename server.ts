@@ -1,6 +1,8 @@
 import express = require('express');
 import path = require('path');
 import io = require('socket.io');
+import SocketEvent = require('./src/app/shared/models/socket-event');
+import SocketRouting = require('./src/server/socket-routing');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,8 +11,13 @@ const server = app.listen(process.env.PORT || 3000, function() {
 });
 const socketIO = io.listen(server);
 
+const routing = new SocketRouting.SocketRouting();
 socketIO.on('connect', socket => {
     console.log(`Socket connected: ${socket.id}.`);
+    socket.on('event', (socketEvent: SocketEvent.SocketEvent) => {
+        console.log(socketEvent);
+        routing.sendEvent(socket, socketEvent);
+    });
 });
 
 // Allow any method from any host and log requests

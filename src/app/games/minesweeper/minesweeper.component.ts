@@ -7,6 +7,8 @@ import { PressEvent } from '../../shared/models/press-event';
 import { timer } from 'rxjs';
 import { DifficultyGameData } from './models/difficulty-game-data';
 import { DefaultGameData } from './models/default-game-data';
+import { Socket } from 'ngx-socket-io';
+import { SocketEvent } from 'src/app/shared/models/socket-event';
 
 @Component({
   selector: 'app-minesweeper',
@@ -46,7 +48,8 @@ export class MinesweeperComponent implements OnInit, AfterViewInit {
   public defaultGameData: DefaultGameData;
   public gameData: DifficultyGameData;
 
-  constructor() {
+  constructor(private socket: Socket) {
+    this.socket.emit('event', new SocketEvent('games', 'minesweeper', 'hi'));
     this.defaultGameData = new DefaultGameData();
     this.onDifficultyChange(this.defaultGameData.lastDifficulty, false);
   }
