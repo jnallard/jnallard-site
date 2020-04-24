@@ -14,6 +14,7 @@ import { GamesComponent } from './games/games.component';
 import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { PressDirective } from './shared/directives/press.directive';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { CameraComponent } from './test-pages/camera/camera.component';
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   },
   { path: 'games', component: GamesComponent, pathMatch: 'full' },
   { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
+  { path: 'test-pages/camera', component: CameraComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent }
 ];
 
@@ -39,7 +41,8 @@ console.log(appRoutes);
     HomeComponent,
     GamesComponent,
     MinesweeperComponent,
-    PressDirective
+    PressDirective,
+    CameraComponent
   ],
   imports: [
     FormsModule,

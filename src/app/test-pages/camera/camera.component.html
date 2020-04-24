@@ -1,0 +1,41 @@
+<div class="container">
+  <h1>Camera Test</h1>
+  
+  <div class="card text-white bg-danger mb-3" *ngIf="error" >
+    <div class="card-header">Error</div>
+    <div class="card-body">
+      <h5 class="card-title">Error</h5>
+      <p class="card-text">{{error}}</p>
+    </div>
+  </div>
+  <hr/>
+  
+  <h2>Video Stream: </h2>
+  <p><strong>(make sure your browser is not blocking the camera)</strong></p>
+  <video autoplay="true" id="videoElement"></video>
+  
+  <hr/>
+  
+  <h2>Media devices: </h2>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th style="width: 25%;">Label</th>
+        <th style="width: 25%;">Type</th>
+        <th style="width: 25%;">Id</th>
+        <th style="width: 25%;">Group Id</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="devices">
+      <tr *ngFor="let device of devices" style="word-break: break-all;">
+        <td>{{device.label}}</td>
+        <td>{{device.kind}}</td>
+        <td>{{device.deviceId}}</td>
+        <td>{{device.groupId}}</td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <hr/>
+
+</div>
