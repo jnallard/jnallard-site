@@ -16,6 +16,7 @@ import { PressDirective } from './shared/directives/press.directive';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { CameraComponent } from './test-pages/camera/camera.component';
 import { CardsComponent } from './games/cards/cards.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -58,7 +59,8 @@ console.log(appRoutes);
     CollapseModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    SocketIoModule.forRoot(socketConfig)
+    SocketIoModule.forRoot(socketConfig),
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
