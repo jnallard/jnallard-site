@@ -3,6 +3,7 @@ import { ISocketRouting } from './i-socket-routing';
 import { Socket } from 'socket.io';
 import { SocketEvent } from 'src/app/shared/models/socket-event';
 import { MinesweeperSocketRouting } from './games/minesweeper/minesweerper-socket-routing';
+import { CardsSocketRouting } from './games/cards/cards-socket-routing';
 
 class RoutingSubcategory {
   constructor(public name: string, public router: ISocketRouting) {}
@@ -18,6 +19,7 @@ export class SocketRouting {
       new RoutingSubcategory('main', new MainSocketRouting())
     ]),
     new RoutingCategory('games', [
+      new RoutingSubcategory('cards', new CardsSocketRouting()),
       new RoutingSubcategory('minesweeper', new MinesweeperSocketRouting())
     ])
   ];
