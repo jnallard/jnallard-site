@@ -1,0 +1,29 @@
+<div class="modal-header">
+  <h3 class="modal-title">Create a New Game</h3>
+  <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <h4>Game Details</h4>
+  <div class="input-group input-group-sm mb-3">
+    <div class="input-group-prepend">
+      <span class="input-group-text">Name</span>
+    </div>
+    <input type="text" class="form-control" [(ngModel)]="name">
+  </div>
+  <h4>Decks <small>({{getSelectedDecks().length}} decks selected)</small></h4>
+  <div class="list-group">
+    <button type="button" class="list-group-item list-group-item-action" *ngFor="let deck of knownDecks" [ngClass]="{'list-group-item-success': deck.selected}" (click)="deck.selected = !deck.selected">
+      {{deck.deck.name}} 
+      <small>
+        (<a [href]="'https://www.cardcastgame.com/browse/deck/' + deck.deck.id" target="_blank">
+          {{deck.deck.id}} <i class="fas fa-external-link-alt"></i>
+        </a>)
+    </small>
+    </button>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.close('Close click')">Close</button>
+</div>

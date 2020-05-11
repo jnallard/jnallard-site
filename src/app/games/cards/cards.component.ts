@@ -5,6 +5,10 @@ import { SocketEvent } from 'src/app/shared/models/socket-event';
 import { SocketData } from 'src/app/shared/models/socket-data';
 import { Game } from 'src/server/games/cards/dtos/game';
 import { CardCastDeck } from 'src/server/games/cards/dtos/card-cast-deck';
+import { CreateGameComponent } from './create-game/create-game.component';
+import { ModalService } from 'src/app/shared/services/modal.service';
+import { CreateGameModalRequest } from './create-game/create-game-modal-request.model';
+import { CreateGameRequest } from 'src/server/games/cards/dtos/create-game-request';
 
 @Component({
   selector: 'app-cards',
@@ -18,16 +22,15 @@ export class CardsComponent implements OnInit {
   public currentGame: Game;
 
   constructor(
+    private modalService: ModalService,
     private socket: Socket
   ) {
     this.socket.emit('event', new SocketEvent('games', 'cards', new SocketData('loaded')));
     this.socket.on('game-list', (gameList: Game[]) => {
       this.knownGames = gameList;
-      console.log(gameList.map(game => game.name));
     });
     this.socket.on('known-decks', (knownDecks: CardCastDeck[]) => {
       this.knownDecks = knownDecks;
-      console.log(knownDecks);
     });
   }
 
@@ -43,11 +46,18 @@ export class CardsComponent implements OnInit {
   }
 
   createGame() {
-    console.log('create game');
+    this.modalService.open(CreateGameComponent, new CreateGameModalRequest(this.knownDecks)).subscribe(data => {
+      console.log(data);
+      this.sendEvent('create-game', new CreateGameRequest(data.name, data.selectedDecks.map(deck => deck.id)));
+    }, console.error);
   }
 
   selectGame(selectedGame: Game) {
     this.currentGame = selectedGame;
+  }
+
+  sendEvent(eventType: string, data: any) {
+    this.socket.emit('event', new SocketEvent('games', 'cards', new SocketData(eventType, data)));
   }
 
 }

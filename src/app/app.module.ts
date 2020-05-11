@@ -17,6 +17,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { CameraComponent } from './test-pages/camera/camera.component';
 import { CardsComponent } from './games/cards/cards.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CreateGameComponent } from './games/cards/create-game/create-game.component';
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -46,7 +47,8 @@ console.log(appRoutes);
     MinesweeperComponent,
     PressDirective,
     CameraComponent,
-    CardsComponent
+    CardsComponent,
+    CreateGameComponent
   ],
   imports: [
     FormsModule,

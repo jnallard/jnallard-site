@@ -1,19 +1,23 @@
 <div class="container">
   <div *ngIf="!currentGame">
     <h1>Pick a game</h1>
-    <div class="row">
-      <div class="card" style="width: 18rem;">
-        <div class="card-body">
-          <h5 class="card-title">New Game</h5>
-          <p class="card-text">Select the decks and rules you want to play with</p>
-          <button class="btn btn-primary" (click)="createGame()">Create Game</button>
+    <div class="row game-list">
+      <div class="col-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">New Game</h5>
+            <p class="card-text">Select the decks and rules you want to play with</p>
+            <button class="btn btn-primary" (click)="createGame()">Create Game</button>
+          </div>
         </div>
       </div>
-      <div class="card" style="width: 18rem;" *ngFor="let game of knownGames">
-        <div class="card-body">
-          <h5 class="card-title">{{game.name}}</h5>
-          <p class="card-text">Player-Created Game</p>
-          <button class="btn btn-primary" (click)="selectGame(game)">Join</button>
+      <div class="col-4" *ngFor="let game of knownGames">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{game.name}}</h5>
+            <p class="card-text">Player-Created Game</p>
+            <button class="btn btn-primary" (click)="selectGame(game)">Join</button>
+          </div>
         </div>
       </div>
     </div>
