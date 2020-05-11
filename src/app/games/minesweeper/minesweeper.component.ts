@@ -18,7 +18,7 @@ import { SocketData } from 'src/app/shared/models/socket-data';
 })
 export class MinesweeperComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('myCanvas')
+  @ViewChild('myCanvas', {static: false})
   myCanvas: ElementRef;
 
   public readonly minColumns = 5;

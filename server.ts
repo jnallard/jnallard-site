@@ -1,8 +1,8 @@
-import express = require('express');
-import path = require('path');
-import io = require('socket.io');
-import SocketEvent = require('./src/app/shared/models/socket-event');
-import SocketRouting = require('./src/server/socket-routing');
+import * as express from 'express';
+import * as path from 'path';
+import * as io from 'socket.io';
+import { SocketEvent } from './src/app/shared/models/socket-event';
+import { SocketRouting } from './src/server/socket-routing';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -11,10 +11,10 @@ const server = app.listen(process.env.PORT || 3000, function() {
 });
 const socketIO = io.listen(server);
 
-const routing = new SocketRouting.SocketRouting();
+const routing = new SocketRouting();
 socketIO.on('connect', socket => {
     console.log(`Socket connected: ${socket.id}.`);
-    socket.on('event', (socketEvent: SocketEvent.SocketEvent) => {
+    socket.on('event', (socketEvent: SocketEvent) => {
         console.log(socketEvent);
         routing.sendEvent(socket, socketEvent);
     });

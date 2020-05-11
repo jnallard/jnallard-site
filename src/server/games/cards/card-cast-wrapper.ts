@@ -1,4 +1,4 @@
-import cardcast = require('cardcast');
+import * as cardcast from 'cardcast';
 import { from, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { CardCastDeck } from './dtos/card-cast-deck';

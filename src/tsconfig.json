@@ -1,15 +1,15 @@
 {
   "compileOnSave": false,
   "include": [
-      "src/**/*.ts"
+      "./**/*.ts"
   ],
   "compilerOptions": {
-    "baseUrl": "./",
+    "baseUrl": "../",
     "importHelpers": true,
-    "outDir": "./dist/out-tsc",
+    "outDir": "../dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "CommonJS",
+    "module": "esnext",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
