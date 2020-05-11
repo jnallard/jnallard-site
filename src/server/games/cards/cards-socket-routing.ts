@@ -13,12 +13,13 @@ import { Card } from './dtos/card';
 export class CardsSocketRouting implements ISocketRouting {
   private gameDtos: Game[] = [];
   private cardCast = new CardCastWrapper();
-  private knownDeckIds = ['7RTVN', '4WHKA'];
+  private knownDeckIds = ['4WHKA'];
   private knownDecks: CardCastDeck[];
   private games: Map<string, GameController> = new Map();
 
   constructor() {
-    forkJoin(this.knownDeckIds.map(deckId => this.cardCast.getDeck(deckId))).subscribe(decks => this.knownDecks = decks);
+    forkJoin(this.knownDeckIds.map(deckId => this.cardCast.getDeck(deckId)))
+      .subscribe(decks => this.knownDecks = decks.filter(deck => deck != null));
   }
 
   handleEvent(socket: Socket, event: SocketEvent): void {

@@ -1,6 +1,6 @@
 import * as cardcast from 'cardcast';
-import { from, forkJoin } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { from, forkJoin, of } from 'rxjs';
+import { map, tap, catchError } from 'rxjs/operators';
 import { CardCastDeck } from './dtos/card-cast-deck';
 import { Card } from './dtos/card';
 
@@ -18,6 +18,6 @@ export class CardCastWrapper {
     const getResponses = from(cardcast(id).responses() as Promise<any>)
       .pipe(tap(responses => whiteCards = responses.map(card => new Card(card.text.join()))));
     return forkJoin(getInfo, getCalls, getResponses)
-      .pipe(map(() => new CardCastDeck(metadata.name, metadata.code, blackCards, whiteCards)));
+      .pipe(map(() => new CardCastDeck(metadata.name, metadata.code, blackCards, whiteCards)), catchError(() => of(null)));
   }
 }
