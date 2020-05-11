@@ -9,6 +9,11 @@ import { CreateGameComponent } from './create-game/create-game.component';
 import { ModalService } from 'src/app/shared/services/modal.service';
 import { CreateGameModalRequest } from './create-game/create-game-modal-request.model';
 import { CreateGameRequest } from 'src/server/games/cards/dtos/create-game-request';
+import { PickUsernameComponent } from './pick-username/pick-username.component';
+import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
+import { JoinGameRequest } from 'src/server/games/cards/dtos/join-game-request';
+import { timer, interval } from 'rxjs';
+import { Card } from 'src/server/games/cards/dtos/card';
 
 @Component({
   selector: 'app-cards',
@@ -20,6 +25,10 @@ export class CardsComponent implements OnInit {
   public knownGames: Game[];
   public knownDecks: CardCastDeck[];
   public currentGame: Game;
+  public username: string;
+
+  public currentBlackCard: Card;
+  public whiteCards: Card[];
 
   constructor(
     private modalService: ModalService,
@@ -32,6 +41,19 @@ export class CardsComponent implements OnInit {
     this.socket.on('known-decks', (knownDecks: CardCastDeck[]) => {
       this.knownDecks = knownDecks;
     });
+    this.socket.on('game-created', (game: Game) => {
+      this.joinGame(game);
+    });
+    this.socket.on('game-joined', (game: Game) => {
+      this.currentGame = game;
+    });
+    this.socket.on('my-player-update', (whiteCards: Card[]) => {
+      this.whiteCards = whiteCards;
+    });
+    this.socket.on('current-black-card', (blackCard: Card) => {
+      this.currentBlackCard = blackCard;
+    });
+    interval(1000).subscribe(() => this.sendEvent('request-reload', null));
   }
 
   public static getGameEntry() {
@@ -43,6 +65,30 @@ export class CardsComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.getUsername();
+  }
+
+  getUsername() {
+    this.modalService.open(PickUsernameComponent, null).subscribe(username => {
+      this.username = username;
+    });
+  }
+
+  changeUsername() {
+    this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to change your username?').subscribe(result => {
+      if (result) {
+        this.username = null;
+        this.getUsername();
+      }
+    });
+  }
+
+  leaveGame() {
+    this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to leave this game?').subscribe(result => {
+      if (result) {
+        this.currentGame = null;
+      }
+    });
   }
 
   createGame() {
@@ -52,8 +98,8 @@ export class CardsComponent implements OnInit {
     }, console.error);
   }
 
-  selectGame(selectedGame: Game) {
-    this.currentGame = selectedGame;
+  joinGame(selectedGame: Game) {
+    this.sendEvent('join-game', new JoinGameRequest(this.username, selectedGame.id));
   }
 
   sendEvent(eventType: string, data: any) {

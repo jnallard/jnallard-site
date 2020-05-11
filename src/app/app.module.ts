@@ -18,6 +18,8 @@ import { CameraComponent } from './test-pages/camera/camera.component';
 import { CardsComponent } from './games/cards/cards.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateGameComponent } from './games/cards/create-game/create-game.component';
+import { PickUsernameComponent } from './games/cards/pick-username/pick-username.component';
+import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -48,7 +50,9 @@ console.log(appRoutes);
     PressDirective,
     CameraComponent,
     CardsComponent,
-    CreateGameComponent
+    CreateGameComponent,
+    PickUsernameComponent,
+    ConfirmationModalComponent
   ],
   imports: [
     FormsModule,
