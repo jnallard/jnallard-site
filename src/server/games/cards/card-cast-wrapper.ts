@@ -14,9 +14,9 @@ export class CardCastWrapper {
     const getInfo = from(cardcast(id).info() as Promise<any>)
       .pipe(tap(info => metadata = info));
     const getCalls = from(cardcast(id).calls() as Promise<any>)
-      .pipe(tap(calls => blackCards = calls.map(card => new Card(card.text.join()))));
+      .pipe(tap(calls => blackCards = calls.map(card => new Card(card))));
     const getResponses = from(cardcast(id).responses() as Promise<any>)
-      .pipe(tap(responses => whiteCards = responses.map(card => new Card(card.text.join()))));
+      .pipe(tap(responses => whiteCards = responses.map(card => new Card(card))));
     return forkJoin(getInfo, getCalls, getResponses)
       .pipe(map(() => new CardCastDeck(metadata.name, metadata.code, blackCards, whiteCards)), catchError(() => of(null)));
   }

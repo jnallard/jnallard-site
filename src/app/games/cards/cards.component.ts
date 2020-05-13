@@ -26,6 +26,7 @@ export class CardsComponent implements OnInit {
   public knownDecks: CardCastDeck[];
   public currentGame: Game;
   public username: string;
+  public messages: string[] = [];
 
   public currentBlackCard: Card;
   public whiteCards: Card[];
@@ -46,12 +47,14 @@ export class CardsComponent implements OnInit {
     });
     this.socket.on('game-joined', (game: Game) => {
       this.currentGame = game;
+      this.messages.push(`Welcome to game '${game.name}'`);
     });
     this.socket.on('my-player-update', (whiteCards: Card[]) => {
       this.whiteCards = whiteCards;
     });
     this.socket.on('current-black-card', (blackCard: Card) => {
       this.currentBlackCard = blackCard;
+      console.log(this.currentBlackCard);
     });
     interval(1000).subscribe(() => this.sendEvent('request-reload', null));
   }
