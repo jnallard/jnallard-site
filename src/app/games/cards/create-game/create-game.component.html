@@ -1,8 +1,5 @@
 <div class="modal-header">
   <h3 class="modal-title">Create a New Game</h3>
-  <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
 </div>
 <div class="modal-body">
   <h4>Game Details</h4>
@@ -25,5 +22,5 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="modalRef.close('Close click')">Submit</button>
+  <button type="button" class="btn btn-outline-dark" (click)="modalRef.close('Close click')" [disabled]="!isValid()">Create Game</button>
 </div>

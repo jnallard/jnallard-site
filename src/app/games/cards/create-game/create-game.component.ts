@@ -16,6 +16,11 @@ export class CreateGameComponent implements OnInit, IModalComponent<CreateGameMo
   public modalRef: NgbModalRef;
   public name: string;
 
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
   init(modalRef: NgbModalRef, data: CreateGameModalRequest) {
     this.modalRef = modalRef;
     this.knownDecks = data.knownDecks.map(deck => {
@@ -27,9 +32,8 @@ export class CreateGameComponent implements OnInit, IModalComponent<CreateGameMo
     return new CreateGameModalResponse(this.name, this.getSelectedDecks().map(deck => deck.deck));
   }
 
-  constructor() { }
-
-  ngOnInit(): void {
+  isValid() {
+    return this.name && this.getSelectedDecks().length > 0;
   }
 
   getSelectedDecks() {

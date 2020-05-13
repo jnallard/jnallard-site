@@ -9,21 +9,29 @@ export class DeckManager {
     this.undealtCards = cards;
   }
 
-  getCards(count = 1) {
+  getCards(count = 1, drawToHand: boolean = true) {
     const cards: Card[] = [];
     for (let i = 0; i < count; i++) {
-      cards.push(this.drawCard());
+      cards.push(this.drawCard(drawToHand));
     }
     return cards;
   }
 
-  private drawCard() {
+  cardPlayed(playedCardText: string) {
+    const playedCard = this.cardsInHands.find(card => card.displayText === playedCardText);
+    this.moveCard(playedCard, this.cardsInHands, this.playedCards);
+  }
+
+  private drawCard(drawToHand: boolean) {
     if (this.undealtCards.length === 0) {
       this.undealtCards = this.playedCards;
       this.playedCards = [];
     }
     const drawnCard = this.undealtCards[0];
     this.moveCard(drawnCard, this.undealtCards, this.cardsInHands);
+    if (!drawToHand) {
+      this.cardPlayed(drawnCard.displayText);
+    }
     return drawnCard;
   }
 

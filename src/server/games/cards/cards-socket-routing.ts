@@ -16,6 +16,7 @@ export class CardsSocketRouting implements ISocketRouting {
   private knownDeckIds = ['4WHKA'];
   private knownDecks: CardCastDeck[];
   private games: Map<string, GameController> = new Map();
+  private sockets: Map<Socket, GameController> = new Map();
 
   constructor() {
     forkJoin(this.knownDeckIds.map(deckId => this.cardCast.getDeck(deckId)))
@@ -36,6 +37,10 @@ export class CardsSocketRouting implements ISocketRouting {
         break;
       case 'join-game':
         this.joinGame(socket, event.data.data as JoinGameRequest);
+        break;
+      case 'play-white-cards':
+        const game = this.sockets.get(socket);
+        game.playWhiteCards(socket, event.data.data as Card[]);
         break;
     }
   }
@@ -69,6 +74,7 @@ export class CardsSocketRouting implements ISocketRouting {
   joinGame(socket: Socket, request: JoinGameRequest) {
     const foundGame = this.games.get(request.gameId);
     foundGame.addPlayer(request.username, socket);
+    this.sockets.set(socket, foundGame);
     socket.emit('game-joined', foundGame.gameDto);
   }
 }

@@ -4,7 +4,7 @@ import { SocketEvent } from 'src/app/shared/models/socket-event';
 
 export class MainSocketRouting implements ISocketRouting {
   handleEvent(socket: Socket, event: SocketEvent): void {
-    console.log('MainSocketRouting');
+    // console.log('MainSocketRouting');
     socket.emit('loaded', event);
   }
 

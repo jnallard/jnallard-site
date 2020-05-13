@@ -9,12 +9,19 @@ import { NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 })
 export class PickUsernameComponent implements OnInit, IModalComponent<void, string> {
   public username: string;
-  public modalRef: NgbModalRef;
+  private modalRef: NgbModalRef;
 
   constructor() { }
 
   init(modalRef: NgbModalRef, data: void) {
     this.modalRef = modalRef;
+  }
+
+  submitUsername() {
+    if (!this.username) {
+      return;
+    }
+    this.modalRef.close();
   }
 
   getResult(): string {

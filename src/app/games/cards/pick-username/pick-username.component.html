@@ -1,17 +1,14 @@
 <div class="modal-header">
   <h3 class="modal-title">Create a Username</h3>
-  <button type="button" class="close" aria-label="Close" (click)="modalRef.dismiss('Cross click')">
-    <span aria-hidden="true">&times;</span>
-  </button>
 </div>
 <div class="modal-body">
   <div class="input-group input-group-sm mb-3">
     <div class="input-group-prepend">
       <span class="input-group-text">Username</span>
     </div>
-    <input type="text" class="form-control" [(ngModel)]="username" (keyup.enter)="modalRef.close('Submit Input')">
+    <input type="text" class="form-control" [(ngModel)]="username" (keyup.enter)="submitUsername()">
   </div>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="modalRef.close('Submit Click')">Submit</button>
+  <button type="button" class="btn btn-outline-dark" (click)="submitUsername()" [disabled]="!username">Submit</button>
 </div>

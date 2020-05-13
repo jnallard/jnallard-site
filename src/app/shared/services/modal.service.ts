@@ -12,7 +12,7 @@ export class ModalService {
   constructor(private ngModal: NgbModal) { }
 
   open<In, Out>(a: Type<IModalComponent<In, Out>>, inData: In) {
-    const modalRef = this.ngModal.open(a);
+    const modalRef = this.ngModal.open(a, {backdrop: 'static', keyboard: false});
     const component = modalRef.componentInstance as IModalComponent<In, Out>;
     component.init(modalRef, inData);
     return from(modalRef.result)

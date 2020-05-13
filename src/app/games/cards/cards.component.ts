@@ -29,7 +29,7 @@ export class CardsComponent implements OnInit {
   public messages: string[] = [];
 
   public currentBlackCard: Card;
-  public whiteCards: Card[];
+  public whiteCards: {selected: boolean, card: Card}[];
 
   constructor(
     private modalService: ModalService,
@@ -46,11 +46,12 @@ export class CardsComponent implements OnInit {
       this.joinGame(game);
     });
     this.socket.on('game-joined', (game: Game) => {
+      this.messages = [];
       this.currentGame = game;
       this.messages.push(`Welcome to game '${game.name}'`);
     });
     this.socket.on('my-player-update', (whiteCards: Card[]) => {
-      this.whiteCards = whiteCards;
+      this.whiteCards = whiteCards.map(card => ({ selected: false, card}));
     });
     this.socket.on('current-black-card', (blackCard: Card) => {
       this.currentBlackCard = blackCard;
@@ -107,6 +108,18 @@ export class CardsComponent implements OnInit {
 
   sendEvent(eventType: string, data: any) {
     this.socket.emit('event', new SocketEvent('games', 'cards', new SocketData(eventType, data)));
+  }
+
+  getSelectedWhiteCards() {
+    return this.whiteCards.filter(card => card.selected).map(card => card.card);
+  }
+
+  canSubmitCards() {
+    return this.currentBlackCard.underscores === this.getSelectedWhiteCards().length;
+  }
+
+  playCards() {
+    this.sendEvent('play-white-cards', this.getSelectedWhiteCards());
   }
 
 }

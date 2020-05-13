@@ -15,7 +15,7 @@ const routing = new SocketRouting();
 socketIO.on('connect', socket => {
     console.log(`Socket connected: ${socket.id}.`);
     socket.on('event', (socketEvent: SocketEvent) => {
-        console.log(socketEvent);
+        // console.log(socketEvent);
         routing.sendEvent(socket, socketEvent);
     });
 });
