@@ -46,24 +46,33 @@
         </div>
       </div>
       <div class="row full-height" *ngIf="currentGame">
-        <div class="col-12 col-sm-6 col-md-4 full-height" *ngIf="currentBlackCard">
+        <div class="col-12 col-sm-6 col-md-4 full-height" *ngIf="currentRound">
           <div class="card text-white bg-dark full-height">
             <h5 class="card-header">Current Round</h5>
             <div class="card-body scrollable">
               <div class="card black-card">
                 <div class="card-body">
-                  <p class="card-text">{{currentBlackCard.displayText}}</p>
+                  <p class="card-text">{{currentRound.blackCard.displayText}}</p>
                 </div>
               </div>
-              <p>
+              <p *ngIf="!currentRound.playedCards">
                 <small>
-                  <i *ngIf="currentBlackCard.underscores == 1">Pick a white card...</i>
-                  <i *ngIf="currentBlackCard.underscores != 1">Pick {{currentBlackCard.underscores}} white cards...</i>
+                  <i *ngIf="currentRound.blackCard.underscores == 1">Pick a white card...</i>
+                  <i *ngIf="currentRound.blackCard.underscores != 1">Pick {{currentRound.blackCard.underscores}} white cards...</i>
                 </small>
               </p>
+              <div *ngIf="currentRound.playedCards">
+                <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
+                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenWords = cards" [ngClass]="{'selected-card': cardsAreEqual(czarChosenWords, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                    <div class="card-body">
+                      <p class="card-text">{{card.displayText}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="card-footer">
-              <button class="btn btn-block btn-light" [disabled]="true">Submit</button>
+              <button class="btn btn-block btn-light" [disabled]="!czarChosenWords" (click)="pickWinningCards()">Submit</button>
             </div>
           </div>
         </div>

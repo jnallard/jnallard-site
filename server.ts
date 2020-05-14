@@ -16,7 +16,11 @@ socketIO.on('connect', socket => {
     console.log(`Socket connected: ${socket.id}.`);
     socket.on('event', (socketEvent: SocketEvent) => {
         // console.log(socketEvent);
-        routing.sendEvent(socket, socketEvent);
+        try {
+            routing.sendEvent(socket, socketEvent);
+        } catch (exception) {
+            console.error(exception);
+        }
     });
 });
 

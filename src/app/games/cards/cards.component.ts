@@ -12,8 +12,9 @@ import { CreateGameRequest } from 'src/server/games/cards/dtos/create-game-reque
 import { PickUsernameComponent } from './pick-username/pick-username.component';
 import { ConfirmationModalComponent } from 'src/app/shared/components/confirmation-modal/confirmation-modal.component';
 import { JoinGameRequest } from 'src/server/games/cards/dtos/join-game-request';
-import { timer, interval } from 'rxjs';
+import { interval } from 'rxjs';
 import { Card } from 'src/server/games/cards/dtos/card';
+import { Round } from 'src/server/games/cards/dtos/round';
 
 @Component({
   selector: 'app-cards',
@@ -28,8 +29,11 @@ export class CardsComponent implements OnInit {
   public username: string;
   public messages: string[] = [];
 
-  public currentBlackCard: Card;
+  public currentRound: Round;
   public whiteCards: {selected: boolean, card: Card}[];
+  public czarChosenWords: Card[];
+
+  public cardsAreEqual = Card.cardsAreEqual;
 
   constructor(
     private modalService: ModalService,
@@ -53,9 +57,18 @@ export class CardsComponent implements OnInit {
     this.socket.on('my-player-update', (whiteCards: Card[]) => {
       this.whiteCards = whiteCards.map(card => ({ selected: false, card}));
     });
-    this.socket.on('current-black-card', (blackCard: Card) => {
-      this.currentBlackCard = blackCard;
-      console.log(this.currentBlackCard);
+    this.socket.on('start-round', (round: Round) => {
+      this.reset();
+      this.currentRound = round;
+    });
+    this.socket.on('judge-round', (round: Round) => {
+      this.currentRound = round;
+    });
+    this.socket.on('end-round', (round: Round) => {
+      this.currentRound = round;
+      this.messages.unshift(`${round.winner} won round ${round.roundNumber}.
+        "${round.blackCard.displayText}" -> ${round.chosenCards.map(card => `"${card.displayText}"`).join(', ')}`);
+      console.log(round);
     });
     interval(1000).subscribe(() => this.sendEvent('request-reload', null));
   }
@@ -70,6 +83,11 @@ export class CardsComponent implements OnInit {
 
   ngOnInit() {
     this.getUsername();
+  }
+
+  reset() {
+    this.czarChosenWords = [];
+    this.currentRound = null;
   }
 
   getUsername() {
@@ -115,11 +133,15 @@ export class CardsComponent implements OnInit {
   }
 
   canSubmitCards() {
-    return this.currentBlackCard.underscores === this.getSelectedWhiteCards().length;
+    return this.currentRound.blackCard.underscores === this.getSelectedWhiteCards().length;
   }
 
   playCards() {
-    this.sendEvent('play-white-cards', this.getSelectedWhiteCards());
+    this.sendEvent('game.play-white-cards', this.getSelectedWhiteCards());
   }
 
+  pickWinningCards() {
+    this.sendEvent('game.pick-winning-cards', this.czarChosenWords);
+    this.czarChosenWords = null;
+  }
 }
