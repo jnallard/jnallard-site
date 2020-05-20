@@ -14,7 +14,7 @@ export class CardsSocketRouting implements ISocketRouting {
   private cardCast = new CardService();
   private knownDecks: CardCastDeck[];
   private games: Map<string, GameController> = new Map();
-  private sockets: Map<string, GameController> = new Map();
+  private gamesforSession: Map<string, GameController> = new Map();
 
   constructor() {
     this.cardCast.loadDecks().subscribe(decks => this.knownDecks = decks);
@@ -23,7 +23,9 @@ export class CardsSocketRouting implements ISocketRouting {
   handleEvent(socket: Socket, event: SocketEvent): void {
     const eventType = event.data.type;
     if (eventType.startsWith('game.')) {
-      const game = this.sockets.get(event.sessionId);
+      console.log('start--------------------');
+      console.log(event.sessionId);
+      const game = this.gamesforSession.get(event.sessionId);
       game.handleEvent(socket, event);
       return;
     }
@@ -73,7 +75,7 @@ export class CardsSocketRouting implements ISocketRouting {
   joinGame(socket: Socket, request: JoinGameRequest, sessionId: string) {
     const foundGame = this.games.get(request.gameId);
     foundGame.addPlayer(request.username, socket, sessionId);
-    this.sockets.set(sessionId, foundGame);
+    this.gamesforSession.set(sessionId, foundGame);
     socket.emit('game-joined', foundGame.gameDto);
   }
 }

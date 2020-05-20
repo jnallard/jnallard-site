@@ -5,21 +5,26 @@ import { Round } from '../dtos/round';
 export class Player {
   public whiteCards: Card[] = [];
   public playedWhiteCards: Card[];
-  constructor(public username: string, public socket: Socket, public sessionId: string) {}
+  constructor(public username: string, private socket: Socket, public sessionId: string) {
+  }
 
   sendPlayerHand() {
-    this.socket.emit('my-player-update', this.whiteCards);
+    this.sendMessage('my-player-update', this.whiteCards);
   }
 
   sendRoundStart(currentRound: Round) {
-    this.socket.emit('start-round', currentRound);
+    this.sendMessage('start-round', currentRound);
   }
 
   sendRoundJudge(currentRound: Round) {
-    this.socket.emit('judge-round', currentRound);
+    this.sendMessage('judge-round', currentRound);
   }
 
   sendRoundEnd(currentRound: Round) {
-    this.socket.emit('end-round', currentRound);
+    this.sendMessage('end-round', currentRound);
+  }
+
+  sendMessage(key: string, value: any) {
+    this.socket.emit(key, value);
   }
 }

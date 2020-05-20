@@ -45,7 +45,7 @@ export class GameController {
   }
 
   playWhiteCards(socket: Socket, playedCards: Card[], sessionId: string) {
-    const player = this.players.find(p => p.sessionId = sessionId);
+    const player = this.players.find(p => p.sessionId === sessionId);
     player.playedWhiteCards = playedCards;
     player.whiteCards = player.whiteCards.filter(card => !playedCards.find(playedCard => card.id === playedCard.id));
     player.whiteCards.push(...this.whiteCards.getCards(playedCards.length));
