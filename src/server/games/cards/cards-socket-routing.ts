@@ -23,8 +23,6 @@ export class CardsSocketRouting implements ISocketRouting {
   handleEvent(socket: Socket, event: SocketEvent): void {
     const eventType = event.data.type;
     if (eventType.startsWith('game.')) {
-      console.log('start--------------------');
-      console.log(event.sessionId);
       const game = this.gamesforSession.get(event.sessionId);
       game.handleEvent(socket, event);
       return;

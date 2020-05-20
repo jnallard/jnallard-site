@@ -118,7 +118,7 @@
                 <table class="table table-striped table-sm bg-light">
                   <tbody>
                     <tr *ngFor="let message of messages">
-                      <td>{{message}}</td>
+                      <td [innerHTML]="message"></td>
                     </tr>
                   </tbody>
                 </table>

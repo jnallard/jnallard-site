@@ -66,8 +66,7 @@ export class CardsComponent implements OnInit {
     });
     this.socket.on('end-round', (round: Round) => {
       this.currentRound = round;
-      this.messages.unshift(`${round.winner} won round ${round.roundNumber}.
-        "${round.blackCard.displayText}" -> ${round.chosenCards.map(card => `"${card.displayText}"`).join(', ')}`);
+      this.addWinningCardsMessage(round);
       console.log(round);
     });
     interval(1000).subscribe(() => this.sendEvent('request-reload', null));
@@ -83,6 +82,20 @@ export class CardsComponent implements OnInit {
 
   ngOnInit() {
     this.getUsername();
+  }
+
+  addWinningCardsMessage(round: Round) {
+    let html = `<strong>${round.winner} won round ${round.roundNumber}.</strong><br/>`;
+    const blackCardSplit = round.blackCard.displayText.split('_');
+    const newArray = [] as string[];
+    for (let i = 0; i < blackCardSplit.length; i++) {
+      newArray.push(`${blackCardSplit[i].trim()} `);
+      if (round.chosenCards[i]) {
+        newArray.push(`<span class="white-text">${round.chosenCards[i].displayText.trim()}</span> `);
+      }
+    }
+    html += `<p class="black-text">${newArray.join('')}</p>`;
+    this.messages.unshift(html);
   }
 
   isRoundDone() {

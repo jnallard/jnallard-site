@@ -81,6 +81,7 @@ export class GameController {
   startRound() {
     const currentBlackCard = this.blackCards.getCards(1, false)[0];
     this.currentRound = new Round(this.rounds.length + 1, currentBlackCard);
+    this.rounds.push(this.currentRound);
     this.players.forEach(player => player.sendRoundStart(this.currentRound));
   }
 }

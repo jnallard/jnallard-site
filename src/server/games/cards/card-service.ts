@@ -69,11 +69,11 @@ export class CardService {
       response.data.values.forEach((row, index) => {
         const blackCardText = row[0];
         if (blackCardText) {
-          blackCards.push(new Card(blackCardText, `${deckName}-black-${index}`));
+          blackCards.push(new Card(blackCardText.toString(), `${deckName}-black-${index}`));
         }
         const whiteCardText = row[1];
         if (whiteCardText) {
-          whiteCards.push(new Card(whiteCardText, `${deckName}-white-${index}`));
+          whiteCards.push(new Card(whiteCardText.toString(), `${deckName}-white-${index}`));
         }
       });
       const newDeck = new CardCastDeck(deckName, deckName, blackCards, whiteCards);
