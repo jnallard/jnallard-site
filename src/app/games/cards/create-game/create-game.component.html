@@ -13,11 +13,6 @@
   <div class="list-group">
     <button type="button" class="list-group-item list-group-item-action" *ngFor="let deck of knownDecks" [ngClass]="{'list-group-item-success': deck.selected}" (click)="deck.selected = !deck.selected">
       {{deck.deck.name}} 
-      <small>
-        ( <a [href]="'https://www.cardcastgame.com/browse/deck/' + deck.deck.id" target="_blank">
-          {{deck.deck.id}} <i class="fas fa-external-link-alt"></i>
-        </a> )
-    </small>
     </button>
   </div>
 </div>

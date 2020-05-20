@@ -14,6 +14,7 @@ class RoutingCategory {
 }
 
 export class SocketRouting {
+
   routings = [
     new RoutingCategory('app', [
       new RoutingSubcategory('main', new MainSocketRouting())

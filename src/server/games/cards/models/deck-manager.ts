@@ -19,6 +19,9 @@ export class DeckManager {
   }
 
   cardPlayed(playedCardText: string) {
+    if (!playedCardText) {
+      return;
+    }
     const playedCard = this.cardsInHands.find(card => card.displayText === playedCardText);
     this.moveCard(playedCard, this.cardsInHands, this.playedCards);
   }
@@ -34,7 +37,7 @@ export class DeckManager {
     if (!drawToHand) {
       this.cardPlayed(drawnCard.displayText);
     }
-    return drawnCard;
+    return drawnCard || new Card('', Math.random().toString());
   }
 
   private moveCard(card: Card, from: Card[], to: Card[]) {

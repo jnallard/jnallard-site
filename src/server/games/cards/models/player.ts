@@ -5,7 +5,7 @@ import { Round } from '../dtos/round';
 export class Player {
   public whiteCards: Card[] = [];
   public playedWhiteCards: Card[];
-  constructor(public username: string, public socket: Socket) {}
+  constructor(public username: string, public socket: Socket, public sessionId: string) {}
 
   sendPlayerHand() {
     this.socket.emit('my-player-update', this.whiteCards);

@@ -2,9 +2,8 @@ import { ISocketRouting } from 'src/server/i-socket-routing';
 import { Socket } from 'socket.io';
 import { SocketEvent } from 'src/app/shared/models/socket-event';
 import { Game } from './dtos/game';
-import { CardCastWrapper } from './card-cast-wrapper';
+import { CardService } from './card-service';
 import { CardCastDeck } from './dtos/card-cast-deck';
-import { forkJoin } from 'rxjs';
 import { CreateGameRequest } from './dtos/create-game-request';
 import { JoinGameRequest } from './dtos/join-game-request';
 import { GameController } from './models/game-controller';
@@ -12,22 +11,20 @@ import { Card } from './dtos/card';
 
 export class CardsSocketRouting implements ISocketRouting {
   private gameDtos: Game[] = [];
-  private cardCast = new CardCastWrapper();
-  private knownDeckIds = ['4WHKA'];
+  private cardCast = new CardService();
   private knownDecks: CardCastDeck[];
   private games: Map<string, GameController> = new Map();
-  private sockets: Map<Socket, GameController> = new Map();
+  private sockets: Map<string, GameController> = new Map();
 
   constructor() {
-    forkJoin(this.knownDeckIds.map(deckId => this.cardCast.getDeck(deckId)))
-      .subscribe(decks => this.knownDecks = decks.filter(deck => deck != null));
+    this.cardCast.loadDecks().subscribe(decks => this.knownDecks = decks);
   }
 
   handleEvent(socket: Socket, event: SocketEvent): void {
     const eventType = event.data.type;
     if (eventType.startsWith('game.')) {
-      const game = this.sockets.get(socket);
-      game.handleEvent(socket, event.data);
+      const game = this.sockets.get(event.sessionId);
+      game.handleEvent(socket, event);
       return;
     }
     switch (eventType) {
@@ -39,10 +36,10 @@ export class CardsSocketRouting implements ISocketRouting {
         this.updateGamesList(socket);
         break;
       case 'create-game':
-        this.createGame(socket, event.data.data as CreateGameRequest);
+        this.createGame(socket, event.data.data as CreateGameRequest, event.sessionId);
         break;
       case 'join-game':
-        this.joinGame(socket, event.data.data as JoinGameRequest);
+        this.joinGame(socket, event.data.data as JoinGameRequest, event.sessionId);
         break;
     }
   }
@@ -55,9 +52,9 @@ export class CardsSocketRouting implements ISocketRouting {
     socket.emit('known-decks', this.knownDecks);
   }
 
-  createGame(socket: Socket, request: CreateGameRequest) {
+  createGame(socket: Socket, request: CreateGameRequest, sessionId: string) {
     const gameId = (this.gameDtos.length + 1).toString();
-    const decks = request.deckIds.map(deckId => this.knownDecks.find(deck => deck.id === deckId));
+    const decks = request.deckIds.map(deckId => this.cardCast.getDeck(deckId));
     const whiteCards = decks.reduce((array, currentValue) => {
       array.push(...currentValue.whiteCards);
       return array;
@@ -73,10 +70,10 @@ export class CardsSocketRouting implements ISocketRouting {
     socket.emit('game-created', newGame.gameDto);
   }
 
-  joinGame(socket: Socket, request: JoinGameRequest) {
+  joinGame(socket: Socket, request: JoinGameRequest, sessionId: string) {
     const foundGame = this.games.get(request.gameId);
-    foundGame.addPlayer(request.username, socket);
-    this.sockets.set(socket, foundGame);
+    foundGame.addPlayer(request.username, socket, sessionId);
+    this.sockets.set(sessionId, foundGame);
     socket.emit('game-joined', foundGame.gameDto);
   }
 }

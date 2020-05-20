@@ -85,8 +85,12 @@ export class CardsComponent implements OnInit {
     this.getUsername();
   }
 
+  isRoundDone() {
+    return this.currentRound && this.currentRound.winner;
+  }
+
   reset() {
-    this.czarChosenWords = [];
+    this.czarChosenWords = null;
     this.currentRound = null;
   }
 
@@ -133,7 +137,11 @@ export class CardsComponent implements OnInit {
   }
 
   canSubmitCards() {
-    return this.currentRound.blackCard.underscores === this.getSelectedWhiteCards().length;
+    return this.currentRound.blackCard.underscores === this.getSelectedWhiteCards().length && !this.isRoundDone();
+  }
+
+  canChooseWinningCards() {
+    return this.czarChosenWords && !this.isRoundDone(); // && is czar
   }
 
   playCards() {

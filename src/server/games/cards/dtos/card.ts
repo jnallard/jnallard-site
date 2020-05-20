@@ -1,10 +1,8 @@
 export class Card {
-  public displayText: string;
   public underscores: number;
 
-  constructor(card: {text: string[]}) {
-    this.displayText = card.text.join('_');
-    this.underscores = card.text.length - 1;
+  constructor(public displayText: string, public id: string) {
+    this.underscores = displayText.split('_').length - 1 || 1;
   }
 
   public static cardsAreEqual(aCards: Card[], bCards: Card[]) {
@@ -14,7 +12,7 @@ export class Card {
     if (aCards === bCards) {
       return true;
     }
-    return aCards.every(aCard => bCards.some(bCard => bCard.displayText === aCard.displayText))
-      && bCards.every(bCard => aCards.some(aCard => bCard.displayText === aCard.displayText));
+    return aCards.every(aCard => bCards.some(bCard => bCard.id === aCard.id))
+      && bCards.every(bCard => aCards.some(aCard => bCard.id === aCard.id));
   }
 }
