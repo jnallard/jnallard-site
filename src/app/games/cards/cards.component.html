@@ -46,10 +46,10 @@
         </div>
       </div>
       <div class="row full-height" *ngIf="currentGame">
-        <div class="col-12 col-sm-6 col-md-4 full-height" *ngIf="currentRound">
+        <div class="col-12 col-sm-6 col-md-4 full-height pb-1" *ngIf="currentRound">
           <div class="card text-white bg-dark full-height">
-            <h5 class="card-header">Current Round</h5>
-            <div class="card-body scrollable">
+            <h5 class="card-header"><i class="far fa-play-circle"></i> Current Round</h5>
+            <div class="card-body scrollable bg-secondary">
               <div class="card black-card">
                 <div class="card-body">
                   <p class="card-text">{{currentRound.blackCard.displayText}}</p>
@@ -63,7 +63,7 @@
               </p>
               <div *ngIf="currentRound.playedCards">
                 <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
-                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'selected-card': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
                     <div class="card-body">
                       <p class="card-text">{{card.displayText}}</p>
                     </div>
@@ -77,15 +77,15 @@
               </p>
             </div>
             <div class="card-footer">
-              <button class="btn btn-block btn-light" [disabled]="!canChooseWinningCards()" (click)="pickWinningCards()">Submit</button>
+              <button class="btn btn-block btn-warning" [disabled]="!canChooseWinningCards()" (click)="pickWinningCards()">Submit</button>
             </div>
           </div>
         </div>
-        <div class="col-12 col-sm-6 col-md-4 full-height">
+        <div class="col-12 col-sm-6 col-md-4 full-height pb-1">
           <div class="card text-white bg-dark full-height">
-            <h5 class="card-header">Your Hand</h5>
-            <div class="card-body scrollable">
-              <div class="card white-card clickable" *ngFor="let whiteCard of whiteCards" (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'selected-card': selectedWhiteCards.includes(whiteCard)}">
+            <h5 class="card-header"><i class="fas fa-hand-paper"></i> Your Hand</h5>
+            <div class="card-body scrollable bg-secondary">
+              <div class="card white-card clickable" *ngFor="let whiteCard of whiteCards" (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'bg-warning': selectedWhiteCards.includes(whiteCard)}">
                 <div class="card-body">
                   <p class="card-text">
                     <span class="badge badge-dark" *ngIf="selectedWhiteCards.includes(whiteCard)">#{{selectedWhiteCards.indexOf(whiteCard) + 1}}</span>
@@ -95,15 +95,15 @@
               </div>
             </div>
             <div class="card-footer">
-              <button class="btn btn-block btn-light" [disabled]="!canSubmitCards()" (click)="playCards()">Submit</button>
+              <button class="btn btn-block btn-warning" [disabled]="!canSubmitCards()" (click)="playCards()">Submit</button>
             </div>
           </div>
         </div>
-        <div class="col-12 col-md-4 full-height">
+        <div class="col-12 col-md-4 full-height pb-1">
           <div class="half-height pb-1">
             <div class="card text-white bg-dark full-height">
-              <h5 class="card-header">Players</h5>
-              <div class="card-body scrollable p-0">
+              <h5 class="card-header"><i class="fas fa-users"></i> Players</h5>
+              <div class="card-body scrollable p-0 bg-secondary">
                 <table class="table table-striped table-sm bg-light">
                   <tbody>
                     <tr *ngFor="let player of currentGame.players">
@@ -116,8 +116,8 @@
           </div>
           <div class="half-height pt-1">
             <div class="card text-white bg-dark full-height">
-              <h5 class="card-header">Messages</h5>
-              <div class="card-body scrollable p-0">
+              <h5 class="card-header"><i class="fas fa-envelope"></i> Messages</h5>
+              <div class="card-body scrollable p-0 bg-secondary">
                 <table class="table table-striped table-sm bg-light">
                   <tbody>
                     <tr *ngFor="let message of messages">

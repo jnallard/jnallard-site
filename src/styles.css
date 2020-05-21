@@ -20,10 +20,11 @@
   background-color: black;
   padding: 5px;
   margin-bottom: 0;
+  line-height: 2em;
 }
 
 .white-text {
   color: black;
   background-color: white;
-  padding: 2px;
+  padding: 2px 4px;
 }
