@@ -16,12 +16,12 @@ export class GameController {
   public rounds: Round[] = [];
 
   private currentRound: Round;
+  private czar: PlayerController;
   private playedWhiteCards: Map<PlayerController, Card[]> = new Map();
 
   constructor(public gameDto: Game, whiteCards: Card[], blackCards: Card[]) {
     this.whiteCards = new DeckManager(whiteCards);
     this.blackCards = new DeckManager(blackCards);
-    this.startRound();
   }
 
   handleEvent(socket: Socket, event: SocketEvent) {
@@ -38,10 +38,13 @@ export class GameController {
   addPlayer(username: string, socket: Socket, sessionId: string) {
     const player = new PlayerController(username, socket, sessionId);
     this.players.push(player);
+    if (this.players.length === 1) {
+      this.startRound();
+    }
     this.gameDto.players.push(username);
     const startingCards = this.whiteCards.getCards(7);
     player.whiteCards.push(...startingCards);
-    player.sendPlayerHand();
+    player.sendPrivatePlayerUpdate();
     player.sendRoundStart(this.currentRound);
     this.sendPlayerUpdates();
   }
@@ -54,12 +57,12 @@ export class GameController {
     this.playedWhiteCards.set(player, playedCards);
     player.state = PlayerStatus.Played;
     this.checkAllCardsPlayed();
-    player.sendPlayerHand();
+    player.sendPrivatePlayerUpdate();
     this.sendPlayerUpdates();
   }
 
   checkAllCardsPlayed() {
-    const isDone = this.players.every(player => player.playedWhiteCards);
+    const isDone = this.players.every(player => player.playedWhiteCards || player === this.czar);
     if (isDone) {
       this.revealWhiteCards();
     }
@@ -76,27 +79,46 @@ export class GameController {
     this.currentRound.winner = winner.username;
     winner.score++;
     this.players.forEach(player => {
-      player.playedWhiteCards.forEach(card => this.whiteCards.cardPlayed(card.displayText));
-      player.playedWhiteCards = null;
+      if (player.playedWhiteCards) {
+        player.playedWhiteCards.forEach(card => this.whiteCards.cardPlayed(card.displayText));
+        player.playedWhiteCards = null;
+      }
       player.sendRoundEnd(this.currentRound);
     });
     this.sendPlayerUpdates();
+    this.playedWhiteCards.clear();
     of(true).pipe(delay(5000)).subscribe(() => this.startRound());
+  }
+
+  getNextCzar(lastCzar: PlayerController) {
+    if (!lastCzar) {
+      return this.players[0];
+    }
+    const index = this.players.indexOf(lastCzar);
+    if (index >= this.players.length - 1 || index < 0) {
+      return this.players[0];
+    }
+    return this.players[index + 1];
   }
 
   startRound() {
     const currentBlackCard = this.blackCards.getCards(1, false)[0];
-    this.currentRound = new Round(this.rounds.length + 1, currentBlackCard);
+    this.czar = this.getNextCzar(this.czar);
+    this.currentRound = new Round(this.rounds.length + 1, currentBlackCard, this.czar.getPlayerDto());
     this.rounds.push(this.currentRound);
     this.players.forEach(player => {
       player.sendRoundStart(this.currentRound);
       player.state = PlayerStatus.Selecting;
     });
+    this.czar.state = PlayerStatus.CardCzar;
     this.sendPlayerUpdates();
   }
 
   sendPlayerUpdates() {
     const players = this.players.map(player => player.getPlayerDto());
-    this.players.forEach(player => player.sendPlayersUpdate(players));
+    this.players.forEach(player => {
+      player.sendPlayersUpdate(players);
+      player.sendPrivatePlayerUpdate();
+    });
   }
 }

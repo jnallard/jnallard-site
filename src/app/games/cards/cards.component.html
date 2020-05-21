@@ -68,7 +68,8 @@
               <div *ngIf="currentRound.playedCards">
                 <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
                   <hr />
-                  <button class="card white-card clickable btn-block btn-light" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                  <button class="card white-card clickable btn-block btn-light" *ngFor="let card of cards" [disabled]="!isCzar()"
+                    (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
                     <div class="card-body">
                       <p class="card-text">{{card.displayText}}</p>
                     </div>
@@ -91,7 +92,7 @@
           <div class="card text-white bg-dark full-height">
             <h5 class="card-header"><i class="fas fa-hand-paper"></i> Your Hand</h5>
             <div class="card-body scrollable bg-secondary">
-              <button class="card white-card clickable btn-block btn-light" *ngFor="let whiteCard of whiteCards" [disabled]="areCardsPlayed"
+              <button class="card white-card clickable btn-block btn-light" *ngFor="let whiteCard of whiteCards" [disabled]="areCardsPlayed || isCzar()"
                 (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'bg-warning': selectedWhiteCards.includes(whiteCard)}">
                 <div class="card-body">
                   <p class="card-text">
@@ -124,9 +125,9 @@
                       <td>{{player.name}}</td>
                       <td>{{player.score}}</td>
                       <td>
-                        <span *ngIf="player.status === PlayerStatus.Selecting" class="fas fa-spinner fa-spin"></span>
-                        <span *ngIf="player.status === PlayerStatus.Played" class="fas fa-check"></span>
-                        <span *ngIf="player.status === PlayerStatus.CardCzar" class="fas fa-star"></span>
+                        <span *ngIf="player.status === PlayerStatus.Selecting" class="fas fa-spinner fa-spin" title="Selecting . . . "></span>
+                        <span *ngIf="player.status === PlayerStatus.Played" class="fas fa-check" title="Played cards"></span>
+                        <span *ngIf="player.status === PlayerStatus.CardCzar" class="fas fa-star" title="Card Czar"></span>
                       </td>
                     </tr>
                   </tbody>

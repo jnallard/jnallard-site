@@ -47,7 +47,6 @@ export class CardService {
     }),
     flatMap(response => {
       const sheets = response.data.sheets.map(sheet => sheet.properties.title);
-      console.log(sheets);
       return forkJoin(sheets.map(sheet => this.loadDeck(sheet)));
     }),
     map(() => [...this.decks.values()]));
@@ -63,7 +62,6 @@ export class CardService {
       }));
     }),
     tap(response => {
-      console.log(response.data.values);
       const whiteCards = [] as Card[];
       const blackCards = [] as Card[];
       response.data.values.forEach((row, index) => {

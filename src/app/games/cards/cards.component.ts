@@ -17,6 +17,7 @@ import { Card } from 'src/server/games/cards/dtos/card';
 import { Round } from 'src/server/games/cards/dtos/round';
 import { Player } from 'src/server/games/cards/dtos/player';
 import { PlayerStatus } from 'src/server/games/cards/dtos/player-status';
+import { PlayerUpdate } from 'src/server/games/cards/dtos/player-update';
 
 @Component({
   selector: 'app-cards',
@@ -38,6 +39,7 @@ export class CardsComponent implements OnInit {
   public selectedWhiteCards: Card[];
   public czarChosenCards: Card[];
   public areCardsPlayed = false;
+  public myStatus: PlayerStatus;
 
   public cardsAreEqual = Card.cardsAreEqual;
 
@@ -60,8 +62,9 @@ export class CardsComponent implements OnInit {
       this.currentGame = game;
       this.messages.push(`Welcome to game '${game.name}'`);
     });
-    this.socket.on('my-player-update', (whiteCards: Card[]) => {
-      this.whiteCards = whiteCards;
+    this.socket.on('my-player-update', (update: PlayerUpdate) => {
+      this.whiteCards = update.whiteCards;
+      this.myStatus = update.state;
       this.selectedWhiteCards = [];
     });
     this.socket.on('players-update', (players: Player[]) => {
@@ -172,12 +175,16 @@ export class CardsComponent implements OnInit {
     }
   }
 
+  isCzar() {
+    return this.myStatus === PlayerStatus.CardCzar;
+  }
+
   canSubmitCards() {
     return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone() && !this.areCardsPlayed;
   }
 
   canChooseWinningCards() {
-    return this.czarChosenCards && !this.isRoundDone(); // && is czar
+    return this.czarChosenCards && !this.isRoundDone() && this.isCzar();
   }
 
   playCards() {

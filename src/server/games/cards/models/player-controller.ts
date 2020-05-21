@@ -3,6 +3,7 @@ import { Card } from '../dtos/card';
 import { Round } from '../dtos/round';
 import { PlayerStatus } from '../dtos/player-status';
 import { Player } from '../dtos/player';
+import { PlayerUpdate } from '../dtos/player-update';
 
 export class PlayerController {
   public whiteCards: Card[] = [];
@@ -12,8 +13,8 @@ export class PlayerController {
   constructor(public username: string, private socket: Socket, public sessionId: string) {
   }
 
-  sendPlayerHand() {
-    this.sendMessage('my-player-update', this.whiteCards);
+  sendPrivatePlayerUpdate() {
+    this.sendMessage('my-player-update', new PlayerUpdate(this.whiteCards, this.state));
   }
 
   sendPlayersUpdate(players: Player[]) {
