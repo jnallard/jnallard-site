@@ -37,6 +37,7 @@ export class CardsComponent implements OnInit {
   public whiteCards: Card[];
   public selectedWhiteCards: Card[];
   public czarChosenCards: Card[];
+  public areCardsPlayed = false;
 
   public cardsAreEqual = Card.cardsAreEqual;
 
@@ -69,6 +70,7 @@ export class CardsComponent implements OnInit {
     this.socket.on('start-round', (round: Round) => {
       this.reset();
       this.currentRound = round;
+      this.areCardsPlayed = false;
     });
     this.socket.on('judge-round', (round: Round) => {
       this.currentRound = round;
@@ -163,7 +165,7 @@ export class CardsComponent implements OnInit {
   }
 
   canSubmitCards() {
-    return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone();
+    return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone() && !this.areCardsPlayed;
   }
 
   canChooseWinningCards() {
@@ -172,6 +174,7 @@ export class CardsComponent implements OnInit {
 
   playCards() {
     this.sendEvent('game.play-white-cards', this.selectedWhiteCards);
+    this.areCardsPlayed = true;
   }
 
   pickWinningCards() {

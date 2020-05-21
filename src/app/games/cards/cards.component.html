@@ -85,14 +85,15 @@
           <div class="card text-white bg-dark full-height">
             <h5 class="card-header"><i class="fas fa-hand-paper"></i> Your Hand</h5>
             <div class="card-body scrollable bg-secondary">
-              <div class="card white-card clickable" *ngFor="let whiteCard of whiteCards" (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'bg-warning': selectedWhiteCards.includes(whiteCard)}">
+              <button class="card white-card clickable btn-block btn-light" *ngFor="let whiteCard of whiteCards" [disabled]="areCardsPlayed"
+                (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'bg-warning': selectedWhiteCards.includes(whiteCard)}">
                 <div class="card-body">
                   <p class="card-text">
                     <span class="badge badge-dark" *ngIf="selectedWhiteCards.includes(whiteCard)">#{{selectedWhiteCards.indexOf(whiteCard) + 1}}</span>
                     {{whiteCard.displayText}}
                   </p>
                 </div>
-              </div>
+              </button>
             </div>
             <div class="card-footer">
               <button class="btn btn-block btn-warning" [disabled]="!canSubmitCards()" (click)="playCards()">Submit</button>
