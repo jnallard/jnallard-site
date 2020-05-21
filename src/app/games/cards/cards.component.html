@@ -25,21 +25,25 @@
       <div *ngIf="!currentGame">
         <h4>Pick a game...</h4>
         <div class="row game-list">
-          <div class="col-4">
-            <div class="card">
-              <div class="card-body">
+          <div class="col-12 col-sm-4 col-md-3">
+            <div class="card bg-dark text-light">
+              <div class="card-body bg-secondary">
                 <h5 class="card-title">New Game</h5>
-                <p class="card-text">Select the decks and rules you want to play with</p>
-                <button class="btn btn-primary" (click)="createGame()">Create Game</button>
+                <p class="card-text mb-1">Select the decks and rules you want to play with</p>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-warning btn-block" (click)="createGame()">Create Game</button>
               </div>
             </div>
           </div>
-          <div class="col-4" *ngFor="let game of knownGames">
-            <div class="card">
-              <div class="card-body">
+          <div class="col-12 col-sm-4 col-md-3" *ngFor="let game of knownGames">
+            <div class="card bg-dark text-light">
+              <div class="card-body bg-secondary">
                 <h5 class="card-title">{{game.name}}</h5>
-                <p class="card-text">Players: {{game.players}}</p>
-                <button class="btn btn-primary" (click)="joinGame(game)">Join</button>
+                <p class="card-text mb-1"><strong>Players:</strong> {{game.players.join(', ')}}</p>
+              </div>
+              <div class="card-footer">
+                <button class="btn btn-warning btn-block" (click)="joinGame(game)">Join</button>
               </div>
             </div>
           </div>
@@ -71,11 +75,12 @@
                   </button>
                 </div>
               </div>
-              <p *ngIf="isRoundDone()">
+              <h4 *ngIf="isRoundDone()">
+                <br />
                 {{currentRound.winner}} won the round
                 <br />
                 <small>Waiting for the next round to start.</small>
-              </p>
+              </h4>
             </div>
             <div class="card-footer">
               <button class="btn btn-block btn-warning" [disabled]="!canChooseWinningCards()" (click)="pickWinningCards()">Submit</button>

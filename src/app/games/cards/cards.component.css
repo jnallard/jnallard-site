@@ -27,7 +27,6 @@
 
 .game-list .card {
   height: 95%;
-  padding-bottom: 30px;
 }
 
 .header {
@@ -42,10 +41,6 @@
   text-align: right;
 }
 
-.game-list button {
-  position: absolute;
-  bottom: 10px;
-}
 
 .black-card {
   background-color: black;
