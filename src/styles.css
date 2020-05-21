@@ -28,3 +28,15 @@
   background-color: white;
   padding: 2px 4px;
 }
+
+.centered-text {
+  text-align: center;
+}
+
+.left-text {
+  text-align: left;
+}
+
+.right-text {
+  text-align: right;
+}
