@@ -26,6 +26,7 @@ import { PlayerUpdate } from 'src/server/games/cards/dtos/player-update';
 })
 export class CardsComponent implements OnInit {
 
+  private readonly usernameStorageKey = 'caj-username';
   public knownGames: Game[];
   public knownDecks: CardCastDeck[];
   public currentGame: Game;
@@ -122,8 +123,7 @@ export class CardsComponent implements OnInit {
   }
 
   getUsername() {
-    const localStorageKey = 'caj-username';
-    const storedUsername = localStorage.getItem(localStorageKey);
+    const storedUsername = localStorage.getItem(this.usernameStorageKey);
     if (storedUsername) {
       this.username = storedUsername;
       return;
@@ -131,13 +131,14 @@ export class CardsComponent implements OnInit {
 
     this.modalService.open(PickUsernameComponent, null).subscribe(username => {
       this.username = username;
-      localStorage.setItem(localStorageKey, username);
+      localStorage.setItem(this.usernameStorageKey, username);
     });
   }
 
   changeUsername() {
     this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to change your username?').subscribe(result => {
       if (result) {
+        localStorage.removeItem(this.usernameStorageKey);
         this.username = null;
         this.getUsername();
       }
