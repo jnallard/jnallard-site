@@ -63,7 +63,7 @@
               </p>
               <div *ngIf="currentRound.playedCards">
                 <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
-                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenWords = cards" [ngClass]="{'selected-card': cardsAreEqual(czarChosenWords, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'selected-card': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
                     <div class="card-body">
                       <p class="card-text">{{card.displayText}}</p>
                     </div>
@@ -85,9 +85,12 @@
           <div class="card text-white bg-dark full-height">
             <h5 class="card-header">Your Hand</h5>
             <div class="card-body scrollable">
-              <div class="card white-card clickable" *ngFor="let whiteCard of whiteCards" (click)="whiteCard.selected = !whiteCard.selected" [ngClass]="{'selected-card': whiteCard.selected}">
+              <div class="card white-card clickable" *ngFor="let whiteCard of whiteCards" (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'selected-card': selectedWhiteCards.includes(whiteCard)}">
                 <div class="card-body">
-                  <p class="card-text">{{whiteCard.card.displayText}}</p>
+                  <p class="card-text">
+                    <span class="badge badge-dark" *ngIf="selectedWhiteCards.includes(whiteCard)">#{{selectedWhiteCards.indexOf(whiteCard) + 1}}</span>
+                    {{whiteCard.displayText}}
+                  </p>
                 </div>
               </div>
             </div>

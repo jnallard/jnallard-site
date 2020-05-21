@@ -30,8 +30,9 @@ export class CardsComponent implements OnInit {
   public messages: string[] = [];
 
   public currentRound: Round;
-  public whiteCards: {selected: boolean, card: Card}[];
-  public czarChosenWords: Card[];
+  public whiteCards: Card[];
+  public selectedWhiteCards: Card[];
+  public czarChosenCards: Card[];
 
   public cardsAreEqual = Card.cardsAreEqual;
 
@@ -55,7 +56,8 @@ export class CardsComponent implements OnInit {
       this.messages.push(`Welcome to game '${game.name}'`);
     });
     this.socket.on('my-player-update', (whiteCards: Card[]) => {
-      this.whiteCards = whiteCards.map(card => ({ selected: false, card}));
+      this.whiteCards = whiteCards;
+      this.selectedWhiteCards = [];
     });
     this.socket.on('start-round', (round: Round) => {
       this.reset();
@@ -103,7 +105,7 @@ export class CardsComponent implements OnInit {
   }
 
   reset() {
-    this.czarChosenWords = null;
+    this.czarChosenCards = null;
     this.currentRound = null;
   }
 
@@ -145,24 +147,28 @@ export class CardsComponent implements OnInit {
     this.socket.emit('event', new SocketEvent('games', 'cards', new SocketData(eventType, data)));
   }
 
-  getSelectedWhiteCards() {
-    return this.whiteCards.filter(card => card.selected).map(card => card.card);
+  toggleWhiteCard(whiteCard: Card) {
+    if (this.selectedWhiteCards.includes(whiteCard)) {
+      this.selectedWhiteCards.splice(this.selectedWhiteCards.indexOf(whiteCard), 1);
+    } else {
+      this.selectedWhiteCards.push(whiteCard);
+    }
   }
 
   canSubmitCards() {
-    return this.currentRound.blackCard.underscores === this.getSelectedWhiteCards().length && !this.isRoundDone();
+    return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone();
   }
 
   canChooseWinningCards() {
-    return this.czarChosenWords && !this.isRoundDone(); // && is czar
+    return this.czarChosenCards && !this.isRoundDone(); // && is czar
   }
 
   playCards() {
-    this.sendEvent('game.play-white-cards', this.getSelectedWhiteCards());
+    this.sendEvent('game.play-white-cards', this.selectedWhiteCards);
   }
 
   pickWinningCards() {
-    this.sendEvent('game.pick-winning-cards', this.czarChosenWords);
-    this.czarChosenWords = null;
+    this.sendEvent('game.pick-winning-cards', this.czarChosenCards);
+    this.czarChosenCards = null;
   }
 }
