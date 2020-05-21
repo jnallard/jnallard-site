@@ -63,11 +63,12 @@
               </p>
               <div *ngIf="currentRound.playedCards">
                 <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
-                  <div class="card white-card" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                  <hr />
+                  <button class="card white-card clickable btn-block btn-light" *ngFor="let card of cards" (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
                     <div class="card-body">
                       <p class="card-text">{{card.displayText}}</p>
                     </div>
-                  </div>
+                  </button>
                 </div>
               </div>
               <p *ngIf="isRoundDone()">

@@ -119,8 +119,16 @@ export class CardsComponent implements OnInit {
   }
 
   getUsername() {
+    const localStorageKey = 'caj-username';
+    const storedUsername = localStorage.getItem(localStorageKey);
+    if (storedUsername) {
+      this.username = storedUsername;
+      return;
+    }
+
     this.modalService.open(PickUsernameComponent, null).subscribe(username => {
       this.username = username;
+      localStorage.setItem(localStorageKey, username);
     });
   }
 
