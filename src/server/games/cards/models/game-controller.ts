@@ -1,21 +1,22 @@
 import { Game } from '../dtos/game';
 import { Socket } from 'socket.io';
-import { Player } from './player';
 import { DeckManager } from './deck-manager';
 import { Card } from '../dtos/card';
 import { Round } from '../dtos/round';
 import { delay } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { SocketEvent } from 'src/app/shared/models/socket-event';
+import { PlayerController } from './player-controller';
+import { PlayerStatus } from '../dtos/player-status';
 
 export class GameController {
-  public players: Player[] = [];
+  public players: PlayerController[] = [];
   public whiteCards: DeckManager;
   public blackCards: DeckManager;
   public rounds: Round[] = [];
 
   private currentRound: Round;
-  private playedWhiteCards: Map<Player, Card[]> = new Map();
+  private playedWhiteCards: Map<PlayerController, Card[]> = new Map();
 
   constructor(public gameDto: Game, whiteCards: Card[], blackCards: Card[]) {
     this.whiteCards = new DeckManager(whiteCards);
@@ -35,13 +36,14 @@ export class GameController {
   }
 
   addPlayer(username: string, socket: Socket, sessionId: string) {
-    const player = new Player(username, socket, sessionId);
+    const player = new PlayerController(username, socket, sessionId);
     this.players.push(player);
     this.gameDto.players.push(username);
     const startingCards = this.whiteCards.getCards(7);
     player.whiteCards.push(...startingCards);
     player.sendPlayerHand();
     player.sendRoundStart(this.currentRound);
+    this.sendPlayerUpdates();
   }
 
   playWhiteCards(socket: Socket, playedCards: Card[], sessionId: string) {
@@ -50,8 +52,10 @@ export class GameController {
     player.whiteCards = player.whiteCards.filter(card => !playedCards.find(playedCard => card.id === playedCard.id));
     player.whiteCards.push(...this.whiteCards.getCards(playedCards.length));
     this.playedWhiteCards.set(player, playedCards);
+    player.state = PlayerStatus.Played;
     this.checkAllCardsPlayed();
     player.sendPlayerHand();
+    this.sendPlayerUpdates();
   }
 
   checkAllCardsPlayed() {
@@ -70,11 +74,13 @@ export class GameController {
     this.currentRound.chosenCards = winningCards;
     const winner = [...this.playedWhiteCards].find(mapping => Card.cardsAreEqual(mapping[1], winningCards))[0];
     this.currentRound.winner = winner.username;
+    winner.score++;
     this.players.forEach(player => {
       player.playedWhiteCards.forEach(card => this.whiteCards.cardPlayed(card.displayText));
       player.playedWhiteCards = null;
       player.sendRoundEnd(this.currentRound);
     });
+    this.sendPlayerUpdates();
     of(true).pipe(delay(5000)).subscribe(() => this.startRound());
   }
 
@@ -82,6 +88,15 @@ export class GameController {
     const currentBlackCard = this.blackCards.getCards(1, false)[0];
     this.currentRound = new Round(this.rounds.length + 1, currentBlackCard);
     this.rounds.push(this.currentRound);
-    this.players.forEach(player => player.sendRoundStart(this.currentRound));
+    this.players.forEach(player => {
+      player.sendRoundStart(this.currentRound);
+      player.state = PlayerStatus.Selecting;
+    });
+    this.sendPlayerUpdates();
+  }
+
+  sendPlayerUpdates() {
+    const players = this.players.map(player => player.getPlayerDto());
+    this.players.forEach(player => player.sendPlayersUpdate(players));
   }
 }

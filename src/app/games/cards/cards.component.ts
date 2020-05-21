@@ -15,6 +15,8 @@ import { JoinGameRequest } from 'src/server/games/cards/dtos/join-game-request';
 import { interval } from 'rxjs';
 import { Card } from 'src/server/games/cards/dtos/card';
 import { Round } from 'src/server/games/cards/dtos/round';
+import { Player } from 'src/server/games/cards/dtos/player';
+import { PlayerStatus } from 'src/server/games/cards/dtos/player-status';
 
 @Component({
   selector: 'app-cards',
@@ -28,6 +30,8 @@ export class CardsComponent implements OnInit {
   public currentGame: Game;
   public username: string;
   public messages: string[] = [];
+  public players: Player[] = [];
+  public PlayerStatus = PlayerStatus;
 
   public currentRound: Round;
   public whiteCards: Card[];
@@ -58,6 +62,9 @@ export class CardsComponent implements OnInit {
     this.socket.on('my-player-update', (whiteCards: Card[]) => {
       this.whiteCards = whiteCards;
       this.selectedWhiteCards = [];
+    });
+    this.socket.on('players-update', (players: Player[]) => {
+      this.players = players;
     });
     this.socket.on('start-round', (round: Round) => {
       this.reset();
