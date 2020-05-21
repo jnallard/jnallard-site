@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "serve": "concurrently \"ng build --watch\" \"npx ts-node-dev server.ts\"",
-    "start": "npx ts-node server.ts",
+    "start": "npx ts-node --transpile-only server.ts",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
