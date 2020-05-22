@@ -149,6 +149,7 @@ export class CardsComponent implements OnInit {
     this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to leave this game?').subscribe(result => {
       if (result) {
         this.currentGame = null;
+        this.sendEvent('leave-game', null);
       }
     });
   }

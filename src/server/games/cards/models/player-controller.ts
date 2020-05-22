@@ -13,6 +13,10 @@ export class PlayerController {
   constructor(public username: string, private socket: Socket, public sessionId: string) {
   }
 
+  isConnected() {
+    return this.socket.connected;
+  }
+
   sendPrivatePlayerUpdate() {
     this.sendMessage('my-player-update', new PlayerUpdate(this.whiteCards, this.state));
   }

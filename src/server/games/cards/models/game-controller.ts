@@ -18,8 +18,10 @@ export class GameController {
   private currentRound: Round;
   private czar: PlayerController;
   private playedWhiteCards: Map<PlayerController, Card[]> = new Map();
+  private isOver = false;
+  private startedTime = new Date();
 
-  constructor(public gameDto: Game, whiteCards: Card[], blackCards: Card[]) {
+  constructor(public gameId, public gameName: string,  whiteCards: Card[], blackCards: Card[]) {
     this.whiteCards = new DeckManager(whiteCards);
     this.blackCards = new DeckManager(blackCards);
   }
@@ -35,13 +37,30 @@ export class GameController {
     }
   }
 
+  isGameOver() {
+    const timeSurpassedMs: number = new Date().getTime() - this.startedTime.getTime();
+    return this.isOver || (this.players.every(player => !player.isConnected()) && (timeSurpassedMs > 10000));
+  }
+
+  leaveGame(sessionId: string) {
+    const player = this.players.find(p => p.sessionId === sessionId);
+    this.players.splice(this.players.indexOf(player), 1);
+    console.log(this.players);
+    if (this.players.length === 0) {
+      this.isOver = true;
+    } else if (player === this.czar) {
+      this.startRound();
+    }  else {
+      this.checkAllCardsPlayed();
+    }
+  }
+
   addPlayer(username: string, socket: Socket, sessionId: string) {
     const player = new PlayerController(username, socket, sessionId);
     this.players.push(player);
     if (this.players.length === 1) {
       this.startRound();
     }
-    this.gameDto.players.push(username);
     const startingCards = this.whiteCards.getCards(7);
     player.whiteCards.push(...startingCards);
     player.sendPrivatePlayerUpdate();
@@ -120,5 +139,11 @@ export class GameController {
       player.sendPlayersUpdate(players);
       player.sendPrivatePlayerUpdate();
     });
+  }
+
+  getGameDto() {
+    const gameDto = new Game(this.gameId, this.gameName);
+    gameDto.players = this.players.map(p => p.username);
+    return gameDto;
   }
 }
