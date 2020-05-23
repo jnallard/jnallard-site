@@ -44,8 +44,12 @@ export class GameController {
         if (player.isHost) {
           const currentRoundNumber = this.currentRound.roundNumber;
           this.skipRound();
-          this.sendMessage(`Host ${player.username} has skipped Round ${currentRoundNumber}`);
+          this.sendMessage(`Host '${player.username}' has skipped Round ${currentRoundNumber}`);
         }
+        break;
+      case 'game.username-change':
+        player.username = event.data.data as string;
+        this.sendPlayerUpdates();
         break;
     }
   }
@@ -55,8 +59,8 @@ export class GameController {
     const unrevealedPlayers = this.players.filter(p => p.state === PlayerStatus.Selecting);
     if (unrevealedPlayers.length > 0 && revealedPlayers.length > 0) {
       this.revealWhiteCards();
-      this.sendMessage(`Host ${host.username} has skipped waiting for others
-        (${unrevealedPlayers.map(p => p.username).join(', ')}) to play white cards`);
+      this.sendMessage(`Host '${host.username}' has skipped waiting for others
+        (${unrevealedPlayers.map(p => `'${p.username}'`).join(', ')}) to play white cards`);
     }
   }
 

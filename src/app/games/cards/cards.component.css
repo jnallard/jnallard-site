@@ -66,6 +66,9 @@
 
 [disabled] {
   cursor: not-allowed;
+}
+
+.white-card[disabled] {
   background-color: lightgray;
   border-color: gray;
 }
@@ -74,5 +77,9 @@
   position: absolute;
   right: 5px;
   top: -3px;
+}
+
+.message-row.clickable:hover {
+  opacity: 0.75;
 }
 

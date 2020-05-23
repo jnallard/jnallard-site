@@ -144,6 +144,9 @@ export class CardsComponent implements OnInit {
     this.modalService.open(PickUsernameComponent, null).subscribe(username => {
       this.username = username;
       localStorage.setItem(this.usernameStorageKey, username);
+      if (this.currentGame) {
+        this.sendEvent('game.username-change', username);
+      }
     });
   }
 
@@ -151,7 +154,6 @@ export class CardsComponent implements OnInit {
     this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to change your username?').subscribe(result => {
       if (result) {
         localStorage.removeItem(this.usernameStorageKey);
-        this.username = null;
         this.getUsername();
       }
     });
