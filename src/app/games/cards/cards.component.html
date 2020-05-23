@@ -89,12 +89,15 @@
                 </div>
               </div>
               <p *ngIf="!selectedRound.playedCards" class="centered-text">
-                <small *ngIf="!isCzar()">
+                <small *ngIf="!isCzar() && myStatus === PlayerStatus.Selecting">
                   <i *ngIf="selectedRound.blackCard.underscores == 1">Pick a white card...</i>
                   <i *ngIf="selectedRound.blackCard.underscores != 1">Pick {{selectedRound.blackCard.underscores}} white cards...</i>
                 </small>
+                <small *ngIf="!isCzar() && myStatus === PlayerStatus.Played">
+                  <i *ngIf="selectedRound.blackCard.underscores == 1">Waiting for others to play...</i>
+                </small>
                 <small *ngIf="isCzar()">
-                  <i>You are the card czar. Waiting for others to play.</i>
+                  <i>You are the card czar. Waiting for others to play...</i>
                 </small>
               </p>
               <div *ngIf="selectedRound.playedCards">
