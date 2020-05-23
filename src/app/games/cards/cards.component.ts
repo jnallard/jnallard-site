@@ -31,11 +31,13 @@ export class CardsComponent implements OnInit {
   public knownDecks: CardCastDeck[];
   public currentGame: Game;
   public username: string;
-  public messages: string[] = [];
+  public messages: {html: string, action?: () => void}[] = [];
   public players: Player[] = [];
   public PlayerStatus = PlayerStatus;
 
   public currentRound: Round;
+  public selectedRound: Round;
+  public rounds: Round[];
   public whiteCards: Card[];
   public selectedWhiteCards: Card[];
   public czarChosenCards: Card[];
@@ -59,9 +61,8 @@ export class CardsComponent implements OnInit {
       this.joinGame(game);
     });
     this.socket.on('game-joined', (game: Game) => {
-      this.messages = [];
       this.currentGame = game;
-      this.messages.push(`Welcome to game '${game.name}'`);
+      this.messages.push({ html: `Welcome to game '${game.name}' ` });
     });
     this.socket.on('my-player-update', (update: PlayerUpdate) => {
       this.whiteCards = update.whiteCards;
@@ -71,9 +72,14 @@ export class CardsComponent implements OnInit {
     this.socket.on('players-update', (players: Player[]) => {
       this.players = players;
     });
+    this.socket.on('all-rounds', (rounds: Round[]) => {
+      this.rounds = rounds;
+      rounds.filter(round => round.winner).forEach(round => this.addWinningCardsMessage(round));
+    });
     this.socket.on('start-round', (round: Round) => {
       this.reset();
       this.currentRound = round;
+      this.selectedRound = round;
       this.areCardsPlayed = false;
     });
     this.socket.on('judge-round', (round: Round) => {
@@ -81,8 +87,8 @@ export class CardsComponent implements OnInit {
     });
     this.socket.on('end-round', (round: Round) => {
       this.currentRound = round;
+      this.rounds.push(round);
       this.addWinningCardsMessage(round);
-      console.log(round);
     });
     interval(1000).subscribe(() => this.sendEvent('request-reload', null));
   }
@@ -100,7 +106,7 @@ export class CardsComponent implements OnInit {
   }
 
   addWinningCardsMessage(round: Round) {
-    let html = `<strong>${round.winner} won round ${round.roundNumber}.</strong><br/>`;
+    let html = `<strong>${round.winner} won round ${round.roundNumber}.</strong> <small>(Click to view)</small><br/>`;
     const blackCardSplit = round.blackCard.displayText.split('_');
     const newArray = [] as string[];
     for (let i = 0; i < blackCardSplit.length; i++) {
@@ -110,7 +116,7 @@ export class CardsComponent implements OnInit {
       }
     }
     html += `<p class="black-text">${newArray.join('')}</p>`;
-    this.messages.unshift(html);
+    this.messages.unshift({ html, action: () => this.selectedRound = round });
   }
 
   isRoundDone() {
@@ -149,6 +155,7 @@ export class CardsComponent implements OnInit {
     this.modalService.open(ConfirmationModalComponent, 'Are you sure you want to leave this game?').subscribe(result => {
       if (result) {
         this.currentGame = null;
+        this.messages = [];
         this.sendEvent('leave-game', null);
       }
     });
@@ -182,11 +189,12 @@ export class CardsComponent implements OnInit {
   }
 
   canSubmitCards() {
-    return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone() && !this.areCardsPlayed;
+    return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone()
+      && !this.areCardsPlayed && !this.viewingCurrentRound();
   }
 
   canChooseWinningCards() {
-    return this.czarChosenCards && !this.isRoundDone() && this.isCzar();
+    return this.czarChosenCards && !this.isRoundDone() && this.isCzar() && !this.viewingCurrentRound();
   }
 
   playCards() {
@@ -197,5 +205,9 @@ export class CardsComponent implements OnInit {
   pickWinningCards() {
     this.sendEvent('game.pick-winning-cards', this.czarChosenCards);
     this.czarChosenCards = null;
+  }
+
+  viewingCurrentRound() {
+    return this.currentRound.roundNumber === this.selectedRound.roundNumber;
   }
 }

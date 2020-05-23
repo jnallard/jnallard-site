@@ -28,12 +28,16 @@ export class CardsSocketRouting implements ISocketRouting {
     const eventType = event.data.type;
     const game = this.gamesforSession.get(event.sessionId);
     if (eventType.startsWith('game.')) {
-      game.handleEvent(socket, event);
+      game.handleEvent(event);
     } else {
       switch (eventType) {
         case 'loaded':
           this.updateGamesList(socket);
           this.getKnownDecks(socket);
+          if (game) {
+            game.reconnectPlayer(socket, event.sessionId);
+            this.sendGameJoined(socket, game);
+          }
           break;
         case 'request-reload':
           this.updateGamesList(socket);
@@ -84,6 +88,10 @@ export class CardsSocketRouting implements ISocketRouting {
     const foundGame = this.games.get(request.gameId);
     foundGame.addPlayer(request.username, socket, sessionId);
     this.gamesforSession.set(sessionId, foundGame);
-    socket.emit('game-joined', foundGame.getGameDto());
+    this.sendGameJoined(socket, foundGame);
+  }
+
+  sendGameJoined(socket: Socket, game: GameController) {
+    socket.emit('game-joined', game.getGameDto());
   }
 }

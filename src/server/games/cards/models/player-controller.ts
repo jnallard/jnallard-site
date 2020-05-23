@@ -10,7 +10,7 @@ export class PlayerController {
   public playedWhiteCards: Card[];
   public state = PlayerStatus.Selecting;
   public score = 0;
-  constructor(public username: string, private socket: Socket, public sessionId: string) {
+  constructor(public username: string, public socket: Socket, public sessionId: string) {
   }
 
   isConnected() {
@@ -23,6 +23,10 @@ export class PlayerController {
 
   sendPlayersUpdate(players: Player[]) {
     this.sendMessage('players-update', players);
+  }
+
+  sendAllRounds(allRounds: Round[]) {
+    this.sendMessage('all-rounds', allRounds);
   }
 
   sendRoundStart(currentRound: Round) {

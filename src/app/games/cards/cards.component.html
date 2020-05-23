@@ -51,29 +51,38 @@
         </div>
       </div>
       <div class="row full-height" *ngIf="currentGame">
-        <div class="col-12 col-sm-6 col-md-4 full-height pb-1" *ngIf="currentRound">
+        <div class="col-12 col-sm-6 col-md-4 full-height pb-1" *ngIf="selectedRound">
           <div class="card text-white bg-dark full-height">
-            <h5 class="card-header"><i class="far fa-play-circle"></i> Current Round</h5>
+            <h5 class="card-header"><i class="far fa-play-circle"></i> Round {{selectedRound.roundNumber}}</h5>
             <div class="card-body scrollable bg-secondary">
+              <div *ngIf="!viewingCurrentRound()">
+                <div class="card centered-text bg-danger">
+                  <div class="card-body">
+                    <p class="card-text">You are not viewing the latest round.</p>
+                    <button class="btn btn-light" (click)="selectedRound = currentRound">View Current Round</button>
+                  </div>
+                </div>
+                <hr/>
+              </div>
               <div class="card black-card left-text">
                 <div class="card-body">
-                  <p class="card-text">{{currentRound.blackCard.displayText}}</p>
+                  <p class="card-text">{{selectedRound.blackCard.displayText}}</p>
                 </div>
               </div>
-              <p *ngIf="!currentRound.playedCards" class="centered-text">
+              <p *ngIf="!selectedRound.playedCards" class="centered-text">
                 <small *ngIf="!isCzar()">
-                  <i *ngIf="currentRound.blackCard.underscores == 1">Pick a white card...</i>
-                  <i *ngIf="currentRound.blackCard.underscores != 1">Pick {{currentRound.blackCard.underscores}} white cards...</i>
+                  <i *ngIf="selectedRound.blackCard.underscores == 1">Pick a white card...</i>
+                  <i *ngIf="selectedRound.blackCard.underscores != 1">Pick {{selectedRound.blackCard.underscores}} white cards...</i>
                 </small>
                 <small *ngIf="isCzar()">
                   <i>You are the card czar. Waiting for others to play.</i>
                 </small>
               </p>
-              <div *ngIf="currentRound.playedCards">
-                <div *ngFor="let cards of currentRound.playedCards" class="mt-2">
+              <div *ngIf="selectedRound.playedCards">
+                <div *ngFor="let cards of selectedRound.playedCards" class="mt-2">
                   <hr />
                   <button class="card white-card clickable btn-block btn-light left-text" *ngFor="let card of cards" [disabled]="!isCzar()"
-                    (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(currentRound.chosenCards, cards)}">
+                    (click)="czarChosenCards = cards" [ngClass]="{'bg-warning': cardsAreEqual(czarChosenCards, cards) || cardsAreEqual(selectedRound.chosenCards, cards)}">
                     <div class="card-body">
                       <p class="card-text">{{card.displayText}}</p>
                     </div>
@@ -82,7 +91,7 @@
               </div>
               <h4 *ngIf="isRoundDone()" class="centered-text">
                 <br />
-                {{currentRound.winner}} won the round
+                {{selectedRound.winner}} won the round
                 <br />
                 <small>Waiting for the next round to start.</small>
               </h4>
@@ -96,7 +105,7 @@
           <div class="card text-white bg-dark full-height">
             <h5 class="card-header"><i class="fas fa-hand-paper"></i> Your Hand</h5>
             <div class="card-body scrollable bg-secondary">
-              <button class="card white-card clickable btn-block btn-light left-text" *ngFor="let whiteCard of whiteCards" [disabled]="areCardsPlayed || isCzar()"
+              <button class="card white-card clickable btn-block btn-light left-text" *ngFor="let whiteCard of whiteCards" [disabled]="areCardsPlayed || isCzar() || !viewingCurrentRound()"
                 (click)="toggleWhiteCard(whiteCard)" [ngClass]="{'bg-warning': selectedWhiteCards.includes(whiteCard)}">
                 <div class="card-body">
                   <p class="card-text">
@@ -145,8 +154,8 @@
               <div class="card-body scrollable p-0 bg-secondary">
                 <table class="table table-striped table-sm bg-light">
                   <tbody>
-                    <tr *ngFor="let message of messages">
-                      <td [innerHTML]="message"></td>
+                    <tr *ngFor="let message of messages" [ngClass]="{'clickable': message.action}">
+                      <td [innerHTML]="message.html" (click)="message.action && message.action()"></td>
                     </tr>
                   </tbody>
                 </table>

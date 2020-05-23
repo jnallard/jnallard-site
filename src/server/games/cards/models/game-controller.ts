@@ -26,10 +26,10 @@ export class GameController {
     this.blackCards = new DeckManager(blackCards);
   }
 
-  handleEvent(socket: Socket, event: SocketEvent) {
+  handleEvent(event: SocketEvent) {
     switch (event.data.type) {
       case 'game.play-white-cards':
-        this.playWhiteCards(socket, event.data.data as Card[], event.sessionId);
+        this.playWhiteCards(event.data.data as Card[], event.sessionId);
         break;
       case 'game.pick-winning-cards':
         this.finishRound(event.data.data as Card[]);
@@ -45,7 +45,6 @@ export class GameController {
   leaveGame(sessionId: string) {
     const player = this.players.find(p => p.sessionId === sessionId);
     this.players.splice(this.players.indexOf(player), 1);
-    console.log(this.players);
     if (this.players.length === 0) {
       this.isOver = true;
     } else if (player === this.czar) {
@@ -65,10 +64,20 @@ export class GameController {
     player.whiteCards.push(...startingCards);
     player.sendPrivatePlayerUpdate();
     player.sendRoundStart(this.currentRound);
+    player.sendAllRounds(this.rounds);
     this.sendPlayerUpdates();
   }
 
-  playWhiteCards(socket: Socket, playedCards: Card[], sessionId: string) {
+  reconnectPlayer(socket: Socket, sessionId: string) {
+    const player = this.players.find(p => p.sessionId === sessionId);
+    player.socket = socket;
+    player.sendPrivatePlayerUpdate();
+    player.sendRoundStart(this.currentRound);
+    player.sendAllRounds(this.rounds);
+    this.sendPlayerUpdates();
+  }
+
+  playWhiteCards(playedCards: Card[], sessionId: string) {
     const player = this.players.find(p => p.sessionId === sessionId);
     player.playedWhiteCards = playedCards;
     player.whiteCards = player.whiteCards.filter(card => !playedCards.find(playedCard => card.id === playedCard.id));
