@@ -84,9 +84,11 @@ export class CardsComponent implements OnInit {
     });
     this.socket.on('judge-round', (round: Round) => {
       this.currentRound = round;
+      this.selectedRound = round;
     });
     this.socket.on('end-round', (round: Round) => {
       this.currentRound = round;
+      this.selectedRound = round;
       this.rounds.push(round);
       this.addWinningCardsMessage(round);
     });
@@ -190,11 +192,11 @@ export class CardsComponent implements OnInit {
 
   canSubmitCards() {
     return this.currentRound.blackCard.underscores === this.selectedWhiteCards.length && !this.isRoundDone()
-      && !this.areCardsPlayed && !this.viewingCurrentRound();
+      && !this.areCardsPlayed && this.viewingCurrentRound();
   }
 
   canChooseWinningCards() {
-    return this.czarChosenCards && !this.isRoundDone() && this.isCzar() && !this.viewingCurrentRound();
+    return this.czarChosenCards && !this.isRoundDone() && this.isCzar() && this.viewingCurrentRound();
   }
 
   playCards() {
