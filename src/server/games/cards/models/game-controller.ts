@@ -27,13 +27,36 @@ export class GameController {
   }
 
   handleEvent(event: SocketEvent) {
+    const player = this.players.find(p => p.sessionId === event.sessionId);
     switch (event.data.type) {
       case 'game.play-white-cards':
-        this.playWhiteCards(event.data.data as Card[], event.sessionId);
+        this.playWhiteCards(event.data.data as Card[], player);
         break;
       case 'game.pick-winning-cards':
         this.finishRound(event.data.data as Card[]);
         break;
+      case 'game.force-reveal':
+        if (player.isHost) {
+          this.forceRevealWhiteCards(player);
+        }
+        break;
+      case 'game.force-round-end':
+        if (player.isHost) {
+          const currentRoundNumber = this.currentRound.roundNumber;
+          this.skipRound();
+          this.sendMessage(`Host ${player.username} has skipped Round ${currentRoundNumber}`);
+        }
+        break;
+    }
+  }
+
+  forceRevealWhiteCards(host: PlayerController) {
+    const revealedPlayers = this.players.filter(p => p.state === PlayerStatus.Played);
+    const unrevealedPlayers = this.players.filter(p => p.state === PlayerStatus.Selecting);
+    if (unrevealedPlayers.length > 0 && revealedPlayers.length > 0) {
+      this.revealWhiteCards();
+      this.sendMessage(`Host ${host.username} has skipped waiting for others
+        (${unrevealedPlayers.map(p => p.username).join(', ')}) to play white cards`);
     }
   }
 
@@ -42,8 +65,7 @@ export class GameController {
     return this.isOver || (this.players.every(player => !player.isConnected()) && (timeSurpassedMs > 10000));
   }
 
-  leaveGame(sessionId: string) {
-    const player = this.players.find(p => p.sessionId === sessionId);
+  leaveGame(player: PlayerController) {
     this.players.splice(this.players.indexOf(player), 1);
     if (this.players.length === 0) {
       this.isOver = true;
@@ -52,10 +74,12 @@ export class GameController {
     }  else {
       this.checkAllCardsPlayed();
     }
+    this.sendMessage(`${player.username} has left the game with ${player.score} point(s)`);
   }
 
   addPlayer(username: string, socket: Socket, sessionId: string) {
-    const player = new PlayerController(username, socket, sessionId);
+    const isHost = this.players.length === 0;
+    const player = new PlayerController(username, socket, sessionId, isHost);
     this.players.push(player);
     if (this.players.length === 1) {
       this.startRound();
@@ -66,6 +90,7 @@ export class GameController {
     player.sendRoundStart(this.currentRound);
     player.sendAllRounds(this.rounds);
     this.sendPlayerUpdates();
+    this.sendMessage(`${player.username} has joined the game`);
   }
 
   reconnectPlayer(socket: Socket, sessionId: string) {
@@ -77,8 +102,7 @@ export class GameController {
     this.sendPlayerUpdates();
   }
 
-  playWhiteCards(playedCards: Card[], sessionId: string) {
-    const player = this.players.find(p => p.sessionId === sessionId);
+  playWhiteCards(playedCards: Card[], player: PlayerController) {
     player.playedWhiteCards = playedCards;
     player.whiteCards = player.whiteCards.filter(card => !playedCards.find(playedCard => card.id === playedCard.id));
     player.whiteCards.push(...this.whiteCards.getCards(playedCards.length));
@@ -118,6 +142,17 @@ export class GameController {
     of(true).pipe(delay(5000)).subscribe(() => this.startRound());
   }
 
+  skipRound() {
+    this.players.forEach(player => {
+      if (player.playedWhiteCards) {
+        player.playedWhiteCards.forEach(card => this.whiteCards.cardPlayed(card.displayText));
+        player.playedWhiteCards = null;
+      }
+    });
+    this.playedWhiteCards.clear();
+    this.startRound();
+  }
+
   getNextCzar(lastCzar: PlayerController) {
     if (!lastCzar) {
       return this.players[0];
@@ -154,5 +189,9 @@ export class GameController {
     const gameDto = new Game(this.gameId, this.gameName);
     gameDto.players = this.players.map(p => p.username);
     return gameDto;
+  }
+
+  sendMessage(message: string) {
+    this.players.forEach(player => player.sendMessage(message));
   }
 }

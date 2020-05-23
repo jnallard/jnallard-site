@@ -34,6 +34,7 @@ export class CardsComponent implements OnInit {
   public messages: {html: string, action?: () => void}[] = [];
   public players: Player[] = [];
   public PlayerStatus = PlayerStatus;
+  public isHost = false;
 
   public currentRound: Round;
   public selectedRound: Round;
@@ -62,12 +63,12 @@ export class CardsComponent implements OnInit {
     });
     this.socket.on('game-joined', (game: Game) => {
       this.currentGame = game;
-      this.messages.push({ html: `Welcome to game '${game.name}' ` });
     });
     this.socket.on('my-player-update', (update: PlayerUpdate) => {
       this.whiteCards = update.whiteCards;
       this.myStatus = update.state;
       this.selectedWhiteCards = [];
+      this.isHost = update.isHost;
     });
     this.socket.on('players-update', (players: Player[]) => {
       this.players = players;
@@ -91,6 +92,9 @@ export class CardsComponent implements OnInit {
       this.selectedRound = round;
       this.rounds.push(round);
       this.addWinningCardsMessage(round);
+    });
+    this.socket.on('message', (message: string) => {
+      this.messages.unshift({ html: message });
     });
     interval(1000).subscribe(() => this.sendEvent('request-reload', null));
   }
@@ -158,7 +162,7 @@ export class CardsComponent implements OnInit {
       if (result) {
         this.currentGame = null;
         this.messages = [];
-        this.sendEvent('leave-game', null);
+        this.sendEvent('leave-game');
       }
     });
   }
@@ -174,7 +178,7 @@ export class CardsComponent implements OnInit {
     this.sendEvent('join-game', new JoinGameRequest(this.username, selectedGame.id));
   }
 
-  sendEvent(eventType: string, data: any) {
+  sendEvent(eventType: string, data: any = null) {
     this.socket.emit('event', new SocketEvent('games', 'cards', new SocketData(eventType, data)));
   }
 
@@ -211,5 +215,21 @@ export class CardsComponent implements OnInit {
 
   viewingCurrentRound() {
     return this.currentRound.roundNumber === this.selectedRound.roundNumber;
+  }
+
+  canSkipRound() {
+    return !this.currentRound.winner;
+  }
+
+  skipRound() {
+    this.sendEvent('game.force-round-end');
+  }
+
+  canForceReveal() {
+    return this.players.some(p => p.status === PlayerStatus.Selecting) && this.players.some(p => p.status === PlayerStatus.Played);
+  }
+
+  forceReveal() {
+    this.sendEvent('game.force-reveal');
   }
 }

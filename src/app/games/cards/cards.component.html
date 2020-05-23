@@ -53,7 +53,26 @@
       <div class="row full-height" *ngIf="currentGame">
         <div class="col-12 col-sm-6 col-md-4 full-height pb-1" *ngIf="selectedRound">
           <div class="card text-white bg-dark full-height">
-            <h5 class="card-header"><i class="far fa-play-circle"></i> Round {{selectedRound.roundNumber}}</h5>
+            <h5 class="card-header container-fluid">
+              <div class="row">
+                <div class="col-6">
+                  <i class="far fa-play-circle"></i> Round {{selectedRound.roundNumber}}
+                </div>
+                <div class="col-6 float-right">
+                  <div *ngIf="isHost && viewingCurrentRound()">
+                    <div class="btn-group btn-group-sm admin-btn" dropdown>
+                      <button id="button-basic" dropdownToggle type="button" class="btn btn-danger dropdown-toggle" aria-controls="dropdown-basic">
+                        <i class="fas fa-user-lock"></i> Host <span class="caret"></span>
+                      </button>
+                      <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="button-basic">
+                        <li role="menuitem" *ngIf="canForceReveal()"><a class="dropdown-item" (click)="forceReveal()">Reveal White Cards</a></li>
+                        <li role="menuitem" *ngIf="canSkipRound()"><a class="dropdown-item" (click)="skipRound()">End Current Round</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </h5>
             <div class="card-body scrollable bg-secondary">
               <div *ngIf="!viewingCurrentRound()">
                 <div class="card centered-text bg-danger">

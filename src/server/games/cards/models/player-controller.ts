@@ -10,7 +10,7 @@ export class PlayerController {
   public playedWhiteCards: Card[];
   public state = PlayerStatus.Selecting;
   public score = 0;
-  constructor(public username: string, public socket: Socket, public sessionId: string) {
+  constructor(public username: string, public socket: Socket, public sessionId: string, public isHost: boolean = false) {
   }
 
   isConnected() {
@@ -18,30 +18,34 @@ export class PlayerController {
   }
 
   sendPrivatePlayerUpdate() {
-    this.sendMessage('my-player-update', new PlayerUpdate(this.whiteCards, this.state));
+    this.sendEvent('my-player-update', new PlayerUpdate(this.whiteCards, this.state, this.isHost));
   }
 
   sendPlayersUpdate(players: Player[]) {
-    this.sendMessage('players-update', players);
+    this.sendEvent('players-update', players);
   }
 
   sendAllRounds(allRounds: Round[]) {
-    this.sendMessage('all-rounds', allRounds);
+    this.sendEvent('all-rounds', allRounds);
   }
 
   sendRoundStart(currentRound: Round) {
-    this.sendMessage('start-round', currentRound);
+    this.sendEvent('start-round', currentRound);
   }
 
   sendRoundJudge(currentRound: Round) {
-    this.sendMessage('judge-round', currentRound);
+    this.sendEvent('judge-round', currentRound);
   }
 
   sendRoundEnd(currentRound: Round) {
-    this.sendMessage('end-round', currentRound);
+    this.sendEvent('end-round', currentRound);
   }
 
-  sendMessage(key: string, value: any) {
+  sendMessage(message: string) {
+    this.sendEvent('message', message);
+  }
+
+  sendEvent(key: string, value: any) {
     this.socket.emit(key, value);
   }
 
