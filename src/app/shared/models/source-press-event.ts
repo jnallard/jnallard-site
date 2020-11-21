@@ -1,6 +1,5 @@
 export class SourcePressEvent {
   constructor(sourceEvent: MouseEvent | TouchEvent, borderWidth: number, stopPropagation = true, preventDefault = true) {
-    console.log(window.TouchEvent);
     if (window.TouchEvent && sourceEvent instanceof TouchEvent) {
       const touchEvent = sourceEvent as TouchEvent;
       const target = sourceEvent.target as HTMLElement;

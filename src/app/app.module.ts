@@ -20,6 +20,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateGameComponent } from './games/cards/create-game/create-game.component';
 import { PickUsernameComponent } from './games/cards/pick-username/pick-username.component';
 import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
+import { RpgComponent } from './games/rpg/rpg.component';
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -27,9 +28,11 @@ const appRoutes: Routes = [
     redirectTo: '/home',
     pathMatch: 'full'
   },
-  { path: 'games', component: GamesComponent, pathMatch: 'full' },
+  { path: 'games', pathMatch: 'full', redirectTo: '/games/all' },
+  { path: 'games/all', component: GamesComponent, pathMatch: 'full' },
   { path: 'games/minesweeper', component: MinesweeperComponent, pathMatch: 'full' },
   { path: 'games/cards', component: CardsComponent, pathMatch: 'full' },
+  { path: 'games/rpg', component: RpgComponent, pathMatch: 'full' },
   { path: 'test-pages/camera', component: CameraComponent, pathMatch: 'full' },
   { path: 'home', component: HomeComponent }
 ];
@@ -52,7 +55,8 @@ console.log(appRoutes);
     CardsComponent,
     CreateGameComponent,
     PickUsernameComponent,
-    ConfirmationModalComponent
+    ConfirmationModalComponent,
+    RpgComponent
   ],
   imports: [
     FormsModule,

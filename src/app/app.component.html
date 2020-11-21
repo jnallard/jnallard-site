@@ -10,14 +10,28 @@
           Home <span class="sr-only">(current)</span>
         </a>
         <li class="nav-item dropdown" dropdown>
-          <a class="nav-link dropdown-toggle" dropdownToggle id="navbarDropdown">
+          <a class="nav-link dropdown-toggle clickable" dropdownToggle id="navbarDropdown">
             Games
           </a>
           <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
               role="menu" aria-labelledby="button-basic">
-            <li role="menuitem" class="dropdown-item"><a routerLink="/games" routerLinkActive="active">All Games</a></li>
+            <li role="menuitem" class="dropdown-item clickable" routerLink="/games/all" routerLinkActive="active">
+              <a>All Games</a>
+            </li>
             <li class="divider dropdown-divider"></li>
-            <li *ngFor="let game of gameList.games" role="menuitem" class="dropdown-item"><a routerLink="/{{game.path}}" routerLinkActive="active">{{game.name}}</a></li>
+            <li *ngFor="let game of gameList.games" role="menuitem" class="dropdown-item clickable" routerLink="/{{game.path}}" routerLinkActive="active">
+              <a>{{game.name}}</a>
+            </li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown" dropdown>
+          <a class="nav-link dropdown-toggle clickable" dropdownToggle id="navbarDropdown">
+            Tools
+          </a>
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+            <li role="menuitem" class="dropdown-item clickable" routerLink="/test-pages/camera" routerLinkActive="active">
+              <a>Camera Test</a>
+            </li>
           </ul>
         </li>
       </ul>

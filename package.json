@@ -67,6 +67,5 @@
     "ts-node": "^8.10.0",
     "tslint": "~5.9.1"
   },
-  "type": "module",
   "module": "es2015"
 }

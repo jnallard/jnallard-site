@@ -103,7 +103,7 @@ export class CardsComponent implements OnInit {
     return new GameEntry('Cards Against Josh',
       'cards',
       'Play this rip off of a game where you pick answers cards to play alongside prompt cards.',
-      'placeholder.png',
+      'cards.png',
       CardsComponent);
   }
 
