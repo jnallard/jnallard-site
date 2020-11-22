@@ -1,12 +1,33 @@
 <div class="router-page">
-  <div style="text-align:center">
-    <h1>
-      Welcome to Jnallard.com!
-    </h1>
+  <div class="container">
+    <div class="jumbotron">
+      <h1 class="display-4">Welcome to Jnallard.com!</h1>
+      <p class="lead">This is my site I've been working on mostly for my own enjoyment and utility.</p>
+      <hr class="my-4">
+      <p>Feel free to try out and of the games or tools I've made on here.</p>
+    </div>
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-header text-white bg-secondary">
+            <h3>Games</h3>
+          </div>
+          <carousel>
+            <slide *ngFor="let game of gameList.games">
+              <img [src]="game.imagePath" alt="first slide" style="display: block; width: 100%;">
+              <div class="carousel-caption px-1">
+                <h3>{{game.name}}</h3>
+                <p>{{game.description}}</p>
+                <a class="btn btn-light clickable mb-3" routerLink="/{{game.path}}" routerLinkActive="active">Play</a>
+              </div>
+            </slide>
+          </carousel>
+          <div class="card-body">
+            <p class="card-text">Check out some of the games I've been working on!</p>
+            <a routerLink="/games/all" routerLinkActive="active" class="btn btn-primary mt-auto">View all games</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <h2>Links:</h2>
-  <ul>
-    <li><a routerLink="/games" routerLinkActive="active">Games</a></li>
-    <li><a routerLink="/test-pages/camera" routerLinkActive="active">Camera Test</a></li>
-  </ul>
 </div>

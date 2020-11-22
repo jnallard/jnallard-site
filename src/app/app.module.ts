@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -67,6 +68,7 @@ console.log(appRoutes);
     BrowserModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
+    CarouselModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     SocketIoModule.forRoot(socketConfig),
