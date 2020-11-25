@@ -1,0 +1,20 @@
+
+
+
+<form class="form-inline my-2 my-lg-0">
+  <ng-container *ngIf="isLoggedIn$() | async; else loggedOut">
+    <li class="nav-item dropdown" dropdown *ngIf="getUser$() | async as user">
+      <a class="nav-link dropdown-toggle clickable" dropdownToggle id="navbarDropdown">
+        <img class="img user-image" [src]="user.picture"> {{user.name}}
+      </a>
+      <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+        <li role="menuitem" class="dropdown-item clickable" (click)="logOut()">
+          <a class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+        </li>
+      </ul>
+    </li>
+  </ng-container>
+  <ng-template #loggedOut>
+    <button class="btn btn-outline-light my-2 my-sm-0" (click)="logIn()"><i class="fas fa-sign-in-alt"></i> Log in</button>
+  </ng-template>
+</form>

@@ -1,27 +1,28 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule, Routes } from '@angular/router';
-
-import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AuthModule } from '@auth0/auth0-angular';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
-
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { GamesComponent } from './games/games.component';
-import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
-import { PressDirective } from './shared/directives/press.directive';
-import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { CameraComponent } from './test-pages/camera/camera.component';
 import { CardsComponent } from './games/cards/cards.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CreateGameComponent } from './games/cards/create-game/create-game.component';
 import { PickUsernameComponent } from './games/cards/pick-username/pick-username.component';
-import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
+import { GamesComponent } from './games/games.component';
+import { MinesweeperComponent } from './games/minesweeper/minesweeper.component';
 import { RpgComponent } from './games/rpg/rpg.component';
+import { HomeComponent } from './home/home.component';
+import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
+import { PressDirective } from './shared/directives/press.directive';
+import { CameraComponent } from './test-pages/camera/camera.component';
+import { AuthButtonComponent } from './auth/auth-button/auth-button.component';
+
 const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
@@ -57,9 +58,15 @@ console.log(appRoutes);
     CreateGameComponent,
     PickUsernameComponent,
     ConfirmationModalComponent,
-    RpgComponent
+    RpgComponent,
+    AuthButtonComponent
   ],
   imports: [
+    AuthModule.forRoot({
+      domain: 'joallard.auth0.com',
+      clientId: 'YVEiFzpvvn67oh933D0bNNydND2uRHWY',
+      cacheLocation: 'localstorage'
+    }),
     FormsModule,
     RouterModule.forRoot(
       appRoutes,
