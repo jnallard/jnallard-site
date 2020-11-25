@@ -29,7 +29,7 @@
     "@types/express-session": "^1.17.0",
     "@types/express-socket.io-session": "^1.3.2",
     "@types/socket.io": "^2.1.2",
-    "bootstrap": "^4.1.3",
+    "bootstrap": "^4.3.1",
     "cardcast": "0.0.1",
     "concurrently": "^4.1.0",
     "core-js": "^2.5.4",
