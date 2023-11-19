@@ -22,8 +22,9 @@ import { HomeComponent } from './home/home.component';
 import { ConfirmationModalComponent } from './shared/components/confirmation-modal/confirmation-modal.component';
 import { PressDirective } from './shared/directives/press.directive';
 import { CameraComponent } from './test-pages/camera/camera.component';
+import {provideAnimations} from '@angular/platform-browser/animations';
 
-const socketConfig: SocketIoConfig = { url: window.location.origin, options: {} };
+const socketConfig: SocketIoConfig = {url: window.location.origin, options: {} };
 
 const appRoutes: Routes = [
   { path: '',
@@ -65,13 +66,14 @@ console.log(appRoutes);
     AuthModule.forRoot({
       domain: 'joallard.auth0.com',
       clientId: 'YVEiFzpvvn67oh933D0bNNydND2uRHWY',
-      cacheLocation: 'localstorage'
+      cacheLocation: 'localstorage',
+      authorizationParams: {
+        redirect_uri: window.location.origin,
+      },
+
     }),
     FormsModule,
-    RouterModule.forRoot(
-      appRoutes,
-      // { enableTracing: true } // <-- debugging purposes only
-    ),
+    RouterModule.forRoot(appRoutes, {}),
     BrowserModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
@@ -81,7 +83,9 @@ console.log(appRoutes);
     SocketIoModule.forRoot(socketConfig),
     NgbModule
   ],
-  providers: [],
+  providers: [
+    provideAnimations()
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

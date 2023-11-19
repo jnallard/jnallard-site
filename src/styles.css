@@ -40,3 +40,7 @@
 .right-text {
   text-align: right;
 }
+
+.modal-backdrop.show {
+  z-index: 5 !important;
+}
