@@ -68,10 +68,7 @@ console.log(appRoutes);
       cacheLocation: 'localstorage'
     }),
     FormsModule,
-    RouterModule.forRoot(
-      appRoutes,
-      // { enableTracing: true } // <-- debugging purposes only
-    ),
+    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
     BrowserModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
