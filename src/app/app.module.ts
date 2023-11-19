@@ -68,7 +68,7 @@ console.log(appRoutes);
       cacheLocation: 'localstorage'
     }),
     FormsModule,
-    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
+    RouterModule.forRoot(appRoutes, {}),
     BrowserModule,
     BsDropdownModule.forRoot(),
     CollapseModule.forRoot(),
