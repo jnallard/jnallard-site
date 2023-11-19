@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 const server = app.listen(process.env.PORT || 3000, function() {
     console.log(`Server now listening on ${port}.`);
 });
-const socketIO = io.listen(server);
+const socketIO = new io.Server(server);
 
 const session = expressSession({
     secret: EnvironmentService.sessionSecret,
@@ -28,7 +28,7 @@ const routing = new SocketRouting();
 socketIO.on('connect', socket => {
     console.log(`Socket connected: ${socket.id}.`);
     socket.on('event', (socketEvent: SocketEvent) => {
-        socketEvent.sessionId = socket.handshake.sessionID;
+        socketEvent.sessionId = socket.handshake['sessionID'];
         try {
             routing.sendEvent(socket, socketEvent);
         } catch (exception) {
