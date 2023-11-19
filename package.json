@@ -68,5 +68,9 @@
     "ts-node": "^8.10.0",
     "tslint": "~6.1.0"
   },
-  "module": "es2015"
+  "module": "es2015",
+  "engines": {
+    "node": "18.x",
+    "npm": "9.x"
+  }
 }

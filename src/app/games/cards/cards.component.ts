@@ -65,9 +65,10 @@ export class CardsComponent implements OnInit {
       this.currentGame = game;
     });
     this.socket.on('my-player-update', (update: PlayerUpdate) => {
+      const oldSelectedWhiteCards = this.selectedWhiteCards;
       this.whiteCards = update.whiteCards;
       this.myStatus = update.state;
-      this.selectedWhiteCards = [];
+      this.selectedWhiteCards = this.whiteCards?.filter(wc => oldSelectedWhiteCards?.find(old => old.id === wc.id));
       this.isHost = update.isHost;
     });
     this.socket.on('players-update', (players: Player[]) => {

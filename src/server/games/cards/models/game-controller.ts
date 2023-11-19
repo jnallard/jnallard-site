@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 import { SocketEvent } from 'src/app/shared/models/socket-event';
 import { PlayerController } from './player-controller';
 import { PlayerStatus } from '../dtos/player-status';
+import { Shuffler } from '../../../util/shuffler';
 
 export class GameController {
   public players: PlayerController[] = [];
@@ -69,7 +70,8 @@ export class GameController {
     return this.isOver || (this.players.every(player => !player.isConnected()) && (timeSurpassedMs > 10000));
   }
 
-  leaveGame(player: PlayerController) {
+  leaveGame(sessionId: string) {
+    const player = this.players.find(p => p.sessionId === sessionId);
     this.players.splice(this.players.indexOf(player), 1);
     if (this.players.length === 0) {
       this.isOver = true;
@@ -126,6 +128,7 @@ export class GameController {
 
   revealWhiteCards() {
     this.currentRound.playedCards = [...this.playedWhiteCards.values()];
+    Shuffler.shuffle(this.currentRound.playedCards);
     this.players.forEach(player => player.sendRoundJudge(this.currentRound));
   }
 
