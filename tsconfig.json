@@ -11,7 +11,6 @@
     "declaration": false,
     "module": "CommonJS",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "downlevelIteration": true,
     "target": "es2015",
